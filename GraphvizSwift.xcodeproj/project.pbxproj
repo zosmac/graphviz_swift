@@ -110,12 +110,12 @@
 		58E5A5812DCF89F000303648 = {
 			isa = PBXGroup;
 			children = (
-				5885F76C2DDA9E1500CA803D /* Resources */,
+				58E5A5C82DD0200F00303648 /* Frameworks */,
 				58E5A58C2DCF89F000303648 /* GraphvizSwift */,
 				58E5A59E2DCF89F100303648 /* GraphvizSwiftTests */,
 				58E5A5A82DCF89F100303648 /* GraphvizSwiftUITests */,
-				58E5A5C82DD0200F00303648 /* Frameworks */,
 				58E5A58B2DCF89F000303648 /* Products */,
+				5885F76C2DDA9E1500CA803D /* Resources */,
 			);
 			sourceTree = "<group>";
 		};

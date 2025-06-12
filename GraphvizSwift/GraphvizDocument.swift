@@ -1,6 +1,6 @@
 //
 //  GraphvizDocument.swift
-//  Graphviz
+//  GraphvizSwift
 //
 //  Created by Keefe Hayes on 5/10/25.
 //
