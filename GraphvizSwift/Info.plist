@@ -5,18 +5,91 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>GraphDot.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>GraphvizDocument (dot)</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>com.example.plain-text</string>
+				<string>com.att.graphviz.graph.dot</string>
 			</array>
-			<key>NSUbiquitousDocumentUserActivityType</key>
-			<string>$(PRODUCT_BUNDLE_IDENTIFIER).exampledocument</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>GraphGv.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>GraphvizDocument (gv)</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.att.graphviz.graph</string>
+			</array>
+		</dict>
+	</array>
+	<key>CFBundleIconFile</key>
+	<string>Graphviz</string>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>GVDocumentTypeGraph</string>
+			<key>UTTypeIconFile</key>
+			<string>GraphGv.icns</string>
+			<key>UTTypeIcons</key>
+			<dict/>
+			<key>UTTypeIdentifier</key>
+			<string>com.att.graphviz.graph</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gv</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>text/vnd.graphviz</string>
+				</array>
+			</dict>
 		</dict>
 	</array>
 	<key>UTImportedTypeDeclarations</key>
 	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>GVDocumentTypeGraph</string>
+			<key>UTTypeIconFile</key>
+			<string>GraphDot.icns</string>
+			<key>UTTypeIcons</key>
+			<dict/>
+			<key>UTTypeIdentifier</key>
+			<string>com.att.graphviz.graph.dot</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>dot</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>text/vnd.graphviz</string>
+				</array>
+			</dict>
+		</dict>
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
