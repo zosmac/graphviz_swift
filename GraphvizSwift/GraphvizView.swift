@@ -10,6 +10,7 @@ import PDFKit
 
 struct GraphvizView: View {
     @Binding var document: GraphvizDocument
+    @State var attributes: Attributes
     @State private var pdfView = PDFView()
     @State private var inspectorPresented: Bool = false
     @State private var inspector = "attributes"
@@ -17,7 +18,7 @@ struct GraphvizView: View {
     var body: some View {
         GraphView(document: $document, pdfView: $pdfView)
             .inspector(isPresented: $inspectorPresented) {
-                InspectorView(inspector: $inspector, document: $document, pdfView: $pdfView)
+                InspectorView(inspector: $inspector, document: $document, attributes: $attributes, pdfView: $pdfView)
                     .inspectorColumnWidth(min: 280, ideal: 280)
             }
             .toolbar(id: "maintoolbar") {
@@ -39,6 +40,9 @@ struct GraphvizView: View {
                             inspectorPresented = true
                         }
                         inspector = "file"
+                        if !inspectorPresented {
+                            print(document.text!)
+                        }
                     }
                 }
                 ToolbarItem(id: "in") {

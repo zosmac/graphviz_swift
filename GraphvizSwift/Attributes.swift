@@ -8,23 +8,46 @@
 import AppKit
 
 /// Attribute defines a property for graphs, nodes, or edges
-@Observable final class Attribute: Identifiable, Comparable, Hashable, Copyable {
-    static func < (lhs: Attribute, rhs: Attribute) -> Bool { // Comparable
-        lhs.name < rhs.name
-    }
-    
+@Observable final class Attribute: Identifiable, Equatable {
     static func == (lhs: Attribute, rhs: Attribute) -> Bool { // Equatable
         lhs.name == rhs.name
     }
+    let id = UUID()
+    let name: String
+    let kind: Int
+    var value: String
+    let defaultValue: String?
+    let simpleType: String
+    let options: [String]?
+    let listItemType: String?
+    let doc: String
     
-    func hash(into hasher: inout Hasher) { // Hashable
-        hasher.combine(name)
+    init(attribute: ParsedAttribute) {
+        self.name = attribute.name
+        self.kind = attribute.kind
+        self.value = attribute.value
+        self.defaultValue = attribute.defaultValue
+        self.simpleType = attribute.simpleType
+        self.options = attribute.options
+        self.listItemType = attribute.listItemType
+        self.doc = attribute.doc
+    }
+}
+
+/// Attribute defines a property for graphs, nodes, or edges
+final class ParsedAttribute: Comparable {
+    static func < (lhs: ParsedAttribute, rhs: ParsedAttribute) -> Bool { // Comparable
+        lhs.name < rhs.name
+    }
+    static func == (lhs: ParsedAttribute, rhs: ParsedAttribute) -> Bool { // Equatable
+        lhs.name == rhs.name
     }
     
-    var id = UUID()
     var name: String
-    var kind: Int?
-    var type = ""
+    var kind: Int!
+    var value = "" // value if set in document, and changed by user in UI
+    var defaultValue: String? // from attributes.xml
+    var simpleType = ""
     var options: [String]? // option values of enumerated type, true/false for boolean
     var listItemType: String?
     var doc = ""
@@ -37,30 +60,19 @@ import AppKit
     var node: String?
     var edge: String?
     
-    var defaultValue: String? // from attributes.xml
-    var value = "" // value if set in document, and changed by user in UI // TODO: make optional?
-    
     init(name: String) {
         self.name = name
     }
     
     // an Observable must be a class, and an attribute may apply to graphs, nodes
     // and/or edges, so for each attribute must be distinct across kinds
-    init(copy: Attribute, kind: Int, _ defaultValue: String) { // Copyableq
+    init(copy: ParsedAttribute, kind: Int, _ defaultValue: String? = nil) { // Copyable
         self.name = copy.name // don't need self here to disambiguate :)
         self.kind = kind
-        self.type = copy.type
+        self.simpleType = copy.simpleType
         self.options = copy.options
         self.listItemType = copy.listItemType
         self.doc = copy.doc
-        
-        // these don't matter after attribute copied to specific table
-        // only used for recording default value for a complexType
-        //        graph = copy.graph
-        //        subgraph = copy.subgraph
-        //        cluster = copy.cluster
-        //        node = copy.node
-        //        edge = copy.edge
         
         // for TextField, use defaultValue for field label
         self.defaultValue = copy.defaultValue
@@ -76,43 +88,77 @@ import AppKit
     }
 }
 
-class Attributes {
-    var overview = "" // overview doc from attributes.xml
-    var tables: [[Attribute]] = [[], [], []] // AGRAPH, AGNODE, AGEDGE
+@Observable final class Attributes {
+    let overview: String
+    let tables: [[Attribute]] // AGRAPH, AGNODE, AGEDGE
+    
+    init(graph: Graph) {
+        let attributes = ParsedAttributes.parsedAttributes
+        self.overview = attributes.overview
+        var tables = Array(repeating: [Attribute](), count: 3)
+        // merge document's attribute settings into attributes
+        for kind in [AGRAPH, AGNODE, AGEDGE] {
+            for attribute in attributes.tables[kind] {
+                tables[kind].append(Attribute(attribute: attribute))
+                if let value = graph.settings[kind][attribute.name] {
+                    tables[kind].last!.value = value
+                }
+            }
+        }
+        self.tables = tables
+    }
+}
 
+final class ParsedAttributes {
+    nonisolated(unsafe) static let parsedAttributes = ParsedAttributes()
+
+    var overview = "" // overview doc from attributes.xml
+    var tables: [[ParsedAttribute]] = [[], [], []] // AGRAPH, AGNODE, AGEDGE
+    
     init() {
         let url = Bundle.main.url(forResource: "attributes", withExtension: "xml")
         let data = try! Data(contentsOf: url!)
         let parser = XMLParser(data: data)
-        let delegate: AttributesParser = AttributesParser()
+        let delegate = AttributesParser() // strong here, parser.delegate is unowned(unsafe)
         parser.delegate = delegate
         if !parser.parse() {
             print("parse failed \(parser.parserError?.localizedDescription ?? "")")
         }
-        overview = delegate.overview
+
+        self.overview = delegate.overview
         for attribute in delegate.attributes {
+            if let options = delegate.simpleTypes[attribute.simpleType] {
+                if options.count == 1 {
+                    attribute.listItemType = options.first!
+                } else {
+                    attribute.options = options
+                }
+            }
+            if let doc = delegate.simpleTypeDoc[attribute.simpleType] {
+                attribute.doc += "<p><b>\(attribute.simpleType)</b><p>\(doc)"
+            }
             if attribute.graph != nil {
-                tables[AGRAPH].append(Attribute(copy: attribute, kind: AGRAPH, attribute.graph!))
+                tables[AGRAPH].append(ParsedAttribute(copy: attribute, kind: AGRAPH, attribute.graph!))
             }
             if attribute.node != nil {
-                tables[AGNODE].append(Attribute(copy: attribute, kind: AGNODE, attribute.node!))
+                tables[AGNODE].append(ParsedAttribute(copy: attribute, kind: AGNODE, attribute.node!))
             }
             if attribute.edge != nil {
-                tables[AGEDGE].append(Attribute(copy: attribute, kind: AGEDGE, attribute.edge!))
+                tables[AGEDGE].append(ParsedAttribute(copy: attribute, kind: AGEDGE, attribute.edge!))
             }
+            tables[AGRAPH].sort() // graph attributes
+            tables[AGNODE].sort() // node attributes
+            tables[AGEDGE].sort() // edge attributes
         }
-        tables[AGRAPH].sort() // graph attributes
-        tables[AGNODE].sort() // node attributes
-        tables[AGEDGE].sort() // edge attributes
     }
 }
 
 class AttributesParser: NSObject, XMLParserDelegate {
-    var attributes: [Attribute] = []
+    var overview = ""
+    var attributes: [ParsedAttribute] = []
     var indices: [String: Int] = [:]
     var simpleTypes: Dictionary<String, [String]> = [:]
-    var typesDoc: Dictionary<String, String> = [:]
-    var overview = ""
+    var simpleTypeDoc: Dictionary<String, String> = [:]
     
     // track which element within as parsing proceeds
     var attribute: String?
@@ -120,24 +166,12 @@ class AttributesParser: NSObject, XMLParserDelegate {
     var complexType: String?
     var annotation: String?
     var documentation = false
-    
+
     // complete processing of document
     func parserDidEndDocument(
         _ parser: XMLParser
     ) {
         simpleTypes["xsd:boolean"] = ["true", "false"] // treat boolean as enumerated type
-        for attribute in attributes {
-            if let options = simpleTypes[attribute.type] {
-                if options.count == 1 {
-                    attribute.listItemType = options.first!
-                } else {
-                    attribute.options = options
-                }
-            }
-            if let doc = typesDoc[attribute.type] {
-                attribute.doc += "<p><b>\(attribute.type)</b><p>\(doc)"
-            }
-        }
     }
     
     // begin handling for element
@@ -157,10 +191,10 @@ class AttributesParser: NSObject, XMLParserDelegate {
                 attribute = name // started attribute name= section
                 if indices[name] == nil {
                     indices[name] = attributes.count
-                    attributes.append(Attribute(name: name))
+                    attributes.append(ParsedAttribute(name: name))
                 }
                 let index = indices[name]!
-                attributes[index].type = attributeDict["type"] ?? attributes[index].type
+                attributes[index].simpleType = attributeDict["type"] ?? attributes[index].simpleType
                 attributes[index].defaultValue = attributeDict["default"]
             } else if let name = attributeDict["ref"] {
                 let index = indices[name]!
@@ -250,10 +284,10 @@ class AttributesParser: NSObject, XMLParserDelegate {
             if let name = attribute {
                 attributes[indices[name]!].doc += string
             } else if let name = simpleType {
-                if typesDoc[name] == nil {
-                    typesDoc[name] = string
+                if simpleTypeDoc[name] == nil {
+                    simpleTypeDoc[name] = string
                 } else {
-                    typesDoc[name]! += string
+                    simpleTypeDoc[name]! += string
                 }
             }
         }

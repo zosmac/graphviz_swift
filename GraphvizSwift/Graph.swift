@@ -5,19 +5,40 @@
 //  Created by Keefe Hayes on 6/12/25.
 //
 
-import Foundation
+import SwiftUI
 
-final class Graph: @unchecked Sendable {
-    static let graphContext = gvContext()
+class Graph: @unchecked Sendable {
+    nonisolated(unsafe) static let graphContext = gvContext()
     
     var graph: UnsafeMutablePointer<Agraph_t>
-    var layout: Bool
+    var layout = false
     
-    init(text: String) {
-        graph = agmemread(text + "\0")
-        layout = false
+    init(graph: UnsafeMutablePointer<Agraph_t>) {
+        self.graph = graph
     }
-    deinit { // For Swift 6, how to get this to run on the MainActor??
+
+    private var _settings : [[String: String]]?
+    var settings: [[String: String]] {
+        get {
+            if let settings = _settings {
+                return settings
+            }
+            var settings: [[String: String]] = [[:], [:], [:]]
+            for kind in [AGRAPH, AGNODE, AGEDGE] { // assumes these are 0, 1, 2 ;)
+                var nextSymbol: UnsafeMutablePointer<Agsym_t>? = nil
+                while let symbol = agnxtattr(graph, Int32(kind), nextSymbol) {
+                    let name = String(cString: symbol.pointee.name)
+                    let value = String(cString: symbol.pointee.defval)
+                    settings[kind][name] = value
+                    nextSymbol = symbol
+                }
+            }
+            _settings = settings
+            return settings
+        }
+    }
+    
+    deinit {
         if layout {
             print("free layout")
             gvFreeLayout(Graph.graphContext, graph)
@@ -34,6 +55,7 @@ final class Graph: @unchecked Sendable {
         // PSinputscale = 72.0  // TODO: set as for -s CLI flag?
         gvLayout(Graph.graphContext, graph, "dot") // TODO: set as for -K CLI flag?
         layout = true
+
         var renderedData: UnsafeMutablePointer<CChar>?
         var renderedLength: size_t = 0
         let format = "pdf:quartz"
@@ -43,15 +65,7 @@ final class Graph: @unchecked Sendable {
     
     @MainActor
     func changeAttribute(kind: Int, name: String, value: String) -> Void {
-        var symbol = name.withCString { name in
-            return value.withCString { value in
-                return agattr(graph, Int32(kind), UnsafeMutablePointer(mutating: name), nil)
-            }
-        }
-        if let symbol = symbol {
-            print("Current value of \(String(cString: symbol.pointee.name))(\(symbol.pointee.kind)) is \"\(String(cString: symbol.pointee.defval))\"")
-        }
-        symbol = name.withCString { name in
+        let symbol = name.withCString { name in
             return value.withCString { value in
                 return agattr(graph, Int32(kind), UnsafeMutablePointer(mutating: name), UnsafeMutablePointer(mutating: value))
             }

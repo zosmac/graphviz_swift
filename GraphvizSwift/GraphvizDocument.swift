@@ -24,49 +24,25 @@ struct GraphvizDocument: FileDocument {
     var data: Data!
     var text: String!
     var graph: Graph!
-    var attributes: Attributes!
-    
+
     init() {
         name = nil
         data = nil
         text = nil
         graph = nil
-        attributes = nil
     }
     
     init(configuration: ReadConfiguration) throws {
         guard let name = configuration.file.filename,
               let data = configuration.file.regularFileContents,
-              let text = String(data: data, encoding: .utf8) else {
+              let text = String(data: data, encoding: .utf8),
+              let graph = agmemread(text + "\0") else {
             throw CocoaError(.fileReadUnknown)
         }
         self.name = name
         self.data = data
         self.text = text
-        self.graph = Graph(text: text)
-        attributes = Attributes()
-
-        // read document's graph/node/edge settings
-        var settings: [[String: String]] = [[:], [:], [:]]
-        for kind in [AGRAPH, AGNODE, AGEDGE] { // assumes these are 0, 1, 2 ;)
-            var nextSymbol: UnsafeMutablePointer<Agsym_t>?
-            while let symbol = agnxtattr(graph.graph, Int32(kind), nextSymbol) {
-                let name = String(cString: symbol.pointee.name)
-                let value = String(cString: symbol.pointee.defval)
-                Swift.print("\(name)(\(symbol.pointee.kind)): \"\(value)\"")
-                settings[kind][name] = value
-                nextSymbol = symbol
-            }
-        }
-        
-        // record settings in attributes
-        for kind in [AGRAPH, AGNODE, AGEDGE] {
-            for attribute in attributes.tables[kind] {
-                if let value = settings[kind][attribute.name] {
-                    attribute.value = value
-                }
-            }
-        }
+        self.graph = Graph(graph: graph)
         
         //        let bb = document.attributes.settings[AGRAPH]["bb"]
         //        print("size of graph is \(String(describing: bb))")

@@ -12,14 +12,19 @@ import PDFKit
 struct InspectorView: View {
     @Binding var inspector: String
     @Binding var document: GraphvizDocument
+    @Binding var attributes: Attributes
     @Binding var pdfView: PDFView
     @State var kind: Int = 0
 
     var body: some View {
         if inspector == "attributes" {
-            AttributesView(document: $document, pdfView: $pdfView, kind: $kind)
+            AttributesView(graph: $document.graph, attributes: $attributes, pdfView: $pdfView, kind: $kind)
         } else {
             TextEditor(text: $document.text)
+                .monospaced()
+                .onChange (of: document.text) {
+                    print("\(String(describing: document.text))")
+                }
         }
     }
 }

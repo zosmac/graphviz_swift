@@ -27,12 +27,13 @@ struct heading: Identifiable, Hashable {
 let headings: [heading] = [heading("􁁀 Graph", AGRAPH), heading("􀲞 Node", AGNODE), heading("􀫰 Edge", AGEDGE)]
 
 struct AttributesView: View {
-    @Binding var document: GraphvizDocument
+    @Binding var graph: Graph
+    @Binding var attributes: Attributes
     @Binding var pdfView: PDFView
     @Binding var kind: Int
-
-    @State private var row: Attribute.ID?
     
+    @State private var row: Attribute.ID?
+
     var body: some View {
         VStack {
             Picker("Kinds", selection: $kind) {
@@ -45,9 +46,9 @@ struct AttributesView: View {
             .padding(.top, 5.0)
             Spacer()
             VStack {
-                let attributes = document.attributes.tables[kind]
+                let table = attributes.tables[kind]
                 ScrollViewReader { proxy in
-                    Table(attributes, selection: $row) {
+                    Table(table, selection: $row) {
                         TableColumn("Attribute", value: \.name)
                         TableColumn("Value") { (attribute: Attribute) in
                             @Bindable var attribute = attribute
@@ -59,30 +60,30 @@ struct AttributesView: View {
                                 }
                                 .labelsHidden()
                                 .onChange(of: attribute.value) {
-                                    document.graph.changeAttribute(kind: kind, name: attribute.name, value: attribute.value)
-                                    pdfView.document = PDFDocument(data: document.graph.renderGraph())
+                                    graph.changeAttribute(kind: kind, name: attribute.name, value: attribute.value)
+                                    pdfView.document = PDFDocument(data: graph.renderGraph())
                                 }
                             } else {
                                 TextField(attribute.defaultValue ?? "", text: $attribute.value)
                                     .onSubmit {
-                                        document.graph.changeAttribute(kind: kind, name: attribute.name, value: attribute.value)
-                                        pdfView.document = PDFDocument(data: document.graph.renderGraph())
+                                        graph.changeAttribute(kind: kind, name: attribute.name, value: attribute.value)
+                                        pdfView.document = PDFDocument(data: graph.renderGraph())
                                     }
                             }
                         }
                     }
-                    .onChange(of: attributes) { // table kind changed
-                        if let index = attributes.firstIndex(where: { $0.id == row }) {
+                    .onChange(of: table) { // table kind changed
+                        if let index = table.firstIndex(where: { $0.id == row }) {
                             // row in this table kind previously selected, scroll to it
                             // (direct scroll using row itself doesn't work)
-                            proxy.scrollTo(attributes[index].id, anchor: .top)
-                        } else if let toprow = attributes.first {
+                            proxy.scrollTo(table[index].id, anchor: .top)
+                        } else if let toprow = table.first {
                             // scroll to top
                             proxy.scrollTo(toprow.id)
                         }
                     }
                 }
-                AttributesDocView(overview: document.attributes.overview, attributes: attributes, row: row)
+                AttributesDocView(overview: attributes.overview, attributes: table, row: row)
                     .frame(height: 200.0)
             }
         }
@@ -104,7 +105,7 @@ struct AttributesDocView: NSViewRepresentable {
         if let table = attributes,
            let row = row,
            let attribute = table.first(where: {$0.id == row}) {
-            doc = "<b>\(attribute.name)</b> Type: <b>\(attribute.type)</b><p>\(attribute.doc)"
+            doc = "<b>\(attribute.name)</b> Type: <b>\(attribute.simpleType)</b><p>\(attribute.doc)"
         }
         doc = "\(style)<p>\(doc)"
         nsView.loadHTMLString(doc, baseURL: URL(filePath: "http://www.graphviz.org/"))
