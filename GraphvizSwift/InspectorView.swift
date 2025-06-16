@@ -20,11 +20,7 @@ struct InspectorView: View {
         if inspector == "attributes" {
             AttributesView(graph: $document.graph, attributes: $attributes, pdfView: $pdfView, kind: $kind)
         } else {
-            TextEditor(text: $document.text)
-                .monospaced()
-                .onChange (of: document.text) {
-                    print("\(String(describing: document.text))")
-                }
+            EditorView(document: $document)
         }
     }
 }

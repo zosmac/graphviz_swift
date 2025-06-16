@@ -8,4 +8,3 @@
 #import "gvc.h"
 #import "stdlib.h"
 extern double PSinputscale;
-

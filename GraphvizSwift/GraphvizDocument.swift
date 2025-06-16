@@ -35,15 +35,14 @@ struct GraphvizDocument: FileDocument {
     init(configuration: ReadConfiguration) throws {
         guard let name = configuration.file.filename,
               let data = configuration.file.regularFileContents,
-              let text = String(data: data, encoding: .utf8),
-              let graph = agmemread(text + "\0") else {
+              let text = String(data: data, encoding: .utf8) else {
             throw CocoaError(.fileReadUnknown)
         }
         self.name = name
         self.data = data
         self.text = text
-        self.graph = Graph(graph: graph)
-        
+        self.graph = Graph(text: text)
+
         //        let bb = document.attributes.settings[AGRAPH]["bb"]
         //        print("size of graph is \(String(describing: bb))")
         //        let s = bb?.split(separator: " ")

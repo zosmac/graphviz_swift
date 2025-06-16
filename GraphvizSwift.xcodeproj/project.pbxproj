@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		5885F76B2DDA9DD200CA803D /* attributes.xml in Resources */ = {isa = PBXBuildFile; fileRef = 5885F76A2DDA9DD200CA803D /* attributes.xml */; };
+		58AA16362DFD956200C4345A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 58AA16282DFD956200C4345A /* Assets.xcassets */; };
+		58AA16372DFD956200C4345A /* GraphDot.icns in Resources */ = {isa = PBXBuildFile; fileRef = 58AA162C2DFD956200C4345A /* GraphDot.icns */; };
+		58AA16382DFD956200C4345A /* GraphGv.icns in Resources */ = {isa = PBXBuildFile; fileRef = 58AA162D2DFD956200C4345A /* GraphGv.icns */; };
+		58AA16392DFD956200C4345A /* Graphviz.icns in Resources */ = {isa = PBXBuildFile; fileRef = 58AA162F2DFD956200C4345A /* Graphviz.icns */; };
 		58E5A5CA2DD0200F00303648 /* libcdt.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58E5A5C92DD0200F00303648 /* libcdt.6.dylib */; };
 		58E5A5CE2DD0207F00303648 /* libcgraph.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58E5A5CD2DD0207F00303648 /* libcgraph.7.dylib */; };
 		58E5A5D12DD020BA00303648 /* libgvc.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58E5A5D02DD020BA00303648 /* libgvc.7.dylib */; };
@@ -32,6 +36,12 @@
 
 /* Begin PBXFileReference section */
 		5885F76A2DDA9DD200CA803D /* attributes.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = attributes.xml; path = /usr/local/graphviz/share/doc/graphviz/schema/attributes.xml; sourceTree = "<absolute>"; };
+		58AA16282DFD956200C4345A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		58AA162C2DFD956200C4345A /* GraphDot.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = GraphDot.icns; sourceTree = "<group>"; };
+		58AA162D2DFD956200C4345A /* GraphGv.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = GraphGv.icns; sourceTree = "<group>"; };
+		58AA162F2DFD956200C4345A /* Graphviz.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Graphviz.icns; sourceTree = "<group>"; };
+		58AA16302DFD956200C4345A /* Graphviz-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Graphviz-Bridging-Header.h"; sourceTree = "<group>"; };
+		58AA16342DFD956200C4345A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		58E5A58A2DCF89F000303648 /* GraphvziSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GraphvziSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		58E5A59B2DCF89F100303648 /* GraphvizSwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphvizSwiftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		58E5A5A52DCF89F100303648 /* GraphvizSwiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphvizSwiftUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -40,22 +50,9 @@
 		58E5A5D02DD020BA00303648 /* libgvc.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgvc.7.dylib; path = /usr/local/graphviz/lib/libgvc.7.dylib; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		58345E382DD2E54800E4050B /* Exceptions for "GraphvizSwift" folder in "GraphvizSwift" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 58E5A5892DCF89F000303648 /* GraphvizSwift */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		58E5A58C2DCF89F000303648 /* GraphvizSwift */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				58345E382DD2E54800E4050B /* Exceptions for "GraphvizSwift" folder in "GraphvizSwift" target */,
-			);
 			path = GraphvizSwift;
 			sourceTree = "<group>";
 		};
@@ -102,7 +99,13 @@
 		5885F76C2DDA9E1500CA803D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				58AA16282DFD956200C4345A /* Assets.xcassets */,
 				5885F76A2DDA9DD200CA803D /* attributes.xml */,
+				58AA162C2DFD956200C4345A /* GraphDot.icns */,
+				58AA162D2DFD956200C4345A /* GraphGv.icns */,
+				58AA162F2DFD956200C4345A /* Graphviz.icns */,
+				58AA16302DFD956200C4345A /* Graphviz-Bridging-Header.h */,
+				58AA16342DFD956200C4345A /* Info.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -259,6 +262,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58AA16362DFD956200C4345A /* Assets.xcassets in Resources */,
+				58AA16372DFD956200C4345A /* GraphDot.icns in Resources */,
+				58AA16382DFD956200C4345A /* GraphGv.icns in Resources */,
+				58AA16392DFD956200C4345A /* Graphviz.icns in Resources */,
 				5885F76B2DDA9DD200CA803D /* attributes.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -327,7 +334,7 @@
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = GraphvizSwift/Info.plist;
+				INFOPLIST_FILE = Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Graphviz;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.graphics-design";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -364,7 +371,7 @@
 				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = GraphvizSwift/Info.plist;
+				INFOPLIST_FILE = Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Graphviz;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.graphics-design";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -445,7 +452,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
-				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/$(PROJECT_NAME)/Graphviz-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/Resources/Graphviz-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
 			};
@@ -499,7 +506,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/$(PROJECT_NAME)/Graphviz-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/Resources/Graphviz-Bridging-Header.h";
 				SWIFT_PRECOMPILE_BRIDGING_HEADER = NO;
 			};
 			name = Release;
