@@ -7,11 +7,12 @@
 
 import SwiftUI
 import PDFKit
+import WebKit
 
 struct GraphvizView: View {
     @Binding var document: GraphvizDocument
     @State var attributes: Attributes
-    @State private var pdfView = PDFView()
+    
     @State private var inspectorPresented: Bool = false
     @State private var inspector = "attributes"
     
@@ -23,9 +24,9 @@ struct GraphvizView: View {
 //                .foregroundColor(.accentColor)
 //                .frame(height: 18)
 //                .padding([.top, .leading])
-            GraphView(document: $document, pdfView: $pdfView)
+            GraphView(document: $document)
                 .inspector(isPresented: $inspectorPresented) {
-                    InspectorView(inspector: $inspector, document: $document, attributes: $attributes, pdfView: $pdfView)
+                    InspectorView(inspector: $inspector, document: $document, attributes: $attributes)
                         .inspectorColumnWidth(min: 280, ideal: 280)
                 }
                 .toolbar(id: "maintoolbar") {
@@ -54,29 +55,31 @@ struct GraphvizView: View {
                     }
                     ToolbarItem(id: "in") {
                         Button("Zoom In", systemImage: "plus.magnifyingglass") {
-                            pdfView.zoomIn(self)
+                            document.graph.zoomIn()
                         }
                     }
                     ToolbarItem(id: "out") {
                         Button("Zoom out", systemImage: "minus.magnifyingglass") {
-                            pdfView.zoomOut(self)
+                            document.graph.zoomOut()
                         }
                     }
                     ToolbarItem(id: "actual") {
                         Button("Actual Size", systemImage: "1.magnifyingglass") {
-                            pdfView.scaleFactor = 1.0
+                            document.graph.zoomToActual()
                         }
                     }
                     .defaultCustomization(.hidden)
                     ToolbarItem(id: "fit") {
                         Button("Zoom to Fit", systemImage: "arrow.up.left.and.down.right.magnifyingglass") {
-                            pdfView.scaleFactor = pdfView.scaleFactorForSizeToFit
+                            document.graph.zoomToFit()
                         }
                     }
                     .defaultCustomization(.hidden)
                     ToolbarItem(id: "print") {
                         Button("Print", systemImage: "printer") {
-                            pdfView.print(with: NSPrintInfo(), autoRotate: true, pageScaling: .pageScaleDownToFit)
+                            if let pdfView = document.graph.nsView as? PDFView {
+                                pdfView.print(with: NSPrintInfo(), autoRotate: true, pageScaling: .pageScaleDownToFit)
+                            }
                         }
                     }
                     .defaultCustomization(.hidden)

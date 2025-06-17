@@ -29,7 +29,6 @@ let headings: [heading] = [heading("􁁀 Graph", AGRAPH), heading("􀲞 Node", A
 struct AttributesView: View {
     @Binding var graph: Graph
     @Binding var attributes: Attributes
-    @Binding var pdfView: PDFView
     @Binding var kind: Int
     
     @State private var row: Attribute.ID?
@@ -61,13 +60,13 @@ struct AttributesView: View {
                                 .labelsHidden()
                                 .onChange(of: attribute.value) {
                                     graph.changeAttribute(kind: kind, name: attribute.name, value: attribute.value)
-                                    pdfView.document = PDFDocument(data: graph.renderGraph())
+                                    graph.renderGraph()
                                 }
                             } else {
                                 TextField(attribute.defaultValue ?? "", text: $attribute.value)
                                     .onSubmit {
                                         graph.changeAttribute(kind: kind, name: attribute.name, value: attribute.value)
-                                        pdfView.document = PDFDocument(data: graph.renderGraph())
+                                        graph.renderGraph()
                                     }
                             }
                         }

@@ -19,12 +19,13 @@ extension UTType {
 
 struct GraphvizDocument: FileDocument {
     static var readableContentTypes: [UTType] { [.gv, .dot] }
-
+    static var writeableContentTypes: [UTType] { [.svg, .pdf, .gv] }
+    
     var name: String!
     var data: Data!
     var text: String!
     var graph: Graph!
-
+    
     init() {
         name = nil
         data = nil
@@ -41,16 +42,7 @@ struct GraphvizDocument: FileDocument {
         self.name = name
         self.data = data
         self.text = text
-        self.graph = Graph(text: text)
-
-        //        let bb = document.attributes.settings[AGRAPH]["bb"]
-        //        print("size of graph is \(String(describing: bb))")
-        //        let s = bb?.split(separator: " ")
-        //        let w = Float(s![2]) ?? 0
-        //        let h = Float(s![3]) ?? 0
-        //        document.width = CGFloat(w)
-        //        document.height = CGFloat(h)
-        //        print("width \(document.width) height \(document.height)")
+        self.graph = Graph(text: text, utType: .svg)
     }
     
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
@@ -58,23 +50,7 @@ struct GraphvizDocument: FileDocument {
               let data = text.data(using: .utf8) else {
             throw CocoaError(.fileWriteUnknown)
         }
+        print("writing file \(configuration.existingFile?.filename ?? "none") as \(configuration.contentType)")
         return .init(regularFileWithContents: data)
     }
-    
-    // in case this ever becomes a ReferenceFileDocument (a class)
-//    typealias Snapshot = String?
-//    func snapshot(contentType: UTType) throws -> Snapshot {
-//        guard let text = text else {
-//            throw CocoaError(.fileWriteUnknown)
-//        }
-//        return text
-//    }
-//
-//    func fileWrapper(snapshot: Snapshot, configuration: WriteConfiguration) throws -> FileWrapper {
-//        guard let snapshot = snapshot,
-//              let data = snapshot.data(using: .utf8) else {
-//            throw CocoaError(.fileWriteUnknown)
-//        }
-//        return .init(regularFileWithContents: data)
-//    }
 }
