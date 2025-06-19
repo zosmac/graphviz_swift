@@ -27,10 +27,8 @@ struct heading: Identifiable, Hashable {
 let headings: [heading] = [heading("􁁀 Graph", AGRAPH), heading("􀲞 Node", AGNODE), heading("􀫰 Edge", AGEDGE)]
 
 struct AttributesView: View {
-    @Binding var graph: Graph
-    @Binding var attributes: Attributes
+    @Binding var document: GraphvizDocument
     @Binding var kind: Int
-    
     @State private var row: Attribute.ID?
 
     var body: some View {
@@ -45,7 +43,7 @@ struct AttributesView: View {
             .padding(.top, 5.0)
             Spacer()
             VStack {
-                let table = attributes.tables[kind]
+                let table = document.graph.attributes.tables[kind]
                 ScrollViewReader { proxy in
                     Table(table, selection: $row) {
                         TableColumn("Attribute", value: \.name)
@@ -59,14 +57,12 @@ struct AttributesView: View {
                                 }
                                 .labelsHidden()
                                 .onChange(of: attribute.value) {
-                                    graph.changeAttribute(kind: kind, name: attribute.name, value: attribute.value)
-                                    graph.renderGraph()
+                                    document.graph.changeAttribute(kind: kind, name: attribute.name, value: attribute.value)
                                 }
                             } else {
                                 TextField(attribute.defaultValue ?? "", text: $attribute.value)
                                     .onSubmit {
-                                        graph.changeAttribute(kind: kind, name: attribute.name, value: attribute.value)
-                                        graph.renderGraph()
+                                        document.graph.changeAttribute(kind: kind, name: attribute.name, value: attribute.value)
                                     }
                             }
                         }
@@ -82,7 +78,7 @@ struct AttributesView: View {
                         }
                     }
                 }
-                AttributesDocView(overview: attributes.overview, attributes: table, row: row)
+                AttributesDocView(overview: document.graph.attributes.overview, attributes: table, row: row)
                     .frame(height: 200.0)
             }
         }

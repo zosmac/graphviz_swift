@@ -12,12 +12,11 @@ import PDFKit
 struct InspectorView: View {
     @Binding var inspector: String
     @Binding var document: GraphvizDocument
-    @Binding var attributes: Attributes
     @State var kind: Int = 0
 
     var body: some View {
         if inspector == "attributes" {
-            AttributesView(graph: $document.graph, attributes: $attributes, kind: $kind)
+            AttributesView(document: $document, kind: $kind)
         } else {
             EditorView(document: $document)
         }
