@@ -93,7 +93,7 @@ struct AttributesDocView: NSViewRepresentable {
     func makeNSView(context: Context) -> WKWebView {
         return WKWebView()
     }
-    
+
     func updateNSView(_ nsView: WKWebView, context: Context) {
         let style = "<style>\np {font-family:sans-serif;font-size:10pt}\n</style>\n"
         var doc = overview

@@ -9,9 +9,15 @@ import SwiftUI
 
 struct EditorView: View {
     @Binding var document: GraphvizDocument
-    
+
     var body: some View {
-        TextEditor(text: $document.text)
-            .monospaced()
+        @Bindable var graph = document.graph
+        VStack {
+            TextField("No errors", text: $graph.message)
+                .foregroundStyle(graph.message.isEmpty ? .green : .red)
+                .padding(.top)
+            TextEditor(text: $document.text)
+                .monospaced()
+        }
     }
 }

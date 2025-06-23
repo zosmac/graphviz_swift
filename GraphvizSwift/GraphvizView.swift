@@ -15,13 +15,6 @@ struct GraphvizView: View {
     @State private var inspector = "attributes"
     
     var body: some View {
-        //        if document.graph.graph != nil {
-        //        VStack {
-        //            Text(document.graph.message ?? "A beautiful view of your graph below!")
-        //                .font(.title)
-        //                .foregroundColor(.accentColor)
-        //                .frame(height: 18)
-        //                .padding([.top, .leading])
         GraphView(document: $document)
             .inspector(isPresented: $inspectorPresented) {
                 InspectorView(inspector: $inspector, document: $document)
@@ -83,22 +76,5 @@ struct GraphvizView: View {
                 }
                 .defaultCustomization(.hidden)
             }
-        //        }
-        //        } else {
-        //            VStack {
-        //                HStack {
-        //                    Text(document.graph.message ?? "Error parsing content of file")
-        //                        .font(.title)
-        //                        .foregroundColor(.accentColor)
-        //                        .frame(height: 18)
-        //                        .padding([.top, .leading])
-        //                    Spacer()
-        //                }
-        //                Divider()
-        //                TextEditor(text: $document.text)
-        //                    .font(.system(size: 14))
-        //                    .fontDesign(.monospaced)
-        //            }
-        //        }
     }
 }

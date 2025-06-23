@@ -14,13 +14,11 @@ struct GraphView: NSViewRepresentable {
     @Binding var document: GraphvizDocument
     
     func makeNSView(context: Context) -> NSView {
-        print("makeNSView called")
         draw()
         return document.graph.nsView
     }
 
     func updateNSView(_ nsView: NSView, context: Context) {
-        print("updateNSView called")
         if document.graph.updated {
             DispatchQueue.main.async {
                 print("NSView updated!")

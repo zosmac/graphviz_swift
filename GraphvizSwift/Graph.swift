@@ -11,15 +11,35 @@ import PDFKit
 import WebKit
 
 @Observable final class Graph: @unchecked Sendable {
-    nonisolated(unsafe) static let graphContext = gvContext()
+    @MainActor
+    static let graphContext = gvContext()
     
-    private var graph: UnsafeMutablePointer<Agraph_t>?
-    private let utType: UTType
+    @MainActor
+    static func closeGraph(graph: UnsafeMutablePointer<Agraph_t>?, layout: Bool) {
+        if graph != nil {
+            if layout {
+                print("free layout")
+                gvFreeLayout(Graph.graphContext, graph)
+            }
+            print("close graph")
+            agclose(graph)
+        }
+    }
+    
+    private var graph: UnsafeMutablePointer<Agraph_t>? = nil
+    private var utType = UTType.pdf
     private var layout = false
-    var updated: Bool = false
+    private let beginMarker = LogReader.beginMarker.data(using: .utf8)!
+    private let endMarker: Data!
+    private let stderr: FileHandle!
+    private var observer: NSObjectProtocol?
+    var name: String = ""
+    var updated = false
+    var message = ""
     
-    private var _nsView: NSView?
-    @MainActor var nsView: NSView {
+    private var _nsView: NSView? = nil
+    @MainActor
+    var nsView: NSView {
         get {
             if _nsView == nil {
                 switch utType {
@@ -77,51 +97,57 @@ import WebKit
         }
     }
     
-    init(utType: UTType = UTType.pdf) {
-        self.utType = utType
-        self.graph = nil
-        self._nsView = nil
+    init() {
+        self.endMarker = nil
+        self.stderr = nil
     }
-    
-    init(text: String, utType: UTType = UTType.pdf) {
+
+    init(name: String, text: String, utType: UTType = UTType.pdf) {
+        self.name = name
         self.utType = utType
+        self.endMarker = "\(LogReader.endMarker)\(name)\n".data(using: .utf8)!
+        //        let stderr = FileHandle.standardError
+        self.stderr = FileHandle(fileDescriptor: LogReader.fileNumber)
+        self.observer = NotificationCenter.default.addObserver(
+            forName: NSNotification.Name("GraphvizSwift.LogReader.\(name)\n"),
+            object: nil, queue: nil) {
+                self.message = $0.object as! String
+            }
         self.graph = createGraph(text)
     }
-    
-    deinit {
-        closeGraph()
-    }
-    
+
     func createGraph(_ text: String) -> UnsafeMutablePointer<Agraph_t>? {
-        let stderr = FileHandle.standardError
-        try? stderr.write(contentsOf: "============\n".data(using: .utf8)!)
+        updated = true
+        layout = false
+        message = ""
+
+        try? stderr.write(contentsOf: beginMarker)
         let graph = agmemread(text + "\0")
-        try? stderr.write(contentsOf: "============\n".data(using: .utf8)!)
+        try? stderr.write(contentsOf: endMarker)
+
         if graph == nil {
             _settings = [[:], [:], [:]]
         } else {
             _settings = nil
             _attributes = nil
-            updated = true
         }
         return graph
     }
-    
-    func closeGraph() {
-        if graph != nil {
-            if layout {
-                print("free layout")
-                gvFreeLayout(Graph.graphContext, graph)
-            }
-            layout = false
-            print("close graph")
-            agclose(graph)
+
+    deinit {
+        let graph = self.graph
+        let layout = self.layout
+        if let observer = self.observer {
+            NotificationCenter.default.removeObserver(observer)
         }
-        graph = nil
+        DispatchQueue.main.async {
+            Graph.closeGraph(graph: graph, layout: layout)
+        }
     }
     
+    @MainActor
     func updateGraph(text: String) {
-        closeGraph()
+        Graph.closeGraph(graph: graph, layout: layout)
         graph = createGraph(text)
     }
     
@@ -142,18 +168,16 @@ import WebKit
     
     @MainActor
     func renderGraph() -> Data {
+        updated = false
         guard let graph = graph else {
             return Data()
         }
         
-        updated = false
         if layout {
             gvFreeLayout(Graph.graphContext, graph);
         }
-        // PSinputscale = 72.0  // TODO: set as for -s CLI flag?
-        gvLayout(Graph.graphContext, graph, "dot") // TODO: set as for -K CLI flag?
+
         layout = true
-        
         var renderedData: UnsafeMutablePointer<CChar>?
         var renderedLength: size_t = 0
         var format = "pdf:quartz"
@@ -165,9 +189,13 @@ import WebKit
         default:
             break
         }
-        
+
+        try? stderr.write(contentsOf: beginMarker)
+        // PSinputscale = 72.0  // TODO: set as for -s CLI flag?
+        gvLayout(Graph.graphContext, graph, "dot") // TODO: set as for -K CLI flag?
         gvRenderData(Graph.graphContext, graph, format, &renderedData, &renderedLength)
-        
+        try? stderr.write(contentsOf: endMarker)
+
         // futile attempts to get svg data to autoscale like pdf
         //            if let svgView = nsView as? WKWebView {
         //                let string = String(decoding: data, as: Unicode.UTF8.self)
