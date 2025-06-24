@@ -26,13 +26,10 @@ import WebKit
         }
     }
     
-    private var graph: UnsafeMutablePointer<Agraph_t>? = nil
+    var graph: UnsafeMutablePointer<Agraph_t>? = nil
     private var utType = UTType.pdf
-    private var layout = false
-    private let beginMarker = LogReader.beginMarker.data(using: .utf8)!
-    private let endMarker: Data!
-    private let stderr: FileHandle!
-    private var observer: NSObjectProtocol?
+    var layout = false
+    var observer: NSObjectProtocol!
     var name: String = ""
     var updated = false
     var message = ""
@@ -97,22 +94,12 @@ import WebKit
         }
     }
     
-    init() {
-        self.endMarker = nil
-        self.stderr = nil
-    }
+    init() {}
 
     init(name: String, text: String, utType: UTType = UTType.pdf) {
         self.name = name
         self.utType = utType
-        self.endMarker = "\(LogReader.endMarker)\(name)\n".data(using: .utf8)!
-        //        let stderr = FileHandle.standardError
-        self.stderr = FileHandle(fileDescriptor: LogReader.fileNumber)
-        self.observer = NotificationCenter.default.addObserver(
-            forName: NSNotification.Name("GraphvizSwift.LogReader.\(name)\n"),
-            object: nil, queue: nil) {
-                self.message = $0.object as! String
-            }
+        self.observer = LogReader.shared.observe(name: name, graph: self)
         self.graph = createGraph(text)
     }
 
@@ -121,9 +108,9 @@ import WebKit
         layout = false
         message = ""
 
-        try? stderr.write(contentsOf: beginMarker)
+        LogReader.shared.writeBeginMarker()
         let graph = agmemread(text + "\0")
-        try? stderr.write(contentsOf: endMarker)
+        LogReader.shared.writeEndMarker(name)
 
         if graph == nil {
             _settings = [[:], [:], [:]]
@@ -132,17 +119,6 @@ import WebKit
             _attributes = nil
         }
         return graph
-    }
-
-    deinit {
-        let graph = self.graph
-        let layout = self.layout
-        if let observer = self.observer {
-            NotificationCenter.default.removeObserver(observer)
-        }
-        DispatchQueue.main.async {
-            Graph.closeGraph(graph: graph, layout: layout)
-        }
     }
     
     @MainActor
@@ -190,11 +166,11 @@ import WebKit
             break
         }
 
-        try? stderr.write(contentsOf: beginMarker)
+        LogReader.shared.writeBeginMarker()
         // PSinputscale = 72.0  // TODO: set as for -s CLI flag?
         gvLayout(Graph.graphContext, graph, "dot") // TODO: set as for -K CLI flag?
         gvRenderData(Graph.graphContext, graph, format, &renderedData, &renderedLength)
-        try? stderr.write(contentsOf: endMarker)
+        LogReader.shared.writeEndMarker(name)
 
         // futile attempts to get svg data to autoscale like pdf
         //            if let svgView = nsView as? WKWebView {

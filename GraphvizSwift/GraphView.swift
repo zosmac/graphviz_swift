@@ -12,6 +12,18 @@ import WebKit
 
 struct GraphView: NSViewRepresentable {
     @Binding var document: GraphvizDocument
+    var url: URL!
+
+    class Coordinator: NSObject {
+        var parent: GraphView
+        init(_ parent: GraphView) {
+            self.parent = parent
+        }
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
     
     func makeNSView(context: Context) -> NSView {
         draw()
@@ -26,21 +38,31 @@ struct GraphView: NSViewRepresentable {
             }
         }
     }
-    
+
     func draw() {
         let data = document.graph.renderGraph()
         switch document.graph.nsView {
-        case let nsView as PDFView:
-            nsView.document = PDFDocument(data: data)
-        case let nsView as WKWebView:
-            nsView.load(
+        case let pdfView as PDFView:
+            pdfView.document = PDFDocument(data: data)
+        case let svgView as WKWebView:
+            svgView.load(
                 data,
                 mimeType: UTType.svg.preferredMIMEType!,
                 characterEncodingName: "UTF-8",
-                baseURL: URL(filePath: "http://www.graphviz.org/")
+                baseURL: url.deletingLastPathComponent()
             )
         default:
             break
+        }
+    }
+
+    static func dismantleNSView(_ nsView: NSView, coordinator: Coordinator) {
+        if let graph = coordinator.parent.document.graph.graph {
+            let layout = coordinator.parent.document.graph.layout
+            Graph.closeGraph(graph: graph, layout: layout)
+        }
+        if let observer = coordinator.parent.document.graph.observer {
+            LogReader.shared.ignore(observer: observer)
         }
     }
 }

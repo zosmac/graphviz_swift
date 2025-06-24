@@ -11,11 +11,13 @@ import WebKit
 
 struct GraphvizView: View {
     @Binding var document: GraphvizDocument
+    var url: URL!
+
     @State private var inspectorPresented: Bool = false
     @State private var inspector = "attributes"
     
     var body: some View {
-        GraphView(document: $document)
+        GraphView(document: $document, url: url)
             .inspector(isPresented: $inspectorPresented) {
                 InspectorView(inspector: $inspector, document: $document)
                     .inspectorColumnWidth(min: 280, ideal: 280)
