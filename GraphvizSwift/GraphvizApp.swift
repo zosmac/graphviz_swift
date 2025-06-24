@@ -15,8 +15,6 @@ enum GraphvizError: Int {
 
 @main
 struct GraphvizApp: App {
-    let logReader = LogReader.shared
-
     var body: some Scene {
         DocumentGroup(newDocument: GraphvizDocument()) { file in
             GraphvizView(document: file.$document, url: file.fileURL)

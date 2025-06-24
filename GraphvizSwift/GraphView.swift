@@ -62,7 +62,7 @@ struct GraphView: NSViewRepresentable {
             Graph.closeGraph(graph: graph, layout: layout)
         }
         if let observer = coordinator.parent.document.graph.observer {
-            LogReader.shared.ignore(observer: observer)
+            LogInterceptor.shared.ignore(observer: observer)
         }
     }
 }

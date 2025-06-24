@@ -95,23 +95,23 @@ import WebKit
     }
     
     init() {}
-
+    
     init(name: String, text: String, utType: UTType = UTType.pdf) {
         self.name = name
         self.utType = utType
-        self.observer = LogReader.shared.observe(name: name, graph: self)
+        self.observer = LogInterceptor.shared.observe(name: name, graph: self)
         self.graph = createGraph(text)
     }
-
+    
     func createGraph(_ text: String) -> UnsafeMutablePointer<Agraph_t>? {
         updated = true
         layout = false
         message = ""
-
-        LogReader.shared.writeBeginMarker()
+        
+        LogInterceptor.shared.writeBeginMarker()
         let graph = agmemread(text + "\0")
-        LogReader.shared.writeEndMarker(name)
-
+        LogInterceptor.shared.writeEndMarker(name)
+        
         if graph == nil {
             _settings = [[:], [:], [:]]
         } else {
@@ -129,16 +129,13 @@ import WebKit
     
     @MainActor
     func changeAttribute(kind: Int, name: String, value: String) -> Void {
-        if graph != nil {
-            let symbol = name.withCString { name in
+        if graph != nil &&
+            (name.withCString { name in
                 return value.withCString { value in
                     return agattr(graph, Int32(kind), UnsafeMutablePointer(mutating: name), UnsafeMutablePointer(mutating: value))
                 }
-            }
-            if let symbol = symbol {
-                updated = true
-                print("Updated value of \(String(cString: symbol.pointee.name))(\(symbol.pointee.kind)) is \"\(String(cString: symbol.pointee.defval))\"")
-            }
+            }) != nil {
+            updated = true
         }
     }
     
@@ -152,7 +149,7 @@ import WebKit
         if layout {
             gvFreeLayout(Graph.graphContext, graph);
         }
-
+        
         layout = true
         var renderedData: UnsafeMutablePointer<CChar>?
         var renderedLength: size_t = 0
@@ -165,13 +162,13 @@ import WebKit
         default:
             break
         }
-
-        LogReader.shared.writeBeginMarker()
+        
+        LogInterceptor.shared.writeBeginMarker()
         // PSinputscale = 72.0  // TODO: set as for -s CLI flag?
         gvLayout(Graph.graphContext, graph, "dot") // TODO: set as for -K CLI flag?
         gvRenderData(Graph.graphContext, graph, format, &renderedData, &renderedLength)
-        LogReader.shared.writeEndMarker(name)
-
+        LogInterceptor.shared.writeEndMarker(name)
+        
         // futile attempts to get svg data to autoscale like pdf
         //            if let svgView = nsView as? WKWebView {
         //                let string = String(decoding: data, as: Unicode.UTF8.self)

@@ -13,8 +13,8 @@ struct EditorView: View {
     var body: some View {
         @Bindable var graph = document.graph
         VStack {
-            TextField("No errors", text: $graph.message)
-                .foregroundStyle(graph.message.isEmpty ? .green : .red)
+            TextField("No errors", text: $graph.message, axis: .vertical)
+                .foregroundStyle(.red)
                 .padding(.top)
             TextEditor(text: $document.text)
                 .monospaced()

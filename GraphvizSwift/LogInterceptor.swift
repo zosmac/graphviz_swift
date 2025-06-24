@@ -1,5 +1,5 @@
 //
-//  LogReader.swift
+//  LogInterceptor.swift
 //  GraphvizSwift
 //
 //  Created by Keefe Hayes on 6/16/25.
@@ -27,7 +27,7 @@ actor LogInterceptor {
     
     nonisolated func observe(name: String, graph: Graph) -> NSObjectProtocol {
         return NotificationCenter.default.addObserver(
-            forName: NSNotification.Name("GraphvizSwift.LogReader.\(name)\n"),
+            forName: NSNotification.Name("GraphvizSwift.LogInterceptor.\(name)\n"),
             object: nil, queue: nil) {
                 graph.message = $0.object as! String
             }
@@ -41,7 +41,7 @@ actor LogInterceptor {
     private init() {
         self.duperrHandle = FileHandle(fileDescriptor: duperr)
         pipe.fileHandleForReading.readabilityHandler = { handle in
-            var graphvizMessage = false
+            var interceptMessage = false
             var message: Data!
             while true {
                 let data = handle.availableData
@@ -50,19 +50,21 @@ actor LogInterceptor {
                 }
                 if data == self.beginMarker {
                     try? self.duperrHandle.write(contentsOf: data) // debug
-                    graphvizMessage = true
+                    interceptMessage = true
                     message = nil
                 } else if data.prefix(self.endMarker.count) == self.endMarker {
                     try? self.duperrHandle.write(contentsOf: data) // debug
-                    graphvizMessage = false
-                    if let name = String(data: data.suffix(data.count-self.endMarker.count), encoding: .utf8), // will include newline
-                       let message = message {
-                        print("name is <\(name)> error message is \(String(data: message, encoding: .utf8) ?? "(null)")")
-                        try? self.duperrHandle.write(contentsOf: message)
-                        NotificationCenter.default.post(name: Notification.Name("GraphvizSwift.LogReader.\(name)"), object: String(data: message, encoding: .utf8))
+                    interceptMessage = false
+                    let name = String(data: data.suffix(data.count-self.endMarker.count), encoding: .utf8) // will include newline
+                    if name != nil && message != nil {
+                        print("name is <\(name!)> error message is \(message!)")
+                        var string = String(data: message, encoding: .utf8)!
+                        string = string.replacingOccurrences(of: "\n", with: " ")+"\n"
+                        try? self.duperrHandle.write(contentsOf: string.data(using: .utf8) ?? Data())
+                        NotificationCenter.default.post(name: Notification.Name("GraphvizSwift.LogInterceptor.\(name!)"), object: string)
+                        message = nil
                     }
-                    message = nil
-                } else if graphvizMessage {
+                } else if interceptMessage {
                     try? self.duperrHandle.write(contentsOf: data) // debug
                     if message == nil {
                         message = data
