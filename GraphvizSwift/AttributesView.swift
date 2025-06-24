@@ -29,6 +29,7 @@ let headings: [heading] = [heading("􁁀 Graph", AGRAPH), heading("􀲞 Node", A
 struct AttributesView: View {
     @Binding var document: GraphvizDocument
     @Binding var kind: Int
+    @Binding var webView: WKWebView
     @State private var row: Attribute.ID?
 
     var body: some View {
@@ -78,31 +79,33 @@ struct AttributesView: View {
                         }
                     }
                 }
-                AttributesDocView(overview: document.graph.attributes.overview, attributes: table, row: row)
+                AttributeDocView(webView: $webView, attributes: table, row: $row)
                     .frame(height: 200.0)
             }
         }
     }
 }
 
-struct AttributesDocView: NSViewRepresentable {
-    var overview: String
+struct AttributeDocView: NSViewRepresentable {
+    let style = "<style>\np {font-family:sans-serif;font-size:10pt}\n</style>\n"
+    @Binding var webView: WKWebView
     var attributes: [Attribute]?
-    var row: Attribute.ID?
-    
+    @Binding var row: Attribute.ID?
+
     func makeNSView(context: Context) -> WKWebView {
-        return WKWebView()
+        return webView
     }
 
-    func updateNSView(_ nsView: WKWebView, context: Context) {
-        let style = "<style>\np {font-family:sans-serif;font-size:10pt}\n</style>\n"
-        var doc = overview
+    func updateNSView(_ webView: WKWebView, context: Context) {
+        var doc: String
         if let table = attributes,
            let row = row,
            let attribute = table.first(where: {$0.id == row}) {
             doc = "<b>\(attribute.name)</b> Type: <b>\(attribute.simpleType)</b><p>\(attribute.doc)"
+        } else {
+            doc = ParsedAttributes.parsedAttributes.overview
         }
         doc = "\(style)<p>\(doc)"
-        nsView.loadHTMLString(doc, baseURL: URL(filePath: "http://www.graphviz.org/"))
+        webView.loadHTMLString(doc, baseURL: nil)
     }
 }

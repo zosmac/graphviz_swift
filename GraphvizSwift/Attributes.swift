@@ -43,9 +43,9 @@ final class ParsedAttribute: Comparable {
         lhs.name == rhs.name
     }
     
-    var name: String
-    var kind: Int!
-    var value = "" // value if set in document, and changed by user in UI
+    let name: String
+    let kind: Int!
+    let value: String! // value if set in document, and changed by user in UI
     var defaultValue: String? // from attributes.xml
     var simpleType = ""
     var options: [String]? // option values of enumerated type, true/false for boolean
@@ -62,8 +62,10 @@ final class ParsedAttribute: Comparable {
     
     init(name: String) {
         self.name = name
+        self.kind = 0
+        self.value = ""
     }
-    
+
     // an Observable must be a class, and an attribute may apply to graphs, nodes
     // and/or edges, so for each attribute must be distinct across kinds
     init(copy: ParsedAttribute, kind: Int, _ defaultValue: String? = nil) { // Copyable
@@ -73,36 +75,39 @@ final class ParsedAttribute: Comparable {
         self.options = copy.options
         self.listItemType = copy.listItemType
         self.doc = copy.doc
-        
+
         // for TextField, use defaultValue for field label
         self.defaultValue = copy.defaultValue
         if defaultValue != "" {
             self.defaultValue = defaultValue // graph/node/edge default, if defined, overrides
         }
         // for Picker, set value to identify selection, seeding with defaultValue if defined
+        var value = ""
         if self.options != nil {
             if let defaultValue = self.defaultValue {
-                self.value = defaultValue
+                value = defaultValue
+            } else {
+                self.options?.append("")
             }
         }
+        self.value = value
     }
 }
 
 @Observable final class Attributes {
-    let overview: String
     let tables: [[Attribute]] // AGRAPH, AGNODE, AGEDGE
-    
+
     init(graph: Graph) {
         let attributes = ParsedAttributes.parsedAttributes
-        self.overview = attributes.overview
         var tables = Array(repeating: [Attribute](), count: 3)
         // merge document's attribute settings into attributes
         for kind in [AGRAPH, AGNODE, AGEDGE] {
             for attribute in attributes.tables[kind] {
-                tables[kind].append(Attribute(attribute: attribute))
+                let attribute = Attribute(attribute: attribute)
                 if let value = graph.settings[kind][attribute.name] {
-                    tables[kind].last!.value = value
+                    attribute.value = value
                 }
+                tables[kind].append(attribute)
             }
         }
         self.tables = tables
@@ -112,10 +117,10 @@ final class ParsedAttribute: Comparable {
 final class ParsedAttributes {
     nonisolated(unsafe) static let parsedAttributes = ParsedAttributes()
 
-    var overview = "" // overview doc from attributes.xml
-    var tables: [[ParsedAttribute]] = [[], [], []] // AGRAPH, AGNODE, AGEDGE
-    
-    init() {
+    let overview: String // overview doc from attributes.xml
+    let tables: [[ParsedAttribute]] // AGRAPH, AGNODE, AGEDGE
+
+    private init() {
         let url = Bundle.main.url(forResource: "attributes", withExtension: "xml")
         let data = try! Data(contentsOf: url!)
         let parser = XMLParser(data: data)
@@ -126,6 +131,7 @@ final class ParsedAttributes {
         }
 
         self.overview = delegate.overview
+        var tables = Array(repeating: [ParsedAttribute](), count: 3)
         for attribute in delegate.attributes {
             if let options = delegate.simpleTypes[attribute.simpleType] {
                 if options.count == 1 {
@@ -150,6 +156,7 @@ final class ParsedAttributes {
             tables[AGNODE].sort() // node attributes
             tables[AGEDGE].sort() // edge attributes
         }
+        self.tables = tables
     }
 }
 
@@ -248,7 +255,7 @@ class AttributesParser: NSObject, XMLParserDelegate {
             break
         }
     }
-    
+
     // conclude handling for element
     func parser(
         _ parser: XMLParser,
@@ -271,7 +278,7 @@ class AttributesParser: NSObject, XMLParserDelegate {
             break
         }
     }
-    
+
     // foundCharacters are part of the documentation
     func parser(
         _ parser: XMLParser,
