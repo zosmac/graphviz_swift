@@ -5,29 +5,37 @@
 //  Created by Keefe Hayes on 5/10/25.
 //
 
+import UniformTypeIdentifiers
 import SwiftUI
 import PDFKit
 import WebKit
 
 struct GraphvizView: View {
     @Binding var document: GraphvizDocument
+    @Bindable var graph: Graph
     var url: URL!
-
-    @State private var inspectorPresented: Bool = false
-    @State private var inspector = "attributes"
+    var utType: UTType
     
+    @State private var inspectorPresented: Bool = true
+    @State private var inspector = "attributes"
+    @State private var zoomScale = 1.0
+
+//    @State private var inspector = "editor"
+
     var body: some View {
-        GraphView(document: $document, url: url)
+        @Bindable var graph = graph
+        //        switch utType {
+        //        case .svg:
+        //            GraphAsSVG(document: $document, url: url)
+        //        default: // .pdf
+        GraphAsPDF(document: $document, graph: $graph, url: url)
+            .scaleEffect(zoomScale)
             .inspector(isPresented: $inspectorPresented) {
-                InspectorView(inspector: $inspector, document: $document)
+                InspectorView(inspector: $inspector, document: $document, graph: graph)
                     .inspectorColumnWidth(min: 280, ideal: 280)
             }
-            .onChange(of: document.text) {
-                print("onChange on GraphView", document.text)
-                document.graph.updateGraph(text: document.text)
-            }
-            .toolbar(id: "maintoolbar") {
-                ToolbarItem(id: "attributes") {
+            .toolbar {
+                ToolbarItemGroup {
                     Button("Attributes", systemImage: "info.circle") {
                         if inspector == "attributes" {
                             inspectorPresented.toggle()
@@ -36,47 +44,24 @@ struct GraphvizView: View {
                         }
                         inspector = "attributes"
                     }
-                }
-                ToolbarItem(id: "file") {
                     Button("Content", systemImage: "text.document") {
-                        if inspector == "file" {
+                        if inspector == "editor" {
                             inspectorPresented.toggle()
                         } else {
                             inspectorPresented = true
                         }
-                        inspector = "file"
+                        inspector = "editor"
                     }
-                }
-                ToolbarItem(id: "in") {
-                    Button("Zoom In", systemImage: "plus.magnifyingglass") {
-                        document.graph.zoomIn()
+                    Button("Zoom in", systemImage: "plus.magnifyingglass") {
+                        zoomScale *= 2.0.squareRoot()
                     }
-                }
-                ToolbarItem(id: "out") {
                     Button("Zoom out", systemImage: "minus.magnifyingglass") {
-                        document.graph.zoomOut()
+                        zoomScale /= 2.0.squareRoot()
+                    }
+                    Button("Zoom to fit", systemImage: "arrow.up.left.and.down.right.magnifyingglass") {
+                        zoomScale = 1.0
                     }
                 }
-                ToolbarItem(id: "actual") {
-                    Button("Actual Size", systemImage: "1.magnifyingglass") {
-                        document.graph.zoomToActual()
-                    }
-                }
-                .defaultCustomization(.hidden)
-                ToolbarItem(id: "fit") {
-                    Button("Zoom to Fit", systemImage: "arrow.up.left.and.down.right.magnifyingglass") {
-                        document.graph.zoomToFit()
-                    }
-                }
-                .defaultCustomization(.hidden)
-                ToolbarItem(id: "print") {
-                    Button("Print", systemImage: "printer") {
-                        if let pdfView = document.graph.nsView as? PDFView {
-                            pdfView.print(with: NSPrintInfo(), autoRotate: true, pageScaling: .pageScaleDownToFit)
-                        }
-                    }
-                }
-                .defaultCustomization(.hidden)
             }
     }
 }

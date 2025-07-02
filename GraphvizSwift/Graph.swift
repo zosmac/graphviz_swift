@@ -10,13 +10,21 @@ import SwiftUI
 import PDFKit
 import WebKit
 
-@Observable final class Graph: @unchecked Sendable {
-    @MainActor
-    static let graphContext = gvContext()
-    
-    @MainActor
+@Observable final class Graph {
     static func closeGraph(graph: UnsafeMutablePointer<Agraph_t>?, layout: Bool) {
         if graph != nil {
+            if layout {
+                print("free layout")
+                gvFreeLayout(Graph.graphContext, graph)
+            }
+            print("close and free graph")
+            agclose(graph)
+        }
+    }
+    
+    deinit {
+        print("deinit requested \(self)")
+        if let graph = graph {
             if layout {
                 print("free layout")
                 gvFreeLayout(Graph.graphContext, graph)
@@ -24,49 +32,33 @@ import WebKit
             print("close graph")
             agclose(graph)
         }
+        if let observer = observer {
+            LogInterceptor.shared.ignore(observer: observer)
+        }
     }
-    
-    var graph: UnsafeMutablePointer<Agraph_t>? = nil
-    private var utType = UTType.pdf
-    var layout = false
+
+
+    nonisolated(unsafe) static let graphContext = gvContext()
+    var graph: UnsafeMutablePointer<Agraph_t>?
+
+    var name: String
+    var text: String
+    var settings: [[String: String]]!
+    var attributes: Attributes!
     var observer: NSObjectProtocol!
-    var name: String = ""
+
+    var layout = false
     var updated = false
     var message = ""
     
-    private var _nsView: NSView? = nil
-    @MainActor
-    var nsView: NSView {
-        get {
-            if _nsView == nil {
-                switch utType {
-                case UTType.pdf:
-                    let pdfView = PDFView()
-                    pdfView.autoScales = true
-                    _nsView = pdfView
-                case UTType.svg:
-                    // futile attempts to get svg data to autoscale like pdf
-                    //                    let configuration = WKWebViewConfiguration()
-                    //                    configuration.defaultWebpagePreferences = WKWebpagePreferences()
-                    //                    configuration.defaultWebpagePreferences.preferredContentMode = .desktop
-                    //                    let svgView = WKWebView(frame: .zero, configuration: configuration)
-                    //                    svgView.autoresizesSubviews = true
-                    //                    _nsView = svgView
-                    _nsView = WKWebView()
-                default:
-                    _nsView = NSView()
-                }
-            }
-            return _nsView!
-        }
-    }
-    
-    private var _settings: [[String: String]]?
-    var settings: [[String: String]] {
-        get {
-            if let settings = _settings {
-                return settings
-            }
+    init(document: Binding<GraphvizDocument>) {
+        self.name = document.wrappedValue.name
+        self.text = document.wrappedValue.text
+        self.graph = createGraph(text)
+        self.observer = LogInterceptor.shared.observe(name: document.wrappedValue.name, graph: self)
+        print("CREATE OBSERVER \(observer.description) for graph \(name)")
+        self.settings = {
+            guard let graph = self.graph else { return [[:], [:], [:]] }
             var settings: [[String: String]] = [[:], [:], [:]]
             for kind in [AGRAPH, AGNODE, AGEDGE] { // assumes these are 0, 1, 2 ;)
                 var nextSymbol: UnsafeMutablePointer<Agsym_t>? = nil
@@ -78,56 +70,30 @@ import WebKit
                     nextSymbol = symbol
                 }
             }
-            _settings = settings
             return settings
-        }
+        }()
+        self.attributes = Attributes(graph: self)
     }
     
-    private var _attributes: Attributes?
-    var attributes: Attributes {
-        get {
-            if let attributes = _attributes {
-                return attributes
+    func createGraph(_ text: String) -> UnsafeMutablePointer<Agraph_t>! {
+        if graph != nil {
+            if layout {
+                print("free layout")
+                gvFreeLayout(Graph.graphContext, graph)
             }
-            _attributes = Attributes(graph: self)
-            return _attributes!
+            print("close and free graph")
+            agclose(graph)
         }
-    }
-    
-    init() {}
-    
-    init(name: String, text: String, utType: UTType = UTType.pdf) {
-        self.name = name
-        self.utType = utType
-        self.observer = LogInterceptor.shared.observe(name: name, graph: self)
-        self.graph = createGraph(text)
-    }
-    
-    func createGraph(_ text: String) -> UnsafeMutablePointer<Agraph_t>? {
+
         updated = true
         layout = false
         message = ""
         
         LogInterceptor.shared.writeBeginMarker()
-        let graph = agmemread(text + "\0")
-        LogInterceptor.shared.writeEndMarker(name)
-        
-        if graph == nil {
-            _settings = [[:], [:], [:]]
-        } else {
-            _settings = nil
-            _attributes = nil
-        }
-        return graph
+        defer { LogInterceptor.shared.writeEndMarker(name) }
+        return agmemread(text + "\0")
     }
     
-    @MainActor
-    func updateGraph(text: String) {
-        Graph.closeGraph(graph: graph, layout: layout)
-        graph = createGraph(text)
-    }
-    
-    @MainActor
     func changeAttribute(kind: Int, name: String, value: String) -> Void {
         if graph != nil &&
             (name.withCString { name in
@@ -139,8 +105,7 @@ import WebKit
         }
     }
     
-    @MainActor
-    func renderGraph() -> Data {
+    func renderGraph(utType: UTType) -> Data {
         updated = false
         guard let graph = graph else {
             return Data()
@@ -188,57 +153,10 @@ import WebKit
         
         return Data(bytes:renderedData!, count:renderedLength)
     }
-    
-    @MainActor
-    func zoomIn() {
-        switch nsView {
-        case let nsView as PDFView:
-            nsView.zoomIn(self)
-        case let nsView as WKWebView:
-            nsView.pageZoom *= 1.1
-        default:
-            break
-        }
-    }
-    
-    @MainActor
-    func zoomOut() {
-        switch nsView {
-        case let nsView as PDFView:
-            nsView.zoomOut(self)
-        case let nsView as WKWebView:
-            nsView.pageZoom /= 1.1
-        default:
-            break
-        }
-    }
-    
-    @MainActor
-    func zoomToActual() {
-        switch nsView {
-        case let nsView as PDFView:
-            nsView.scaleFactor = 1.0
-        case let nsView as WKWebView:
-            nsView.pageZoom = 1.0
-        default:
-            break
-        }
-    }
-    
-    @MainActor
-    func zoomToFit() {
-        switch nsView {
-        case let nsView as PDFView:
-            nsView.scaleFactor = nsView.scaleFactorForSizeToFit
-        case let nsView as WKWebView:
-            // a futile attempt at guessing the scale to fit svg into frame
-            //            var width = view frame width / svg view width
-            //            var height = view frame height / svg view height
-            //            var scale = min(width, height) // but this is too big!
-            //            svgView.pageZoom = scale
-            nsView.pageZoom = 2.0 // just guess for now, cannot find a way to scale svg to view size
-        default:
-            break
-        }
-    }
 }
+//
+//extension Graph {
+//    func zoomIn() -> Void {
+//        (view as! PDFView).zoomIn(nil)
+//    }
+//}

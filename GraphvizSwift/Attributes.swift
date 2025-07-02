@@ -65,7 +65,7 @@ final class ParsedAttribute: Comparable {
         self.kind = 0
         self.value = ""
     }
-
+    
     // an Observable must be a class, and an attribute may apply to graphs, nodes
     // and/or edges, so for each attribute must be distinct across kinds
     init(copy: ParsedAttribute, kind: Int, _ defaultValue: String? = nil) { // Copyable
@@ -75,7 +75,7 @@ final class ParsedAttribute: Comparable {
         self.options = copy.options
         self.listItemType = copy.listItemType
         self.doc = copy.doc
-
+        
         // for TextField, use defaultValue for field label
         self.defaultValue = copy.defaultValue
         if defaultValue != "" {
@@ -96,7 +96,7 @@ final class ParsedAttribute: Comparable {
 
 @Observable final class Attributes {
     let tables: [[Attribute]] // AGRAPH, AGNODE, AGEDGE
-
+    
     init(graph: Graph) {
         let attributes = ParsedAttributes.parsedAttributes
         var tables = Array(repeating: [Attribute](), count: 3)
@@ -116,10 +116,10 @@ final class ParsedAttribute: Comparable {
 
 final class ParsedAttributes {
     nonisolated(unsafe) static let parsedAttributes = ParsedAttributes()
-
+    
     let overview: String // overview doc from attributes.xml
     let tables: [[ParsedAttribute]] // AGRAPH, AGNODE, AGEDGE
-
+    
     private init() {
         let url = Bundle.main.url(forResource: "attributes", withExtension: "xml")
         let data = try! Data(contentsOf: url!)
@@ -129,9 +129,12 @@ final class ParsedAttributes {
         if !parser.parse() {
             print("parse failed \(parser.parserError?.localizedDescription ?? "")")
         }
-
-        self.overview = delegate.overview
+        
+        var overview = delegate.overview
+        overview = overview.replacingOccurrences(of: "[\t\r]", with: "", options: [.regularExpression])
+        
         var tables = Array(repeating: [ParsedAttribute](), count: 3)
+        delegate.attributes.sort()
         for attribute in delegate.attributes {
             if let options = delegate.simpleTypes[attribute.simpleType] {
                 if options.count == 1 {
@@ -140,8 +143,17 @@ final class ParsedAttributes {
                     attribute.options = options
                 }
             }
+            
+            print("attribute: \(attribute.name) \(attribute.simpleType)")
+            
+            // TODO: Get this doc to provide functioning relative links
+            //       The <html:a> tags are using rel= attributes for links.
+            attribute.doc = attribute.doc.replacingOccurrences(of: "[\t\r]", with: "", options: [.regularExpression])
+            overview += " " + attribute.doc
+            
             if let doc = delegate.simpleTypeDoc[attribute.simpleType] {
-                attribute.doc += "<p><b>\(attribute.simpleType)</b><p>\(doc)"
+                attribute.doc += doc
+                overview += doc
             }
             if attribute.graph != nil {
                 tables[AGRAPH].append(ParsedAttribute(copy: attribute, kind: AGRAPH, attribute.graph!))
@@ -152,10 +164,11 @@ final class ParsedAttributes {
             if attribute.edge != nil {
                 tables[AGEDGE].append(ParsedAttribute(copy: attribute, kind: AGEDGE, attribute.edge!))
             }
-            tables[AGRAPH].sort() // graph attributes
-            tables[AGNODE].sort() // node attributes
-            tables[AGEDGE].sort() // edge attributes
+            //            tables[AGRAPH].sort() // graph attributes
+            //            tables[AGNODE].sort() // node attributes
+            //            tables[AGEDGE].sort() // edge attributes
         }
+        self.overview = overview
         self.tables = tables
     }
 }
@@ -173,7 +186,26 @@ class AttributesParser: NSObject, XMLParserDelegate {
     var complexType: String?
     var annotation: String?
     var documentation = false
-
+    var anchorTagTail = ">"
+    
+    func addHTML(stringer: () -> String) {
+        let string = stringer()
+        if annotation != nil {
+            overview += string
+        } else if let name = attribute {
+            if attributes[indices[name]!].doc.isEmpty {
+                let type = attributes[indices[name]!].simpleType
+                attributes[indices[name]!].doc = "<a name=\"\(name)\"></a><p><b>\(name)</b> Type: <a href=\"#\(type)\"><b>\(type)</b></a></p>"
+            }
+            attributes[indices[name]!].doc += string
+        } else if let name = simpleType {
+            if simpleTypeDoc[name] == nil {
+                simpleTypeDoc[name] = "<a name=\"\(name)\"></a><p><b>\(name)</b></p>"
+            }
+            simpleTypeDoc[name]! += string
+        }
+    }
+    
     // complete processing of document
     func parserDidEndDocument(
         _ parser: XMLParser
@@ -204,6 +236,10 @@ class AttributesParser: NSObject, XMLParserDelegate {
                 attributes[index].simpleType = attributeDict["type"] ?? attributes[index].simpleType
                 attributes[index].defaultValue = attributeDict["default"]
             } else if let name = attributeDict["ref"] {
+                // defaultValue meanings:
+                // 1. if nil, this attribute is not for this KIND
+                // 2. if among a complexType(i.e. a KIND), set default to non-nil
+                // 3. if not blank, the defaultValue FOR THIS KIND overrides any default set by <attribute name=> tag
                 let index = indices[name]!
                 let defaultValue = attributeDict["default"] ?? ""
                 switch complexType! {
@@ -247,15 +283,29 @@ class AttributesParser: NSObject, XMLParserDelegate {
         case "xsd:annotation":
             if let id = attributeDict["id"] {
                 annotation = id // started special annotation section
-                overview += "<p><b>\(id)</b><p>"
+                overview += "<a name=\"\(id)\"><p><b>\(id)</b></p></a>"
             }
             //        case "xsd:restriction":
             //        case "xsd:schema":
         default:
-            break
+            if elementName.hasPrefix("html:") {
+                addHTML {
+                    anchorTagTail = ">"
+                    var string = "<" + elementName.suffix(elementName.count - 5)
+                    for (key, value) in attributeDict {
+                        if key == "rel" {
+                            anchorTagTail = " href=\"#"
+                        } else {
+                            string += " \(key)=\"\(value)\""
+                        }
+                    }
+                    string += anchorTagTail
+                    return string
+                }
+            }
         }
     }
-
+    
     // conclude handling for element
     func parser(
         _ parser: XMLParser,
@@ -275,28 +325,24 @@ class AttributesParser: NSObject, XMLParserDelegate {
         case "xsd:annotation":
             annotation = nil
         default:
-            break
+            if elementName.hasPrefix("html:") {
+                addHTML {
+                    "</" + elementName.suffix(elementName.count - 5) + ">"
+                }
+            }
         }
     }
-
+    
     // foundCharacters are part of the documentation
     func parser(
         _ parser: XMLParser,
         foundCharacters string: String
     ) {
-        if annotation != nil { // id'd annotations provide attributes overview
-            overview += string
+        if anchorTagTail != ">" {
+            addHTML { string + "\">" + string}
+        } else {
+            addHTML { string }
         }
-        if documentation {
-            if let name = attribute {
-                attributes[indices[name]!].doc += string
-            } else if let name = simpleType {
-                if simpleTypeDoc[name] == nil {
-                    simpleTypeDoc[name] = string
-                } else {
-                    simpleTypeDoc[name]! += string
-                }
-            }
-        }
+        anchorTagTail = ">"
     }
 }

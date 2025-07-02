@@ -9,9 +9,9 @@ import SwiftUI
 
 struct EditorView: View {
     @Binding var document: GraphvizDocument
+    @Bindable var graph: Graph
 
     var body: some View {
-        @Bindable var graph = document.graph
         VStack {
             TextField("No errors", text: $graph.message, axis: .vertical)
                 .foregroundStyle(.red)

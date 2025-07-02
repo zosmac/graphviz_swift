@@ -29,12 +29,13 @@ actor LogInterceptor {
         return NotificationCenter.default.addObserver(
             forName: NSNotification.Name("GraphvizSwift.LogInterceptor.\(name)\n"),
             object: nil, queue: nil) {
-                graph.message = $0.object as! String
+                print("message update \($0.object ?? "")")
+//                graph.message = $0.object as! String
             }
     }
     
     nonisolated func ignore(observer: NSObjectProtocol) {
-        print("REMOVE OBSERVER")
+        print("REMOVE OBSERVER \(observer.description)")
         NotificationCenter.default.removeObserver(observer)
     }
 
@@ -57,7 +58,7 @@ actor LogInterceptor {
                     interceptMessage = false
                     let name = String(data: data.suffix(data.count-self.endMarker.count), encoding: .utf8) // will include newline
                     if name != nil && message != nil {
-                        print("name is <\(name!)> error message is \(message!)")
+                        print("name is |\(name!)|\twith error message \(message!)")
                         var string = String(data: message, encoding: .utf8)!
                         string = string.replacingOccurrences(of: "\n", with: " ")+"\n"
                         try? self.duperrHandle.write(contentsOf: string.data(using: .utf8) ?? Data())

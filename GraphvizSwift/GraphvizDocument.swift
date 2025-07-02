@@ -21,8 +21,8 @@ struct GraphvizDocument: FileDocument {
     static var readableContentTypes: [UTType] { [.gv, .dot] }
     static var writeableContentTypes: [UTType] { [.pdf, .svg, .gv] }
     
+    var name = ""
     var text = ""
-    var graph: Graph!
 
     init() {}
     
@@ -32,8 +32,8 @@ struct GraphvizDocument: FileDocument {
               let text = String(data: data, encoding: .utf8) else {
             throw CocoaError(.fileReadUnknown)
         }
+        self.name = name
         self.text = text
-        self.graph = Graph(name: name, text: text)
     }
     
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {

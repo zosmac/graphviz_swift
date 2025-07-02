@@ -28,10 +28,11 @@ let headings: [heading] = [heading("􁁀 Graph", AGRAPH), heading("􀲞 Node", A
 
 struct AttributesView: View {
     @Binding var document: GraphvizDocument
+    @Bindable var graph: Graph
     @Binding var kind: Int
     @Binding var webView: WKWebView
     @State private var row: Attribute.ID?
-
+    
     var body: some View {
         VStack {
             Picker("Kinds", selection: $kind) {
@@ -44,7 +45,7 @@ struct AttributesView: View {
             .padding(.top, 5.0)
             Spacer()
             VStack {
-                let table = document.graph.attributes.tables[kind]
+                let table = graph.attributes.tables[kind]
                 ScrollViewReader { proxy in
                     Table(table, selection: $row) {
                         TableColumn("Attribute", value: \.name)
@@ -58,12 +59,12 @@ struct AttributesView: View {
                                 }
                                 .labelsHidden()
                                 .onChange(of: attribute.value) {
-                                    document.graph.changeAttribute(kind: kind, name: attribute.name, value: attribute.value)
+                                    graph.changeAttribute(kind: kind, name: attribute.name, value: attribute.value)
                                 }
                             } else {
                                 TextField(attribute.defaultValue ?? "", text: $attribute.value)
                                     .onSubmit {
-                                        document.graph.changeAttribute(kind: kind, name: attribute.name, value: attribute.value)
+                                        graph.changeAttribute(kind: kind, name: attribute.name, value: attribute.value)
                                     }
                             }
                         }
@@ -79,33 +80,39 @@ struct AttributesView: View {
                         }
                     }
                 }
-                AttributeDocView(webView: $webView, attributes: table, row: $row)
+                AttributeDocView(attributes: table, row: $row)
                     .frame(height: 200.0)
             }
         }
     }
 }
 
+@MainActor
 struct AttributeDocView: NSViewRepresentable {
     let style = "<style>\np {font-family:sans-serif;font-size:10pt}\n</style>\n"
-    @Binding var webView: WKWebView
     var attributes: [Attribute]?
     @Binding var row: Attribute.ID?
-
+    
     func makeNSView(context: Context) -> WKWebView {
-        return webView
+        let webView = WKWebView()
+        webView.allowsLinkPreview = true
+        return WKWebView()
     }
-
+    
     func updateNSView(_ webView: WKWebView, context: Context) {
         var doc: String
         if let table = attributes,
            let row = row,
            let attribute = table.first(where: {$0.id == row}) {
-            doc = "<b>\(attribute.name)</b> Type: <b>\(attribute.simpleType)</b><p>\(attribute.doc)"
+            doc = attribute.doc
         } else {
             doc = ParsedAttributes.parsedAttributes.overview
         }
-        doc = "\(style)<p>\(doc)"
-        webView.loadHTMLString(doc, baseURL: nil)
+        doc = "\(style)<p>\(doc)</p>"
+        print(doc)
+        webView.loadHTMLString(doc, baseURL: URL(string: ""))
+    }
+    
+    static func dismantleNSView(_ webView: WKWebView, coordinator: Coordinator) {
     }
 }
