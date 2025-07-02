@@ -30,7 +30,7 @@ actor LogInterceptor {
             forName: NSNotification.Name("GraphvizSwift.LogInterceptor.\(name)\n"),
             object: nil, queue: nil) {
                 print("message update \($0.object ?? "")")
-//                graph.message = $0.object as! String
+                graph.message = $0.object as! String
             }
     }
     

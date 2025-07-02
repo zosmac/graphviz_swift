@@ -97,6 +97,7 @@ final class ParsedAttribute: Comparable {
 @Observable final class Attributes {
     let tables: [[Attribute]] // AGRAPH, AGNODE, AGEDGE
     
+    @MainActor
     init(graph: Graph) {
         let attributes = ParsedAttributes.parsedAttributes
         var tables = Array(repeating: [Attribute](), count: 3)
@@ -115,7 +116,7 @@ final class ParsedAttribute: Comparable {
 }
 
 final class ParsedAttributes {
-    nonisolated(unsafe) static let parsedAttributes = ParsedAttributes()
+    @MainActor static let parsedAttributes = ParsedAttributes()
     
     let overview: String // overview doc from attributes.xml
     let tables: [[ParsedAttribute]] // AGRAPH, AGNODE, AGEDGE
@@ -146,8 +147,6 @@ final class ParsedAttributes {
             
             print("attribute: \(attribute.name) \(attribute.simpleType)")
             
-            // TODO: Get this doc to provide functioning relative links
-            //       The <html:a> tags are using rel= attributes for links.
             attribute.doc = attribute.doc.replacingOccurrences(of: "[\t\r]", with: "", options: [.regularExpression])
             overview += " " + attribute.doc
             

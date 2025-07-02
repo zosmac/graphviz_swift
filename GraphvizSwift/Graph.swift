@@ -37,7 +37,6 @@ import WebKit
         }
     }
 
-
     nonisolated(unsafe) static let graphContext = gvContext()
     var graph: UnsafeMutablePointer<Agraph_t>?
 
@@ -51,7 +50,7 @@ import WebKit
     var updated = false
     var message = ""
     
-    init(document: Binding<GraphvizDocument>) {
+    @MainActor init(document: Binding<GraphvizDocument>) {
         self.name = document.wrappedValue.name
         self.text = document.wrappedValue.text
         self.graph = createGraph(text)

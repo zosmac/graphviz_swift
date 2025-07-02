@@ -31,6 +31,9 @@ struct AttributesView: View {
     @Bindable var graph: Graph
     @Binding var kind: Int
     @Binding var webView: WKWebView
+    
+    // TODO: is there a way to map row to an href in the overview doc, and scroll there?
+    
     @State private var row: Attribute.ID?
     
     var body: some View {
