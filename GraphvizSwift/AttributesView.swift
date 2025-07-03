@@ -30,12 +30,8 @@ struct AttributesView: View {
     @Binding var document: GraphvizDocument
     @Bindable var graph: Graph
     @Binding var kind: Int
-    @Binding var webView: WKWebView
-    
-    // TODO: is there a way to map row to an href in the overview doc, and scroll there?
-    
-    @State private var row: Attribute.ID?
-    
+    @State var row: Attribute.ID?
+
     var body: some View {
         VStack {
             Picker("Kinds", selection: $kind) {
@@ -72,7 +68,7 @@ struct AttributesView: View {
                             }
                         }
                     }
-                    .onChange(of: table) { // table kind changed
+                    .onChange(of: kind) { // table kind changed
                         if let index = table.firstIndex(where: { $0.id == row }) {
                             // row in this table kind previously selected, scroll to it
                             // (direct scroll using row itself doesn't work)
@@ -83,39 +79,9 @@ struct AttributesView: View {
                         }
                     }
                 }
-                AttributeDocView(attributes: table, row: $row)
+                AttributesDocView(graph: $graph, kind: $kind, row: $row)
                     .frame(height: 200.0)
             }
         }
-    }
-}
-
-@MainActor
-struct AttributeDocView: NSViewRepresentable {
-    let style = "<style>\np {font-family:sans-serif;font-size:10pt}\n</style>\n"
-    var attributes: [Attribute]?
-    @Binding var row: Attribute.ID?
-    
-    func makeNSView(context: Context) -> WKWebView {
-        let webView = WKWebView()
-        webView.allowsLinkPreview = true
-        return WKWebView()
-    }
-    
-    func updateNSView(_ webView: WKWebView, context: Context) {
-        var doc: String
-        if let table = attributes,
-           let row = row,
-           let attribute = table.first(where: {$0.id == row}) {
-            doc = attribute.doc
-        } else {
-            doc = ParsedAttributes.parsedAttributes.overview
-        }
-        doc = "\(style)<p>\(doc)</p>"
-        print(doc)
-        webView.loadHTMLString(doc, baseURL: URL(string: ""))
-    }
-    
-    static func dismantleNSView(_ webView: WKWebView, coordinator: Coordinator) {
     }
 }

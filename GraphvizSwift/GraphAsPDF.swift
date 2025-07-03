@@ -43,17 +43,17 @@ struct GraphAsPDF: NSViewControllerRepresentable {
         return coordinator
     }
     
-    func makeNSViewController(context: Context) -> GraphAsPDF.Coordinator {
+    func makeNSViewController(context: Context) -> Coordinator {
         let nsView = context.coordinator.view as! PDFView
         nsView.autoScales = true
         draw(graph: graph, nsView: nsView)
         return context.coordinator
     }
 
-    func updateNSViewController(_ nsViewController: GraphAsPDF.Coordinator, context: Context) {
+    func updateNSViewController(_ nsViewController: Coordinator, context: Context) {
         if graph.updated {
-            print("NSView updated!")
-            let nsView = context.coordinator.view as! PDFView
+            print("PDF View of graph updated!")
+            let nsView = nsViewController.view as! PDFView
             draw(graph: graph, nsView: nsView)
         }
     }

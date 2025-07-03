@@ -14,11 +14,10 @@ struct InspectorView: View {
     @Binding var document: GraphvizDocument
     @Bindable var graph: Graph
     @State var kind: Int = AGRAPH
-    @State var webView = WKWebView()
 
     var body: some View {
         if inspector == "attributes" {
-            AttributesView(document: $document, graph: graph, kind: $kind, webView: $webView)
+            AttributesView(document: $document, graph: graph, kind: $kind)
         } else {
             EditorView(document: $document, graph: graph)
         }

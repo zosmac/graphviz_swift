@@ -18,9 +18,9 @@ struct GraphvizView: View {
     
     @State private var inspectorPresented: Bool = true
     @State private var inspector = "attributes"
+//    @State private var inspector = "editor"
     @State private var zoomScale = 1.0
 
-//    @State private var inspector = "editor"
 
     var body: some View {
         @Bindable var graph = graph
