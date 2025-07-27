@@ -62,4 +62,8 @@ struct GraphAsPDF: NSViewControllerRepresentable {
         let data = graph.renderGraph(utType: .pdf)
         nsView.document = PDFDocument(data: data)
     }
+    
+    func dismantleNSViewController(_ nsViewController: Coordinator, coordinator: Coordinator) {
+        Graph.closeGraph(graph: graph.graph, layout: graph.layout)
+    }
 }

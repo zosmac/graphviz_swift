@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleIdentifier</key>
+	<string>com.att.graphviz.swift</string>
+	<key>CFBundleIconFile</key>
+	<string>Graphviz</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -33,8 +37,6 @@
 			</array>
 		</dict>
 	</array>
-	<key>CFBundleIconFile</key>
-	<string>Graphviz</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>

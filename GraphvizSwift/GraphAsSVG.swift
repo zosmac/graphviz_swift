@@ -61,7 +61,7 @@ struct GraphAsSVG: NSViewRepresentable {
             data,
             mimeType: UTType.svg.preferredMIMEType!,
             characterEncodingName: "UTF-8",
-            baseURL: url.deletingLastPathComponent()
+            baseURL: URL(filePath: "")
         )
     }
     
