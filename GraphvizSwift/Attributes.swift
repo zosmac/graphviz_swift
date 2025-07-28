@@ -12,7 +12,7 @@ import AppKit
     static func == (lhs: Attribute, rhs: Attribute) -> Bool { // Equatable
         lhs.name == rhs.name
     }
-    let id = UUID()
+    let id: UUID
     let name: String
     let kind: Int
     var value: String
@@ -23,6 +23,7 @@ import AppKit
     let doc: String
     
     init(attribute: ParsedAttribute) {
+        self.id = attribute.id
         self.name = attribute.name
         self.kind = attribute.kind
         self.value = attribute.value
@@ -43,6 +44,7 @@ final class ParsedAttribute: Comparable {
         lhs.name == rhs.name
     }
     
+    let id = UUID()
     let name: String
     let kind: Int!
     let value: String! // value if set in document, and changed by user in UI
@@ -99,7 +101,7 @@ final class ParsedAttribute: Comparable {
     
     @MainActor
     init(graph: Graph) {
-        let attributes = ParsedAttributes.parsedAttributes
+        let attributes = ParsedAttributes.shared
         var tables = Array(repeating: [Attribute](), count: 3)
         // merge document's attribute settings into attributes
         for kind in [AGRAPH, AGNODE, AGEDGE] {
@@ -116,7 +118,7 @@ final class ParsedAttribute: Comparable {
 }
 
 final class ParsedAttributes {
-    @MainActor static let parsedAttributes = ParsedAttributes()
+    @MainActor static let shared = ParsedAttributes()
     
     let overview: String // overview doc from attributes.xml
     let tables: [[ParsedAttribute]] // AGRAPH, AGNODE, AGEDGE

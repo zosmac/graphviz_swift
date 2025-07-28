@@ -79,8 +79,8 @@ struct AttributesView: View {
                         }
                     }
                 }
-                AttributesDocView(graph: $graph, kind: $kind, row: $row)
-                    .frame(height: 200.0)
+                AttributesDocView(graph: graph, kind: $kind, row: $row)
+                    .frame(height: 250.0)
             }
         }
     }

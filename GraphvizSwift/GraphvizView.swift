@@ -13,22 +13,15 @@ import WebKit
 struct GraphvizView: View {
     @Binding var document: GraphvizDocument
     @Bindable var graph: Graph
-    var url: URL!
     var utType: UTType
     
-    @State private var inspectorPresented: Bool = true
-    @State private var inspector = "attributes"
-//    @State private var inspector = "editor"
+    @State private var inspectorPresented: Bool = false
+    @State private var inspector = ""
     @State private var zoomScale = 1.0
-
 
     var body: some View {
         @Bindable var graph = graph
-        //        switch utType {
-        //        case .svg:
-        //            GraphAsSVG(document: $document, url: url)
-        //        default: // .pdf
-        GraphAsPDF(document: $document, graph: $graph, url: url)
+        GraphByType(graph: graph, utType: utType)
             .scaleEffect(zoomScale)
             .inspector(isPresented: $inspectorPresented) {
                 InspectorView(inspector: $inspector, document: $document, graph: graph)

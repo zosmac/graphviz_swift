@@ -11,37 +11,13 @@ import PDFKit
 import WebKit
 
 @Observable final class Graph {
-    static func closeGraph(graph: UnsafeMutablePointer<Agraph_t>?, layout: Bool) {
-        if graph != nil {
-            if layout {
-                print("free layout")
-                gvFreeLayout(Graph.graphContext, graph)
-            }
-            print("close and free graph")
-            agclose(graph)
-        }
-    }
-    
-    deinit {
-        print("deinit requested \(self)")
-        if let graph = graph {
-            if layout {
-                print("free layout")
-                gvFreeLayout(Graph.graphContext, graph)
-            }
-            print("close graph")
-            agclose(graph)
-        }
-        if let observer = observer {
-            LogInterceptor.shared.ignore(observer: observer)
-        }
-    }
-
     nonisolated(unsafe) static let graphContext = gvContext()
-    var graph: UnsafeMutablePointer<Agraph_t>?
+    let style = "<style>\np {font-family:sans-serif;font-size:10pt}\n</style>\n"
+    let docView: WKWebView
+    let name: String
+    let text: String
 
-    var name: String
-    var text: String
+    var graph: UnsafeMutablePointer<Agraph_t>?
     var settings: [[String: String]]!
     var attributes: Attributes!
     var observer: NSObjectProtocol!
@@ -51,6 +27,9 @@ import WebKit
     var message = ""
     
     @MainActor init(document: Binding<GraphvizDocument>) {
+        let docView = WKWebView()
+        docView.loadHTMLString("\(style)<p>\(ParsedAttributes.shared.overview)</p>", baseURL: URL(filePath: ""))
+        self.docView = docView
         self.name = document.wrappedValue.name
         self.text = document.wrappedValue.text
         self.graph = createGraph(text)
@@ -73,7 +52,14 @@ import WebKit
         }()
         self.attributes = Attributes(graph: self)
     }
-    
+
+    // For completeness. This actually only gets called if the NSViewRepresentable
+    // using this graph calls dismantleNSView to run closeGraph.
+    deinit {
+        print("deinit requested \(self)")
+        closeGraph()
+    }
+
     func createGraph(_ text: String) -> UnsafeMutablePointer<Agraph_t>! {
         if graph != nil {
             if layout {
@@ -93,6 +79,22 @@ import WebKit
         return agmemread(text + "\0")
     }
     
+    func closeGraph() {
+        if let graph = graph {
+            if layout {
+                print("free layout")
+                gvFreeLayout(Graph.graphContext, graph)
+            }
+            print("close and free graph")
+            agclose(graph)
+        }
+        graph = nil
+        if let observer = observer {
+            LogInterceptor.shared.ignore(observer: observer)
+        }
+        observer = nil
+    }
+    
     func changeAttribute(kind: Int, name: String, value: String) -> Void {
         if graph != nil &&
             (name.withCString { name in
@@ -104,10 +106,11 @@ import WebKit
         }
     }
     
-    func renderGraph(utType: UTType) -> Data {
+    @MainActor
+    func renderGraph(nsView: NSView) -> Void {
         updated = false
         guard let graph = graph else {
-            return Data()
+            return
         }
         
         if layout {
@@ -117,14 +120,15 @@ import WebKit
         layout = true
         var renderedData: UnsafeMutablePointer<CChar>?
         var renderedLength: size_t = 0
-        var format = "pdf:quartz"
-        switch utType {
-        case UTType.svg:
+        
+        var format: String
+        switch nsView {
+        case nsView as WKWebView:
             format = "svg"
-        case UTType.pdf:
-            break
+        case nsView as PDFView:
+            format = "pdf:quartz"
         default:
-            break
+            return
         }
         
         LogInterceptor.shared.writeBeginMarker()
@@ -150,7 +154,21 @@ import WebKit
         //                let data = string3.data(using: .utf8)!
         //            }
         
-        return Data(bytes:renderedData!, count:renderedLength)
+        let data = Data(bytes:renderedData!, count:renderedLength)
+        switch nsView {
+        case let nsView as WKWebView:
+            nsView.load(
+                data,
+                mimeType: UTType.svg.preferredMIMEType!,
+                characterEncodingName: "UTF-8",
+                baseURL: URL(filePath: "")
+            )
+        case let nsView as PDFView:
+            nsView.document = PDFDocument(data: data)
+        default:
+            break
+        }
+
     }
 }
 //

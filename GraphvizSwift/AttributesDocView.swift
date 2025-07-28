@@ -10,25 +10,23 @@ import WebKit
 
 @MainActor
 struct AttributesDocView: NSViewControllerRepresentable {
-    @Observable class Coordinator: NSViewController, WKUIDelegate {
-        let style = "<style>\np {font-family:sans-serif;font-size:10pt}\n</style>\n"
-        var webView: WKWebView!
-        
-        init() {
+    @Bindable var graph: Graph
+    @Binding var kind: Int
+    @Binding var row: Attribute.ID?
+
+    final class Coordinator: NSViewController { // }, WKUIDelegate {
+        init(_ docView: WKWebView) {
+            print("init web view")
             super.init(nibName: nil, bundle: nil)
+            self.view = docView
         }
 
         override func loadView() {
-            webView = WKWebView()
-            webView.uiDelegate = self
-//            self.webView(webView, didFinish navigation: webView.navigationDelegate?.webView(webView, didStartProvisionalNavigation: webView.backForwardList.currentItem!) ?? .init())
-            view = webView
+            super.loadView()
         }
 
         override func viewDidLoad() {
             super.viewDidLoad()
-            print("load web view")
-            webView.loadHTMLString("\(style)<p>\(ParsedAttributes.parsedAttributes.overview)</p>", baseURL: URL(filePath: ""))
         }
 
         @available(*, unavailable)
@@ -47,29 +45,24 @@ struct AttributesDocView: NSViewControllerRepresentable {
         }
     }
 
-    @Bindable var graph: Graph
-    @Binding var kind: Int
-    @Binding var row: Attribute.ID?
-    @Bindable var coordinator: Coordinator
-
-    init(graph: Bindable<Graph>, kind: Binding<Int>, row: Binding<Attribute.ID?>) {
-        _graph = graph
-        _kind = kind
-        _row = row
-        coordinator = Coordinator()
-    }
-
     func makeCoordinator() -> Coordinator {
-        return coordinator
+        return Coordinator(graph.docView)
     }
 
-    func makeNSViewController(context: Context) -> Coordinator {
-        return context.coordinator
+    func makeNSViewController(context: Context) -> NSViewController {
+        let nsViewController = context.coordinator
+//        var nsView: NSView
+////        let view = WKWebView()
+////        view.uiDelegate = context.coordinator
+//        nsView = webView
+//
+//        nsViewController.view = nsView
+        return nsViewController
     }
     
-    func updateNSViewController(_ nsViewController: Coordinator, context: Context) {
+    func updateNSViewController(_ nsViewController: NSViewController, context: Context) {
         let nsView = nsViewController.view as! WKWebView
-        let table = graph.attributes.tables[kind]
+        let table = ParsedAttributes.shared.tables[kind]
         print("UPDATING DOC VIEW", nsView)
         if let row = row,
            let index = table.firstIndex(where: { $0.id == row }) {
@@ -86,7 +79,7 @@ struct AttributesDocView: NSViewControllerRepresentable {
         }
     }
     
-    static func dismantleNSViewController(_ nsViewController: Coordinator, coordinator: Coordinator) {
+    static func dismantleNSViewController(_ nsViewController: NSViewController, coordinator: Coordinator) {
         print("dismantling AttributeDocView", nsViewController.view)
     }
 }

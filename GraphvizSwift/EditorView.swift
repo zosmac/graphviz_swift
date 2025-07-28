@@ -13,10 +13,10 @@ struct EditorView: View {
 
     var body: some View {
         VStack {
-            TextField("No errors", text: $graph.message, axis: .vertical)
-                .foregroundStyle(.red)
-                .padding(.top)
             TextEditor(text: $document.text)
+                .onChange(of: document.text) { (oldText, newText) in
+                    graph.updated = true
+                }
                 .monospaced()
         }
     }

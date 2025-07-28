@@ -16,10 +16,16 @@ struct InspectorView: View {
     @State var kind: Int = AGRAPH
 
     var body: some View {
-        if inspector == "attributes" {
-            AttributesView(document: $document, graph: graph, kind: $kind)
-        } else {
-            EditorView(document: $document, graph: graph)
+        VStack {
+            TextField("No errors", text: $graph.message, axis: .vertical)
+                .foregroundStyle(.red)
+                .padding(.top)
+                .lineLimit(2)
+            if inspector == "attributes" {
+                AttributesView(document: $document, graph: graph, kind: $kind)
+            } else {
+                EditorView(document: $document, graph: graph)
+            }
         }
     }
 }
