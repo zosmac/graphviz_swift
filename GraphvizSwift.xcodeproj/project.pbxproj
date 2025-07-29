@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5885F76B2DDA9DD200CA803D /* attributes.xml in Resources */ = {isa = PBXBuildFile; fileRef = 5885F76A2DDA9DD200CA803D /* attributes.xml */; };
+		589669E42E385216001DA9A0 /* graphviz.help in Resources */ = {isa = PBXBuildFile; fileRef = 589669E32E385216001DA9A0 /* graphviz.help */; };
 		58AA16362DFD956200C4345A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 58AA16282DFD956200C4345A /* Assets.xcassets */; };
 		58AA16372DFD956200C4345A /* GraphDot.icns in Resources */ = {isa = PBXBuildFile; fileRef = 58AA162C2DFD956200C4345A /* GraphDot.icns */; };
 		58AA16382DFD956200C4345A /* GraphGv.icns in Resources */ = {isa = PBXBuildFile; fileRef = 58AA162D2DFD956200C4345A /* GraphGv.icns */; };
@@ -36,6 +37,7 @@
 
 /* Begin PBXFileReference section */
 		5885F76A2DDA9DD200CA803D /* attributes.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = attributes.xml; path = /usr/local/graphviz/share/doc/graphviz/schema/attributes.xml; sourceTree = "<absolute>"; };
+		589669E32E385216001DA9A0 /* graphviz.help */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = graphviz.help; sourceTree = "<group>"; };
 		58AA16282DFD956200C4345A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		58AA162C2DFD956200C4345A /* GraphDot.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = GraphDot.icns; sourceTree = "<group>"; };
 		58AA162D2DFD956200C4345A /* GraphGv.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = GraphGv.icns; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 		5885F76C2DDA9E1500CA803D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				589669E32E385216001DA9A0 /* graphviz.help */,
 				58AA16282DFD956200C4345A /* Assets.xcassets */,
 				5885F76A2DDA9DD200CA803D /* attributes.xml */,
 				58AA162C2DFD956200C4345A /* GraphDot.icns */,
@@ -263,6 +266,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				58AA16362DFD956200C4345A /* Assets.xcassets in Resources */,
+				589669E42E385216001DA9A0 /* graphviz.help in Resources */,
 				58AA16372DFD956200C4345A /* GraphDot.icns in Resources */,
 				58AA16382DFD956200C4345A /* GraphGv.icns in Resources */,
 				58AA16392DFD956200C4345A /* Graphviz.icns in Resources */,
