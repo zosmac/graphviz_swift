@@ -22,6 +22,16 @@ struct GraphvizApp: App {
                          graph: Graph(document: file.$document),
                          utType: .pdf)
         }
+        .commands {
+            CommandGroup(replacing: .help) {
+                Button("Graphviz Help") {
+                    print("Help requested...")
+                    if let url = Bundle.main.url(forResource: "graphviz", withExtension: "help") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }
+            }
+        }
         .defaultSize(width: 800, height: 600)
         .defaultPosition(UnitPoint(x: 0.5, y: 0.1))
     }
