@@ -13,7 +13,6 @@ struct InspectorView: View {
     @Binding var inspector: String
     @Binding var document: GraphvizDocument
     @Bindable var graph: Graph
-    @State var kind: Int = AGRAPH
 
     var body: some View {
         VStack {
@@ -22,7 +21,7 @@ struct InspectorView: View {
                 .padding(.top)
                 .lineLimit(2)
             if inspector == "attributes" {
-                AttributesView(document: $document, graph: graph, kind: $kind)
+                AttributesView(document: $document, graph: graph)
             } else {
                 EditorView(document: $document, graph: graph)
             }

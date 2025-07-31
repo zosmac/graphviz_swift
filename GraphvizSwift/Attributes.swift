@@ -20,7 +20,6 @@ import AppKit
     let simpleType: String
     let options: [String]?
     let listItemType: String?
-    let doc: String
     
     init(attribute: ParsedAttribute) {
         self.id = attribute.id
@@ -31,7 +30,6 @@ import AppKit
         self.simpleType = attribute.simpleType
         self.options = attribute.options
         self.listItemType = attribute.listItemType
-        self.doc = attribute.doc
     }
 }
 
@@ -96,7 +94,7 @@ final class ParsedAttribute: Comparable {
     }
 }
 
-@Observable final class Attributes {
+struct Attributes {
     let tables: [[Attribute]] // AGRAPH, AGNODE, AGEDGE
     
     @MainActor
@@ -133,12 +131,13 @@ final class ParsedAttributes {
             print("parse failed \(parser.parserError?.localizedDescription ?? "")")
         }
         
-        var overview = delegate.overview
-        overview = overview.replacingOccurrences(of: "[\t\r]", with: "", options: [.regularExpression])
-        
+        var overview = "<h2>Attributes Overview</h2>" + delegate.overview + "<h2>Attributes Types</h2>"
+        for type in delegate.simpleTypeDoc.keys.sorted() {
+            overview += " " + delegate.simpleTypeDoc[type]!
+        }
+        overview += "<h2>Attributes</h2>"
         var tables = Array(repeating: [ParsedAttribute](), count: 3)
-        delegate.attributes.sort()
-        for attribute in delegate.attributes {
+        for attribute in delegate.attributes.sorted() {
             if let options = delegate.simpleTypes[attribute.simpleType] {
                 if options.count == 1 {
                     attribute.listItemType = options.first!
@@ -147,15 +146,8 @@ final class ParsedAttributes {
                 }
             }
             
-            print("attribute: \(attribute.name) \(attribute.simpleType)")
-            
-            attribute.doc = attribute.doc.replacingOccurrences(of: "[\t\r]", with: "", options: [.regularExpression])
             overview += " " + attribute.doc
             
-            if let doc = delegate.simpleTypeDoc[attribute.simpleType] {
-                attribute.doc += doc
-                overview += doc
-            }
             if attribute.graph != nil {
                 tables[AGRAPH].append(ParsedAttribute(copy: attribute, kind: AGRAPH, attribute.graph!))
             }
@@ -165,17 +157,18 @@ final class ParsedAttributes {
             if attribute.edge != nil {
                 tables[AGEDGE].append(ParsedAttribute(copy: attribute, kind: AGEDGE, attribute.edge!))
             }
-            //            tables[AGRAPH].sort() // graph attributes
-            //            tables[AGNODE].sort() // node attributes
-            //            tables[AGEDGE].sort() // edge attributes
         }
-        self.overview = overview
+        self.overview = overview.replacingOccurrences(of: "[\t\r]", with: "", options: [.regularExpression])
         self.tables = tables
     }
 }
 
 class AttributesParser: NSObject, XMLParserDelegate {
-    var overview = ""
+    var overview = """
+<style>
+  p {font-family:sans-serif;font-size:10pt}
+</style>
+"""
     var attributes: [ParsedAttribute] = []
     var indices: [String: Int] = [:]
     var simpleTypes: Dictionary<String, [String]> = [:]
@@ -196,12 +189,12 @@ class AttributesParser: NSObject, XMLParserDelegate {
         } else if let name = attribute {
             if attributes[indices[name]!].doc.isEmpty {
                 let type = attributes[indices[name]!].simpleType
-                attributes[indices[name]!].doc = "<a name=\"\(name)\"></a><p><b>\(name)</b> Type: <a href=\"#\(type)\"><b>\(type)</b></a></p>"
+                attributes[indices[name]!].doc = "<h3><a name=\"\(name)\"></a>\(name) <a href=\"#\(type)\">\(type)</a></h3>"
             }
             attributes[indices[name]!].doc += string
         } else if let name = simpleType {
             if simpleTypeDoc[name] == nil {
-                simpleTypeDoc[name] = "<a name=\"\(name)\"></a><p><b>\(name)</b></p>"
+                simpleTypeDoc[name] = "<a name=\"\(name)\"></a><h3>\(name)</h3>"
             }
             simpleTypeDoc[name]! += string
         }
@@ -284,7 +277,7 @@ class AttributesParser: NSObject, XMLParserDelegate {
         case "xsd:annotation":
             if let id = attributeDict["id"] {
                 annotation = id // started special annotation section
-                overview += "<a name=\"\(id)\"><p><b>\(id)</b></p></a>"
+                overview += "<h3><a name=\"\(id)\">\(id)</a></h3>"
             }
             //        case "xsd:restriction":
             //        case "xsd:schema":

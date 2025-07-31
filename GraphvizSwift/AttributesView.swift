@@ -27,13 +27,16 @@ struct heading: Identifiable, Hashable {
 let headings: [heading] = [heading("􁁀 Graph", AGRAPH), heading("􀲞 Node", AGNODE), heading("􀫰 Edge", AGEDGE)]
 
 struct AttributesView: View {
+    @Environment(\.openWindow) private var openWindow
+    @Environment(KindRow.self) private var kindRow: KindRow
+
     @Binding var document: GraphvizDocument
     @Bindable var graph: Graph
-    @Binding var kind: Int
+    @State var kind: Int = 0
     @State var row: Attribute.ID?
 
     var body: some View {
-        VStack {
+//        VStack {
             Picker("Kinds", selection: $kind) {
                 ForEach(headings) { heading in
                     Text(heading.heading).tag(heading.kind)
@@ -78,10 +81,15 @@ struct AttributesView: View {
                             proxy.scrollTo(toprow.id)
                         }
                     }
+                    .onChange(of: row) { (oldRow, newRow) in
+                        kindRow.kind = kind
+                        kindRow.row = newRow
+                        openWindow(id: "AttributesDocView")
+                    }
                 }
-                AttributesDocView(graph: graph, kind: $kind, row: $row)
-                    .frame(height: 250.0)
-            }
+//                AttributesDocView(kind: $kind, row: $row)
+//                    .frame(height: 250.0)
+//            }
         }
     }
 }

@@ -12,8 +12,6 @@ import WebKit
 
 @Observable final class Graph {
     nonisolated(unsafe) static let graphContext = gvContext()
-    let style = "<style>\np {font-family:sans-serif;font-size:10pt}\n</style>\n"
-    let docView: WKWebView
     let name: String
     let text: String
 
@@ -27,9 +25,6 @@ import WebKit
     var message = ""
     
     @MainActor init(document: Binding<GraphvizDocument>) {
-        let docView = WKWebView()
-        docView.loadHTMLString("\(style)<p>\(ParsedAttributes.shared.overview)</p>", baseURL: URL(filePath: ""))
-        self.docView = docView
         self.name = document.wrappedValue.name
         self.text = document.wrappedValue.text
         self.graph = createGraph(text)

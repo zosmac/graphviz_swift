@@ -25,7 +25,7 @@ struct GraphvizView: View {
             .scaleEffect(zoomScale)
             .inspector(isPresented: $inspectorPresented) {
                 InspectorView(inspector: $inspector, document: $document, graph: graph)
-                    .inspectorColumnWidth(min: 280, ideal: 280)
+                    .frame(minWidth: 280, idealWidth: 280, maxWidth: 400)
             }
             .toolbar {
                 ToolbarItemGroup {
