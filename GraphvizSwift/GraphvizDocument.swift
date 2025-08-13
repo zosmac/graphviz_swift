@@ -17,16 +17,20 @@ extension UTType {
     }
 }
 
-struct GraphvizDocument: FileDocument {
+/// GraphvizDocument contains the contents of the file.
+struct GraphvizDocument: @preconcurrency FileDocument {
     static var readableContentTypes: [UTType] { [.gv, .dot] }
-    static var writeableContentTypes: [UTType] { [.pdf, .svg, .gv] }
+    static var writableContentTypes: [UTType] { [.pdf, .svg, .gv] }
     
-    var name = ""
-    var text = ""
-
-    init() {}
+    let name: String
+    var text: String
     
-    init(configuration: ReadConfiguration) throws {
+    nonisolated init() {
+        self.name = ""
+        self.text = ""
+    }
+    
+    nonisolated init(configuration: ReadConfiguration) throws {
         guard let name = configuration.file.filename,
               let data = configuration.file.regularFileContents,
               let text = String(data: data, encoding: .utf8) else {
@@ -36,8 +40,7 @@ struct GraphvizDocument: FileDocument {
         self.text = text
     }
     
-    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
-        print("file write requested")
-        return .init(regularFileWithContents: text.data(using: .utf8)!)
+    nonisolated func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+        return .init(regularFileWithContents: Data(text.utf8))
     }
 }

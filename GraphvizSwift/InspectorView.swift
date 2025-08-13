@@ -6,24 +6,25 @@
 //
 
 import SwiftUI
-import WebKit
 
-/// InspectorView displays either the graph's attributes or the files contents
+/// InspectorView displays either the graph's attributes or the files contents.
 struct InspectorView: View {
-    @Binding var inspector: String
     @Binding var document: GraphvizDocument
-    @Bindable var graph: Graph
+    @Binding var graph: Graph
+    @Binding var inspector: String
 
     var body: some View {
         VStack {
-            TextField("No errors", text: $graph.message, axis: .vertical)
-                .foregroundStyle(.red)
-                .padding(.top)
-                .lineLimit(2)
+            ScrollView {
+                Text(graph.observer.observee.message)
+                    .foregroundStyle(.red)
+            }
+            .frame(maxHeight: 40)
+            .defaultScrollAnchor(.zero)
             if inspector == "attributes" {
-                AttributesView(document: $document, graph: graph)
-            } else {
-                EditorView(document: $document, graph: graph)
+                AttributesView(graph: $graph)
+            } else if inspector == "editor" {
+                EditorView(document: $document, graph: $graph)
             }
         }
     }

@@ -7,7 +7,6 @@
 
 import UniformTypeIdentifiers
 import SwiftUI
-import WebKit
 
 let GraphvizErrorDomain = "GraphvizErrorDomain"
 enum GraphvizError: Int {
@@ -15,6 +14,7 @@ enum GraphvizError: Int {
     case FileParse
 }
 
+/// KindRow links the selection of an attribute from a graph, node, edge table and its row, to an anchor in the AttributesDocView.
 @Observable class KindRow {
     var kind: Int
     var row: Attribute.ID?
@@ -24,15 +24,15 @@ enum GraphvizError: Int {
     }
 }
 
-@main
-struct GraphvizApp: App {
-    @State private var kindRow = KindRow()
+/// GraphvizApp creates the graphviz document views and attributes documentation window.
+@main struct GraphvizApp: App {
+    @State private var kindRow = KindRow() // positions attributes doc window to attribute's doc
     
     var body: some Scene {
         DocumentGroup(newDocument: GraphvizDocument()) { file in
-            GraphvizView(document: file.$document,
-                         graph: Graph(document: file.$document),
-                         utType: .pdf)
+            GraphvizView(
+                document: file.$document,
+                utType: .pdf)
         }
         .commands {
             CommandGroup(replacing: .help) {
@@ -45,15 +45,14 @@ struct GraphvizApp: App {
             }
         }
         .defaultSize(width: 800, height: 600)
-        .defaultPosition(UnitPoint(x: 0.5, y: 0.1))
+        .defaultPosition(.top)
         .environment(kindRow)
         
         Window("Attributes", id: "AttributesDocView") {
             AttributesDocView()
-                .frame(minWidth: 400, minHeight: 500)
         }
-        .defaultSize(width: 400, height: 500)
-        .defaultPosition(UnitPoint(x: 0.7, y: 0.1))
+        .defaultSize(width: 350, height: 400)
+        .defaultPosition(.topTrailing)
         .environment(kindRow)
     }
 }

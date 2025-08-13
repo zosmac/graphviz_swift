@@ -10,165 +10,99 @@ import SwiftUI
 import PDFKit
 import WebKit
 
+/// Graph bridges a Graphviz document to its views.
 @Observable final class Graph {
     nonisolated(unsafe) static let graphContext = gvContext()
+
     let name: String
-    let text: String
+    let observer: LogObserver
+    let graph: UnsafeMutablePointer<Agraph_t>?
 
-    var graph: UnsafeMutablePointer<Agraph_t>?
-    var settings: [[String: String]]!
-    var attributes: Attributes!
-    var observer: NSObjectProtocol!
+    var attributes: Attributes
+    var settings: [[String: String]]
 
-    var layout = false
-    var updated = false
-    var message = ""
-    
-    @MainActor init(document: Binding<GraphvizDocument>) {
+    init(document: Binding<GraphvizDocument>) {
         self.name = document.wrappedValue.name
-        self.text = document.wrappedValue.text
-        self.graph = createGraph(text)
-        self.observer = LogInterceptor.shared.observe(name: document.wrappedValue.name, graph: self)
-        print("CREATE OBSERVER \(observer.description) for graph \(name)")
-        self.settings = {
-            guard let graph = self.graph else { return [[:], [:], [:]] }
+        let observer = LogObserver(name: name)
+        var graph: UnsafeMutablePointer<Agraph_t>?
+        observer.observe(name: name) {
+            graph = agmemread(document.wrappedValue.text + "\n")
+        }
+        print("INIT \(name) \(graph)")
+        self.graph = graph
+        self.observer = observer
+        let settings = {
             var settings: [[String: String]] = [[:], [:], [:]]
+            guard let graph else { return settings }
             for kind in [AGRAPH, AGNODE, AGEDGE] { // assumes these are 0, 1, 2 ;)
                 var nextSymbol: UnsafeMutablePointer<Agsym_t>? = nil
                 while let symbol = agnxtattr(graph, Int32(kind), nextSymbol) {
                     let name = String(cString: symbol.pointee.name)
                     let value = String(cString: symbol.pointee.defval)
                     settings[kind][name] = value
-                    print("SETTINGS", kind, name, value)
                     nextSymbol = symbol
                 }
             }
             return settings
         }()
-        self.attributes = Attributes(graph: self)
+        self.settings = settings
+        self.attributes = Attributes(applying: settings)
     }
-
+    
     // For completeness. This actually only gets called if the NSViewRepresentable
     // using this graph calls dismantleNSView to run closeGraph.
-    deinit {
-        print("deinit requested \(self)")
-        closeGraph()
-    }
-
-    func createGraph(_ text: String) -> UnsafeMutablePointer<Agraph_t>! {
+    isolated deinit {
         if graph != nil {
-            if layout {
-                print("free layout")
-                gvFreeLayout(Graph.graphContext, graph)
-            }
+            print("deinit requested \(graph)")
+            gvFreeLayout(Graph.graphContext, graph)
             print("close and free graph")
             agclose(graph)
+        }
+    }
+
+    func changeAttribute(kind: Int, name: String, value: String) -> Void {
+        settings[kind][name] = value
+        attributes = Attributes(applying: settings)
+    }
+
+    func renderGraph(nsView: NSView) -> Data {
+        print("RENDER \(name) \(graph)")
+        if graph != nil {
+            gvFreeLayout(Graph.graphContext, graph)
+        } else {
+            return Data()
         }
 
-        updated = true
-        layout = false
-        message = ""
-        
-        LogInterceptor.shared.writeBeginMarker()
-        defer { LogInterceptor.shared.writeEndMarker(name) }
-        return agmemread(text + "\0")
-    }
-    
-    func closeGraph() {
-        if let graph = graph {
-            if layout {
-                print("free layout")
-                gvFreeLayout(Graph.graphContext, graph)
-            }
-            print("close and free graph")
-            agclose(graph)
-        }
-        graph = nil
-        if let observer = observer {
-            LogInterceptor.shared.ignore(observer: observer)
-        }
-        observer = nil
-    }
-    
-    func changeAttribute(kind: Int, name: String, value: String) -> Void {
-        if graph != nil &&
-            (name.withCString { name in
-                return value.withCString { value in
-                    return agattr(graph, Int32(kind), UnsafeMutablePointer(mutating: name), UnsafeMutablePointer(mutating: value))
-                }
-            }) != nil {
-            updated = true
-        }
-    }
-    
-    @MainActor
-    func renderGraph(nsView: NSView) -> Void {
-        updated = false
-        guard let graph = graph else {
-            return
-        }
-        
-        if layout {
-            gvFreeLayout(Graph.graphContext, graph);
-        }
-        
-        layout = true
-        var renderedData: UnsafeMutablePointer<CChar>?
-        var renderedLength: size_t = 0
-        
-        var format: String
+        var format = ""
         switch nsView {
         case nsView as WKWebView:
             format = "svg"
         case nsView as PDFView:
             format = "pdf:quartz"
         default:
-            return
-        }
-        
-        LogInterceptor.shared.writeBeginMarker()
-        // PSinputscale = 72.0  // TODO: set as for -s CLI flag?
-        gvLayout(Graph.graphContext, graph, "dot") // TODO: set as for -K CLI flag?
-        gvRenderData(Graph.graphContext, graph, format, &renderedData, &renderedLength)
-        LogInterceptor.shared.writeEndMarker(name)
-        
-        // futile attempts to get svg data to autoscale like pdf
-        //            if let svgView = nsView as? WKWebView {
-        //                let string = String(decoding: data, as: Unicode.UTF8.self)
-        //                let string2 = string.replacingOccurrences(
-        //                    of: "<svg(.+)width=\"[^\"]+\" height=\"[^\"]+\"(.*)w",
-        //                    with: "<svg$1width=\"100%\" height=\"100%\"$2",
-        //                    options: [.regularExpression],
-        //                    range: nil)
-        //                let string3 = string.replacingOccurrences(
-        //                    of: "(.*)viewBox=\"([^ ]+) ([^ ]+) ([^ ]+) ([^\"]+)\"(.*)",
-        //                    with: "$1viewBox=\"$2 $3 100% 100%\"$6",
-        //                    options: [.regularExpression],
-        //                    range: nil)
-        //                print(string3)
-        //                let data = string3.data(using: .utf8)!
-        //            }
-        
-        let data = Data(bytes:renderedData!, count:renderedLength)
-        switch nsView {
-        case let nsView as WKWebView:
-            nsView.load(
-                data,
-                mimeType: UTType.svg.preferredMIMEType!,
-                characterEncodingName: "UTF-8",
-                baseURL: URL(filePath: "")
-            )
-        case let nsView as PDFView:
-            nsView.document = PDFDocument(data: data)
-        default:
             break
         }
-
+        
+        if format != "" {
+            var renderedData: UnsafeMutablePointer<CChar>?
+            var renderedLength: size_t = 0
+            // PSinputscale = 72.0  // TODO: set as for -s CLI flag?
+            observer.observe(name: name) {
+                for (kind, settings) in settings.enumerated() {
+                    for (name, value) in settings {
+                        _ = name.withCString { name in
+                            value.withCString { value in
+                                agattr(graph, Int32(kind), UnsafeMutablePointer(mutating: name), UnsafeMutablePointer(mutating: value))
+                            }
+                        }
+                    }
+                }
+                gvLayout(Graph.graphContext, graph, "dot") // TODO: set as for -K CLI flag?
+                gvRenderData(Graph.graphContext, graph, format, &renderedData, &renderedLength)
+            }
+            return Data(bytes:renderedData!, count:renderedLength)
+        }
+        
+        return Data()
     }
 }
-//
-//extension Graph {
-//    func zoomIn() -> Void {
-//        (view as! PDFView).zoomIn(nil)
-//    }
-//}

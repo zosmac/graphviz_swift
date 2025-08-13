@@ -5,78 +5,106 @@
 //  Created by Keefe Hayes on 6/16/25.
 //
 
-import SwiftUI
+@preconcurrency import SwiftUI
 
-actor LogInterceptor {
-    static let shared = LogInterceptor()
-    
-    let duperr = dup(STDERR_FILENO)
-    let duperrHandle: FileHandle
-    let stderrHandle = FileHandle(fileDescriptor: STDERR_FILENO)
-    let beginMarker = "<<<<<<<<<<\n".data(using: .utf8)!
-    let endMarker = ">>>>>>>>>> ".data(using: .utf8)!
-    let pipe = Pipe()
-    
-    nonisolated func writeBeginMarker() {
-        try? stderrHandle.write(contentsOf: beginMarker)
+/// LogObservee provides a place for log messages to be sent for display in the inspector view.
+@Observable final class LogObservee {
+    var name: Notification.Name
+    var message: String = ""
+    init(name: Notification.Name) {
+        self.name = name
     }
-    
-    nonisolated func writeEndMarker(_ name: String) {
-        try? stderrHandle.write(contentsOf: endMarker + "\(name)\n".data(using: .utf8)!)
+}
+
+/// LogObserver awaits log message notifications from graphviz render operations.
+@Observable final class LogObserver {
+    private let notificationName: NSNotification.Name
+    let observer: Any
+    let observee: LogObservee
+
+    init(name: String) {
+        self.notificationName = Notification.Name("GraphvizSwift.LogInterceptor.\(name)")
+        self.observee = LogObservee(name: notificationName)
+        self.observer = NotificationCenter.default.addObserver(
+            forName: notificationName,
+            object: nil,
+            queue: nil,
+            using: LogObserver.receiver(observee: observee))
+        print("add observer for \(name) \(observer)")
     }
-    
-    nonisolated func observe(name: String, graph: Graph) -> NSObjectProtocol {
-        return NotificationCenter.default.addObserver(
-            forName: NSNotification.Name("GraphvizSwift.LogInterceptor.\(name)\n"),
-            object: nil, queue: nil) {
-                print("message update \($0.object ?? "")")
-                graph.message = $0.object as! String
+
+    isolated deinit {
+        print("deinit observer for \(notificationName.rawValue) \(observer)")
+        remove()
+    }
+
+    static func receiver(observee: LogObservee) -> @Sendable (_ notification: Notification) -> Void {
+        return { (notification) in
+            let string = notification.userInfo?["message"] as! String
+            print(string)
+            DispatchQueue.main.async {
+                observee.message = string
             }
+        }
     }
     
-    nonisolated func ignore(observer: NSObjectProtocol) {
-        print("REMOVE OBSERVER \(observer.description)")
-        NotificationCenter.default.removeObserver(observer)
+    func observe(name: String, block: () -> Void) -> Void {
+        LogInterceptor.enter(name)
+        block()
+        LogInterceptor.exit()
     }
+    
+    func remove() {
+        NotificationCenter.default.removeObserver(
+            observer,
+            name: notificationName,
+            object: nil
+        )
+    }
+}
+
+/// logInterceptor prevents lazy loading of the global shared LogInterceptor.
+let logInterceptor = LogInterceptor.shared
+
+/// LogInterceptor defines a pipe for capturing log messages sent to stderr.
+struct LogInterceptor {
+    static let shared = LogInterceptor()
+    private let pipe = Pipe()
+    private let duperr = dup(STDERR_FILENO)
 
     private init() {
-        self.duperrHandle = FileHandle(fileDescriptor: duperr)
+        let duperrHandle = FileHandle(fileDescriptor: duperr)
         pipe.fileHandleForReading.readabilityHandler = { handle in
-            var interceptMessage = false
-            var message: Data!
+            var data = Data()
             while true {
-                let data = handle.availableData
-                if data.isEmpty {
-                    continue
-                }
-                if data == self.beginMarker {
-                    try? self.duperrHandle.write(contentsOf: data) // debug
-                    interceptMessage = true
-                    message = nil
-                } else if data.prefix(self.endMarker.count) == self.endMarker {
-                    try? self.duperrHandle.write(contentsOf: data) // debug
-                    interceptMessage = false
-                    let name = String(data: data.suffix(data.count-self.endMarker.count), encoding: .utf8) // will include newline
-                    if name != nil && message != nil {
-                        print("name is |\(name!)|\twith error message \(message!)")
-                        var string = String(data: message, encoding: .utf8)!
-                        string = string.replacingOccurrences(of: "\n", with: " ")+"\n"
-                        try? self.duperrHandle.write(contentsOf: string.data(using: .utf8) ?? Data())
-                        NotificationCenter.default.post(name: Notification.Name("GraphvizSwift.LogInterceptor.\(name!)"), object: string)
-                        message = nil
-                    }
-                } else if interceptMessage {
-                    try? self.duperrHandle.write(contentsOf: data) // debug
-                    if message == nil {
-                        message = data
-                    } else {
-                        message += data
-                    }
-                } else {
-                    try? self.duperrHandle.write(contentsOf: data)
+                data += handle.availableData
+                if data[data.endIndex-1] == 10 &&
+                    data[data.endIndex-2] == 10 {
+                    data = data.dropLast(2)
+                    let string = String(data: data, encoding: .utf8)!
+                    let splits = string.split(separator: "\n")
+                    let name = splits[0]
+                    let message = splits.count > 1 ? splits[1...].joined(separator: "\n") : ""
+                    duperrHandle.write(Data("\(name): \(message)\n".utf8))
+                    NotificationCenter.default.post(
+                        name: Notification.Name("GraphvizSwift.LogInterceptor.\(name)"),
+                        object: nil,
+                        userInfo: ["message": message]
+                    )
+                    data = Data()
                 }
             }
         }
-        dup2(pipe.fileHandleForWriting.fileDescriptor, STDERR_FILENO)
+    }
+    
+    static func enter(_ name: String) {
+        fflush(stderr)
+        dup2(LogInterceptor.shared.pipe.fileHandleForWriting.fileDescriptor, STDERR_FILENO)
+        LogInterceptor.shared.pipe.fileHandleForWriting.write(Data("\(name)\n".utf8))
+    }
+    
+    static func exit() {
+        LogInterceptor.shared.pipe.fileHandleForWriting.write(Data("\n".utf8))
+        dup2(LogInterceptor.shared.duperr, STDERR_FILENO)
     }
 }

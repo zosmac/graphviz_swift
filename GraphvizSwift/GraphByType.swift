@@ -10,109 +10,59 @@ import SwiftUI
 import PDFKit
 import WebKit
 
+/// GraphByType displays Graphviz PDF and SVG renders in SwiftUI.
 struct GraphByType: NSViewRepresentable {
-    var graph: Graph
+    @Binding var graph: Graph
     var utType: UTType
-
-    typealias Coordinator = Graph
-    func makeCoordinator() -> Coordinator {
-        return graph
-    }
+    @Binding var zoomScale: CGFloat
 
     func makeNSView(context: Context) -> NSView {
-        var nsView: NSView
         switch utType {
-        case UTType.svg:
-            let view = WKWebView()
-            nsView = view
-        case UTType.pdf:
-            let view = PDFView()
-            view.autoScales = true
-            nsView = view
+        case .svg:
+            return WKWebView()
+        case .pdf:
+            let pdfView = PDFView()
+            pdfView.autoScales = true
+            return pdfView
         default:
-            nsView = NSView()
+            return NSView()
         }
-        graph.renderGraph(nsView: nsView)
-        return nsView
     }
     
     func updateNSView(_ nsView: NSView, context: Context) {
-        if graph.updated {
-            print("View of graph updated!")
-            graph.renderGraph(nsView: nsView)
+        let data = graph.renderGraph(nsView: nsView)
+        switch nsView {
+        case let nsView as WKWebView:
+            nsView.load(
+                data,
+                mimeType: UTType.svg.preferredMIMEType!,
+                characterEncodingName: "UTF-8",
+                baseURL: URL(filePath: "")
+            )
+            if nsView.magnification != zoomScale {
+                nsView.setMagnification(zoomScale, centeredAt: .zero)
+            }
+        case let nsView as PDFView:
+            nsView.document = PDFDocument(data: data)
+            if nsView.scaleFactor != zoomScale {
+                if zoomScale == 0.0 { // set in GraphvizView to signal "size to fit"
+                    zoomScale = nsView.scaleFactorForSizeToFit
+                }
+                nsView.scaleFactor = zoomScale
+            }
+        default:
+            if let rect = nsView.superview?.frame {
+                let width = rect.width * zoomScale
+                let height = rect.height * zoomScale
+                let x = rect.origin.x + (rect.width - width) / 2
+                let y = rect.origin.y + (rect.height - height) / 2
+                nsView.frame = CGRect(x: x, y: y, width: width, height: height)
+            }
         }
     }
     
     static func dismantleNSView(_ nsView: NSView, coordinator: Coordinator) {
         print("dismantle view controller called")
-        let graph = coordinator
-        graph.closeGraph()
+        nsView.prepareForReuse()
     }
 }
-
-
-// seems like overkill, but retained in case
-//struct GraphRepresentable: NSViewControllerRepresentable {
-//    var graph: Graph
-//    var utType: UTType
-//    
-//    final class Coordinator: NSViewController {
-//        var graph: Graph
-//
-//        init(graph: Graph) {
-//            self.graph = graph
-//            super.init(nibName: nil, bundle: nil)
-//        }
-//
-//        override func loadView() {
-//            super.loadView()
-//        }
-//
-//        override func viewDidLoad() {
-//            super.viewDidLoad()
-//        }
-//        
-//        @available(*, unavailable)
-//        required init?(coder: NSCoder) {
-//            print("coder init called for GraphAsPDF.Controller")
-//            fatalError("init(coder:) has not been implemented")
-//        }
-//    }
-//
-//    func makeCoordinator() -> Coordinator {
-//        return Coordinator(graph: graph)
-//    }
-//    
-//    func makeNSViewController(context: Context) -> NSViewController {
-//        let nsViewController = context.coordinator
-//        var nsView: NSView
-//        switch utType {
-//        case UTType.svg:
-//            let view = WKWebView()
-//            nsView = view
-//        case UTType.pdf:
-//            let view = PDFView()
-//            view.autoScales = true
-//            nsView = view
-//        default:
-//            nsView = NSView()
-//        }
-//        graph.renderGraph(nsView: nsView)
-//        
-//        nsViewController.view = nsView
-//        return nsViewController
-//    }
-//    
-//    func updateNSViewController(_ nsViewController: NSViewController, context: Context) {
-//        if graph.updated {
-//            print("PDF View of graph updated!")
-//            graph.renderGraph(nsView: nsViewController.view)
-//        }
-//    }
-//    
-//    static func dismantleNSViewController(_ nsViewController: NSViewController, coordinator: Coordinator) {
-//        print("dismantle view controller called")
-//        let graph = coordinator.graph
-//        graph.closeGraph()
-//    }
-//}

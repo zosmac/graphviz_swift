@@ -6,19 +6,16 @@
 //
 
 import SwiftUI
-import PDFKit
-import WebKit
 
+/// A heading for the AttributesView for each kind of attribute: graph, node, edge.
 struct heading: Identifiable, Hashable {
     var id: String { heading }
     var heading: String
     var kind: Int
-    
     init(_ heading: String, _ kind: Int) {
         self.heading = heading
         self.kind = kind
     }
-    
     func hash(into hasher: inout Hasher) { // Hashable
         hasher.combine(heading)
     }
@@ -26,70 +23,87 @@ struct heading: Identifiable, Hashable {
 
 let headings: [heading] = [heading("􁁀 Graph", AGRAPH), heading("􀲞 Node", AGNODE), heading("􀫰 Edge", AGEDGE)]
 
+// AttributesView shows the values of graph, node, and edge attributes of a graph.
 struct AttributesView: View {
-    @Environment(\.openWindow) private var openWindow
     @Environment(KindRow.self) private var kindRow: KindRow
-
-    @Binding var document: GraphvizDocument
-    @Bindable var graph: Graph
-    @State var kind: Int = 0
-    @State var row: Attribute.ID?
-
+    @Binding var graph: Graph
+    @State private var kind: Int = 0
+    @State private var row: Attribute.ID?
+    
     var body: some View {
-//        VStack {
+        VStack(spacing: 10) {
             Picker("Kinds", selection: $kind) {
-                ForEach(headings) { heading in
-                    Text(heading.heading).tag(heading.kind)
+                ForEach(headings) {
+                    Text($0.heading).tag($0.kind)
                 }
             }
             .pickerStyle(.segmented)
             .labelsHidden()
             .padding(.top, 5.0)
-            Spacer()
-            VStack {
-                let table = graph.attributes.tables[kind]
-                ScrollViewReader { proxy in
-                    Table(table, selection: $row) {
-                        TableColumn("Attribute", value: \.name)
-                        TableColumn("Value") { (attribute: Attribute) in
-                            @Bindable var attribute = attribute
-                            if let options = attribute.options {
-                                Picker(attribute.name, selection: $attribute.value) {
-                                    ForEach(options, id:\.self) { option in
-                                        Text(option)
-                                    }
-                                }
-                                .labelsHidden()
-                                .onChange(of: attribute.value) {
-                                    graph.changeAttribute(kind: kind, name: attribute.name, value: attribute.value)
-                                }
-                            } else {
-                                TextField(attribute.defaultValue ?? "", text: $attribute.value)
-                                    .onSubmit {
-                                        graph.changeAttribute(kind: kind, name: attribute.name, value: attribute.value)
-                                    }
-                            }
+            let table = graph.attributes.tables[kind]
+            ScrollViewReader { proxy in
+                Table(table, selection: $row) {
+                    TableColumn("Attribute", value: \.name)
+                    TableColumn("Value") { (attribute: Attribute) in
+                        if let options = attribute.options {
+                            OptionView(graph: $graph, kind: kind, name: attribute.name, options: options, value: attribute.value)
+                        } else {
+                            ValueView(graph: $graph, kind: kind, name: attribute.name, label: attribute.defaultValue ?? "", value: attribute.value)
                         }
-                    }
-                    .onChange(of: kind) { // table kind changed
-                        if let index = table.firstIndex(where: { $0.id == row }) {
-                            // row in this table kind previously selected, scroll to it
-                            // (direct scroll using row itself doesn't work)
-                            proxy.scrollTo(table[index].id, anchor: .top)
-                        } else if let toprow = table.first {
-                            // scroll to top
-                            proxy.scrollTo(toprow.id)
-                        }
-                    }
-                    .onChange(of: row) { (oldRow, newRow) in
-                        kindRow.kind = kind
-                        kindRow.row = newRow
-                        openWindow(id: "AttributesDocView")
                     }
                 }
-//                AttributesDocView(kind: $kind, row: $row)
-//                    .frame(height: 250.0)
-//            }
+                .onChange(of: kind) { // table kind changed
+                    if let index = table.firstIndex(where: { $0.id == row }) {
+                        // row in this table kind previously selected, scroll to it
+                        // (direct scroll using row itself doesn't work)
+                        proxy.scrollTo(table[index].id, anchor: .top)
+                    } else if let toprow = table.first {
+                        // scroll to top
+                        proxy.scrollTo(toprow.id)
+                    }
+                }
+                .onChange(of: row) {
+                    kindRow.kind = kind
+                    kindRow.row = row
+                }
+            }
         }
+    }
+}
+
+/// OptionView defines a picker for selecting an attribute value from a list of options.
+struct OptionView: View {
+    @Binding var graph: Graph
+    var kind: Int
+    var name: String
+    var options: [String]
+    @State var value: String
+    
+    var body: some View {
+        Picker(name, selection: $value) {
+            ForEach(options, id: \.self) {
+                Text($0).tag($0)
+            }
+        }
+        .labelsHidden()
+        .onChange(of: value) {
+            graph.changeAttribute(kind: kind, name: name, value: value)
+        }
+    }
+}
+
+/// ValueView defines a text field for entering an attribute value.
+struct ValueView: View {
+    @Binding var graph: Graph
+    var kind: Int
+    var name: String
+    var label: String
+    @State var value: String
+    
+    var body: some View {
+        TextField(label, text: $value)
+            .onSubmit {
+                graph.changeAttribute(kind: kind, name: name, value: value)
+            }
     }
 }

@@ -7,25 +7,22 @@
 
 import AppKit
 
-/// Attribute defines a property for graphs, nodes, or edges
-@Observable final class Attribute: Identifiable, Equatable {
-    static func == (lhs: Attribute, rhs: Attribute) -> Bool { // Equatable
-        lhs.name == rhs.name
-    }
+/// Attribute reflects a graph, node, or edge property after the graph's setting applied.
+struct Attribute: Identifiable {
     let id: UUID
-    let name: String
-    let kind: Int
-    var value: String
+    let name: String /// Attribute name
+    let kind: Int    /// Whether this attribute applies to graph, node, or edge
+    let value: String /// Attribute's value
     let defaultValue: String?
     let simpleType: String
     let options: [String]?
     let listItemType: String?
     
-    init(attribute: ParsedAttribute) {
+    init(attribute: ParsedAttribute, value: String) {
         self.id = attribute.id
         self.name = attribute.name
         self.kind = attribute.kind
-        self.value = attribute.value
+        self.value = value
         self.defaultValue = attribute.defaultValue
         self.simpleType = attribute.simpleType
         self.options = attribute.options
@@ -33,7 +30,7 @@ import AppKit
     }
 }
 
-/// Attribute defines a property for graphs, nodes, or edges
+/// ParsedAttribute defines a graph, node, or edge property parsed from attributes.xml.
 final class ParsedAttribute: Comparable {
     static func < (lhs: ParsedAttribute, rhs: ParsedAttribute) -> Bool { // Comparable
         lhs.name < rhs.name
@@ -45,15 +42,15 @@ final class ParsedAttribute: Comparable {
     let id = UUID()
     let name: String
     let kind: Int!
-    let value: String! // value if set in document, and changed by user in UI
+    var value: String! // value if set in document, and changed by user in UI
     var defaultValue: String? // from attributes.xml
     var simpleType = ""
     var options: [String]? // option values of enumerated type, true/false for boolean
     var listItemType: String?
     var doc = ""
     
-    // identify attribute's complexType membership, and whether it has a default value
-    // these values are only used during parsing
+    // Identify attribute's complexType membership, and whether it has a default value.
+    // These values are only used during parsing.
     var graph: String?
     var subgraph: String?
     var cluster: String?
@@ -66,10 +63,9 @@ final class ParsedAttribute: Comparable {
         self.value = ""
     }
     
-    // an Observable must be a class, and an attribute may apply to graphs, nodes
-    // and/or edges, so for each attribute must be distinct across kinds
+    // An attribute may apply to a graph, node or edge, so each attribute must be copied to be distinct by kind.
     init(copy: ParsedAttribute, kind: Int, _ defaultValue: String? = nil) { // Copyable
-        self.name = copy.name // don't need self here to disambiguate :)
+        self.name = copy.name
         self.kind = kind
         self.simpleType = copy.simpleType
         self.options = copy.options
@@ -94,34 +90,32 @@ final class ParsedAttribute: Comparable {
     }
 }
 
+/// Attributes holds the attribute settings for a graph.
 struct Attributes {
+    static let defaults = ParsedAttributes()
     let tables: [[Attribute]] // AGRAPH, AGNODE, AGEDGE
-    
-    @MainActor
-    init(graph: Graph) {
-        let attributes = ParsedAttributes.shared
+
+    init(applying settings: [[AnyHashable: Any]]) {
+        let attributes = Attributes.defaults
         var tables = Array(repeating: [Attribute](), count: 3)
         // merge document's attribute settings into attributes
         for kind in [AGRAPH, AGNODE, AGEDGE] {
             for attribute in attributes.tables[kind] {
-                let attribute = Attribute(attribute: attribute)
-                if let value = graph.settings[kind][attribute.name] {
-                    attribute.value = value
-                }
-                tables[kind].append(attribute)
+                tables[kind].append(
+                    Attribute(attribute: attribute,
+                              value: settings[kind][attribute.name] as? String ?? attribute.value))
             }
         }
         self.tables = tables
     }
 }
 
+/// ParsedAttributes contains the tables of Graphviz attributes and documentation of the attributes.
 final class ParsedAttributes {
-    @MainActor static let shared = ParsedAttributes()
+    let documentation: String // documentation from attributes.xml
+    let tables: [[ParsedAttribute]] // by kind: AGRAPH, AGNODE, AGEDGE
     
-    let overview: String // overview doc from attributes.xml
-    let tables: [[ParsedAttribute]] // AGRAPH, AGNODE, AGEDGE
-    
-    private init() {
+    init() {
         let url = Bundle.main.url(forResource: "attributes", withExtension: "xml")
         let data = try! Data(contentsOf: url!)
         let parser = XMLParser(data: data)
@@ -131,11 +125,11 @@ final class ParsedAttributes {
             print("parse failed \(parser.parserError?.localizedDescription ?? "")")
         }
         
-        var overview = "<h2>Attributes Overview</h2>" + delegate.overview + "<h2>Attributes Types</h2>"
+        var documentation = "<h3>Attributes Overview</h3>" + delegate.documentation + "<h3>Attributes Types</h3>"
         for type in delegate.simpleTypeDoc.keys.sorted() {
-            overview += " " + delegate.simpleTypeDoc[type]!
+            documentation += " " + delegate.simpleTypeDoc[type]!
         }
-        overview += "<h2>Attributes</h2>"
+        documentation += "<h3>Attributes</h3>"
         var tables = Array(repeating: [ParsedAttribute](), count: 3)
         for attribute in delegate.attributes.sorted() {
             if let options = delegate.simpleTypes[attribute.simpleType] {
@@ -146,7 +140,7 @@ final class ParsedAttributes {
                 }
             }
             
-            overview += " " + attribute.doc
+            documentation += " " + attribute.doc
             
             if attribute.graph != nil {
                 tables[AGRAPH].append(ParsedAttribute(copy: attribute, kind: AGRAPH, attribute.graph!))
@@ -158,13 +152,14 @@ final class ParsedAttributes {
                 tables[AGEDGE].append(ParsedAttribute(copy: attribute, kind: AGEDGE, attribute.edge!))
             }
         }
-        self.overview = overview.replacingOccurrences(of: "[\t\r]", with: "", options: [.regularExpression])
+        self.documentation = documentation.replacingOccurrences(of: "[\t\r]", with: "", options: [.regularExpression])
         self.tables = tables
     }
 }
 
-class AttributesParser: NSObject, XMLParserDelegate {
-    var overview = """
+/// AttributesParser reads attributes.xml to produce the tables of Graphviz attributes.
+final class AttributesParser: NSObject, XMLParserDelegate {
+    var documentation = """
 <style>
   p {font-family:sans-serif;font-size:10pt}
 </style>
@@ -174,7 +169,7 @@ class AttributesParser: NSObject, XMLParserDelegate {
     var simpleTypes: Dictionary<String, [String]> = [:]
     var simpleTypeDoc: Dictionary<String, String> = [:]
     
-    // track which element within as parsing proceeds
+    // track which XML element within as parsing proceeds
     var attribute: String?
     var simpleType: String?
     var complexType: String?
@@ -185,16 +180,20 @@ class AttributesParser: NSObject, XMLParserDelegate {
     func addHTML(stringer: () -> String) {
         let string = stringer()
         if annotation != nil {
-            overview += string
+            documentation += string
         } else if let name = attribute {
             if attributes[indices[name]!].doc.isEmpty {
                 let type = attributes[indices[name]!].simpleType
-                attributes[indices[name]!].doc = "<h3><a name=\"\(name)\"></a>\(name) <a href=\"#\(type)\">\(type)</a></h3>"
+                if simpleTypeDoc[type] == nil {
+                    attributes[indices[name]!].doc = "<h4><a name=\"\(name)\">\(name)</a> <i>\(type)</i></h4>"
+                } else {
+                    attributes[indices[name]!].doc = "<h4><a name=\"\(name)\">\(name)</a> <a href=\"#\(type)\"><i>\(type)</i></a></h4>"
+                }
             }
             attributes[indices[name]!].doc += string
         } else if let name = simpleType {
             if simpleTypeDoc[name] == nil {
-                simpleTypeDoc[name] = "<a name=\"\(name)\"></a><h3>\(name)</h3>"
+                simpleTypeDoc[name] = "<h4><a name=\"\(name)\">\(name)</a></h4>"
             }
             simpleTypeDoc[name]! += string
         }
@@ -277,7 +276,7 @@ class AttributesParser: NSObject, XMLParserDelegate {
         case "xsd:annotation":
             if let id = attributeDict["id"] {
                 annotation = id // started special annotation section
-                overview += "<h3><a name=\"\(id)\">\(id)</a></h3>"
+                documentation += "<h4><a name=\"\(id)\">\(id)</a></h4>"
             }
             //        case "xsd:restriction":
             //        case "xsd:schema":
@@ -320,9 +319,7 @@ class AttributesParser: NSObject, XMLParserDelegate {
             annotation = nil
         default:
             if elementName.hasPrefix("html:") {
-                addHTML {
-                    "</" + elementName.suffix(elementName.count - 5) + ">"
-                }
+                addHTML { "</\(elementName.dropFirst(5))>" }
             }
         }
     }
@@ -332,11 +329,11 @@ class AttributesParser: NSObject, XMLParserDelegate {
         _ parser: XMLParser,
         foundCharacters string: String
     ) {
-        if anchorTagTail != ">" {
-            addHTML { string + "\">" + string}
-        } else {
+        if anchorTagTail == ">" {
             addHTML { string }
+        } else {
+            addHTML { string + "\">" + string }
+            anchorTagTail = ">"
         }
-        anchorTagTail = ">"
     }
 }
