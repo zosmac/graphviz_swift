@@ -112,7 +112,7 @@ struct Attributes {
 
 /// ParsedAttributes contains the tables of Graphviz attributes and documentation of the attributes.
 final class ParsedAttributes {
-    let documentation: String // documentation from attributes.xml
+    let attributesdoc: String // documentation from attributes.xml
     let tables: [[ParsedAttribute]] // by kind: AGRAPH, AGNODE, AGEDGE
     
     init() {
@@ -125,11 +125,11 @@ final class ParsedAttributes {
             print("parse failed \(parser.parserError?.localizedDescription ?? "")")
         }
         
-        var documentation = "<h3>Attributes Overview</h3>" + delegate.documentation + "<h3>Attributes Types</h3>"
+        var attributesdoc = "<h3>Attributes Overview</h3>" + delegate.attributesdoc + "<h3>Attributes Types</h3>"
         for type in delegate.simpleTypeDoc.keys.sorted() {
-            documentation += " " + delegate.simpleTypeDoc[type]!
+            attributesdoc += " " + delegate.simpleTypeDoc[type]!
         }
-        documentation += "<h3>Attributes</h3>"
+        attributesdoc += "<h3>Attributes</h3>"
         var tables = Array(repeating: [ParsedAttribute](), count: 3)
         for attribute in delegate.attributes.sorted() {
             if let options = delegate.simpleTypes[attribute.simpleType] {
@@ -140,7 +140,7 @@ final class ParsedAttributes {
                 }
             }
             
-            documentation += " " + attribute.doc
+            attributesdoc += " " + attribute.doc
             
             if attribute.graph != nil {
                 tables[AGRAPH].append(ParsedAttribute(copy: attribute, kind: AGRAPH, attribute.graph!))
@@ -152,14 +152,14 @@ final class ParsedAttributes {
                 tables[AGEDGE].append(ParsedAttribute(copy: attribute, kind: AGEDGE, attribute.edge!))
             }
         }
-        self.documentation = documentation.replacingOccurrences(of: "[\t\r]", with: "", options: [.regularExpression])
+        self.attributesdoc = attributesdoc.replacingOccurrences(of: "[\t\r]", with: "", options: [.regularExpression])
         self.tables = tables
     }
 }
 
 /// AttributesParser reads attributes.xml to produce the tables of Graphviz attributes.
 final class AttributesParser: NSObject, XMLParserDelegate {
-    var documentation = """
+    var attributesdoc = """
 <style>
   p {font-family:sans-serif;font-size:10pt}
 </style>
@@ -180,7 +180,7 @@ final class AttributesParser: NSObject, XMLParserDelegate {
     func addHTML(stringer: () -> String) {
         let string = stringer()
         if annotation != nil {
-            documentation += string
+            attributesdoc += string
         } else if let name = attribute {
             if attributes[indices[name]!].doc.isEmpty {
                 let type = attributes[indices[name]!].simpleType
@@ -276,7 +276,7 @@ final class AttributesParser: NSObject, XMLParserDelegate {
         case "xsd:annotation":
             if let id = attributeDict["id"] {
                 annotation = id // started special annotation section
-                documentation += "<h4><a name=\"\(id)\">\(id)</a></h4>"
+                attributesdoc += "<h4><a name=\"\(id)\">\(id)</a></h4>"
             }
             //        case "xsd:restriction":
             //        case "xsd:schema":

@@ -5,9 +5,9 @@
 //  Created by Keefe Hayes on 6/16/25.
 //
 
-@preconcurrency import SwiftUI
+import SwiftUI
 
-/// LogObservee provides a place for log messages to be sent for display in the inspector view.
+/// LogObservee provides a place for log messages to be sent for display in the inspector view. This type is observable so that the posting of the message is detectcd by the Text view in InspectorView.
 @Observable final class LogObservee {
     var name: Notification.Name
     var message: String = ""
@@ -17,7 +17,7 @@
 }
 
 /// LogObserver awaits log message notifications from graphviz render operations.
-@Observable final class LogObserver {
+final class LogObserver {
     private let notificationName: NSNotification.Name
     let observer: Any
     let observee: LogObservee
@@ -35,7 +35,11 @@
 
     isolated deinit {
         print("deinit observer for \(notificationName.rawValue) \(observer)")
-        remove()
+        NotificationCenter.default.removeObserver(
+            observer,
+            name: notificationName,
+            object: nil
+        )
     }
 
     static func receiver(observee: LogObservee) -> @Sendable (_ notification: Notification) -> Void {
@@ -52,14 +56,6 @@
         LogInterceptor.enter(name)
         block()
         LogInterceptor.exit()
-    }
-    
-    func remove() {
-        NotificationCenter.default.removeObserver(
-            observer,
-            name: notificationName,
-            object: nil
-        )
     }
 }
 

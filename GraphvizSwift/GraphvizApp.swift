@@ -15,7 +15,7 @@ enum GraphvizError: Int {
 }
 
 /// KindRow links the selection of an attribute from a graph, node, edge table and its row, to an anchor in the AttributesDocView.
-@Observable class KindRow {
+@Observable final class KindRow {
     var kind: Int
     var row: Attribute.ID?
     init(kind: Int = AGRAPH, row: Attribute.ID? = nil) {

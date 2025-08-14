@@ -14,7 +14,7 @@ struct AttributesDocView: NSViewRepresentable {
 
     func makeNSView(context: Context) -> WKWebView {
         let docView = WKWebView()
-        docView.loadHTMLString(Attributes.defaults.documentation, baseURL: URL(filePath: ""))
+        docView.loadHTMLString(Attributes.defaults.attributesdoc, baseURL: URL(filePath: ""))
         return docView
     }
     

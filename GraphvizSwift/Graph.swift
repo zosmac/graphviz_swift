@@ -11,7 +11,7 @@ import PDFKit
 import WebKit
 
 /// Graph bridges a Graphviz document to its views.
-@Observable final class Graph {
+final class Graph {
     nonisolated(unsafe) static let graphContext = gvContext()
 
     let name: String
@@ -49,8 +49,6 @@ import WebKit
         self.attributes = Attributes(applying: settings)
     }
     
-    // For completeness. This actually only gets called if the NSViewRepresentable
-    // using this graph calls dismantleNSView to run closeGraph.
     isolated deinit {
         if graph != nil {
             print("deinit requested \(graph)")

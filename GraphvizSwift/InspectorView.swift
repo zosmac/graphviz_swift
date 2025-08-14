@@ -16,6 +16,7 @@ struct InspectorView: View {
     var body: some View {
         VStack {
             ScrollView {
+                // observee must be an observable class type
                 Text(graph.observer.observee.message)
                     .foregroundStyle(.red)
             }
