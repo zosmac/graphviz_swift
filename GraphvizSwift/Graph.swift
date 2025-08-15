@@ -11,11 +11,11 @@ import PDFKit
 import WebKit
 
 /// Graph bridges a Graphviz document to its views.
-final class Graph {
+@Observable final class Graph {
     nonisolated(unsafe) static let graphContext = gvContext()
 
     let name: String
-    let observer: LogObserver
+    var observer: LogObserver
     let graph: UnsafeMutablePointer<Agraph_t>?
 
     var attributes: Attributes
@@ -50,10 +50,9 @@ final class Graph {
     }
     
     isolated deinit {
+        print("deinit Graph \(name) \(graph)")
         if graph != nil {
-            print("deinit requested \(graph)")
             gvFreeLayout(Graph.graphContext, graph)
-            print("close and free graph")
             agclose(graph)
         }
     }
@@ -90,7 +89,7 @@ final class Graph {
                     for (name, value) in settings {
                         _ = name.withCString { name in
                             value.withCString { value in
-                                agattr(graph, Int32(kind), UnsafeMutablePointer(mutating: name), UnsafeMutablePointer(mutating: value))
+                                agattr_text(graph, Int32(kind), UnsafeMutablePointer(mutating: name), UnsafeMutablePointer(mutating: value))
                             }
                         }
                     }

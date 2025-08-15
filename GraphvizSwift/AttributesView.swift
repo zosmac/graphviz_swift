@@ -48,7 +48,7 @@ struct AttributesView: View {
                         if let options = attribute.options {
                             OptionView(graph: $graph, kind: kind, name: attribute.name, options: options, value: attribute.value)
                         } else {
-                            ValueView(graph: $graph, kind: kind, name: attribute.name, label: attribute.defaultValue ?? "", value: attribute.value)
+                            ValueView(graph: $graph, kind: kind, name: attribute.name, label: attribute.defaultValue ?? "", value: attribute.value, enabled: attribute.value.isEmpty)
                         }
                     }
                 }
@@ -99,10 +99,13 @@ struct ValueView: View {
     var name: String
     var label: String
     @State var value: String
-    
+    @State var enabled: Bool
+
     var body: some View {
         TextField(label, text: $value)
+            .disabled(!enabled)
             .onSubmit {
+                enabled = false
                 graph.changeAttribute(kind: kind, name: name, value: value)
             }
     }

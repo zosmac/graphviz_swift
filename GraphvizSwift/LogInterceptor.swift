@@ -14,19 +14,23 @@ import SwiftUI
     init(name: Notification.Name) {
         self.name = name
     }
+    
+    isolated deinit {
+        print("deinit LogObservee \(name.rawValue)")
+    }
 }
 
 /// LogObserver awaits log message notifications from graphviz render operations.
 final class LogObserver {
-    private let notificationName: NSNotification.Name
+    private let name: NSNotification.Name
     let observer: Any
     let observee: LogObservee
 
     init(name: String) {
-        self.notificationName = Notification.Name("GraphvizSwift.LogInterceptor.\(name)")
-        self.observee = LogObservee(name: notificationName)
+        self.name = Notification.Name("GraphvizSwift.LogInterceptor.\(name)")
+        self.observee = LogObservee(name: self.name)
         self.observer = NotificationCenter.default.addObserver(
-            forName: notificationName,
+            forName: self.name,
             object: nil,
             queue: nil,
             using: LogObserver.receiver(observee: observee))
@@ -34,10 +38,10 @@ final class LogObserver {
     }
 
     isolated deinit {
-        print("deinit observer for \(notificationName.rawValue) \(observer)")
+        print("deinit LogObserver for \(name.rawValue) \(observer)")
         NotificationCenter.default.removeObserver(
             observer,
-            name: notificationName,
+            name: name,
             object: nil
         )
     }
