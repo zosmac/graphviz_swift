@@ -11,9 +11,29 @@ import WebKit
 /// AttributesDocView displays the documentation for attributes from attributes.xml.
 struct AttributesDocView: NSViewRepresentable {
     @Environment(KindRow.self) private var kindRow: KindRow
-
+    
+    class Coordinator: NSObject, WKNavigationDelegate {
+        func webView(
+            _ webView: WKWebView,
+            decidePolicyFor navigationAction: WKNavigationAction,
+            decisionHandler: @escaping @MainActor (WKNavigationActionPolicy) -> Void
+        ) {
+            if let baseURL = webView.url,
+               baseURL.absoluteString.hasPrefix("file:///") {
+                decisionHandler(.allow)
+            } else {
+                decisionHandler(.cancel) // prevent navigation away from doc page
+            }
+        }
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        return Coordinator()
+    }
+    
     func makeNSView(context: Context) -> WKWebView {
         let docView = WKWebView()
+        docView.navigationDelegate = context.coordinator
         docView.loadHTMLString(Attributes.defaults.attributesdoc, baseURL: URL(filePath: ""))
         return docView
     }
