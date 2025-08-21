@@ -18,12 +18,7 @@ struct AttributesDocView: NSViewRepresentable {
             decidePolicyFor navigationAction: WKNavigationAction,
             decisionHandler: @escaping @MainActor (WKNavigationActionPolicy) -> Void
         ) {
-            if let baseURL = webView.url,
-               baseURL.absoluteString.hasPrefix("file:///") {
-                decisionHandler(.allow)
-            } else {
-                decisionHandler(.cancel) // prevent navigation away from doc page
-            }
+            decisionHandler(webView.url?.relativePath == "/" ? .allow : .cancel) // prevent navigation away from doc page
         }
     }
     
@@ -34,14 +29,14 @@ struct AttributesDocView: NSViewRepresentable {
     func makeNSView(context: Context) -> WKWebView {
         let docView = WKWebView()
         docView.navigationDelegate = context.coordinator
-        docView.loadHTMLString(Attributes.defaults.attributesdoc, baseURL: URL(filePath: ""))
+        docView.loadHTMLString(Graph.attributeDocumentation, baseURL: URL(filePath: ""))
         return docView
     }
     
     func updateNSView(_ nsView: WKWebView, context: Context) {
         let kind = kindRow.kind
         let row = kindRow.row
-        let table = Attributes.defaults.tables[kind]
+        let table = Graph.attributeDefaults.tables[kind]
         if let row,
            let index = table.firstIndex(where: { $0.id == row }) {
             let name = table[index].name
@@ -57,7 +52,7 @@ struct AttributesDocView: NSViewRepresentable {
     }
     
     static func dismantleNSView(_ nsView: WKWebView, coordinator: Coordinator) {
-        print("dismantling AttributeDocView", nsView)
+//        print("dismantling AttributeDocView", nsView)
         nsView.prepareForReuse()
     }
 }

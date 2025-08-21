@@ -92,15 +92,14 @@ final class ParsedAttribute: Comparable {
 
 /// Attributes holds the attribute settings for a graph.
 struct Attributes {
-    static let defaults = ParsedAttributes()
     let tables: [[Attribute]] // AGRAPH, AGNODE, AGEDGE
 
+    nonisolated
     init(applying settings: [[AnyHashable: Any]]) {
-        let attributes = Attributes.defaults
         var tables = Array(repeating: [Attribute](), count: 3)
         // merge document's attribute settings into attributes
         for kind in [AGRAPH, AGNODE, AGEDGE] {
-            for attribute in attributes.tables[kind] {
+            for attribute in Graph.attributeDefaults.tables[kind] {
                 tables[kind].append(
                     Attribute(attribute: attribute,
                               value: settings[kind][attribute.name] as? String ?? attribute.value))
@@ -112,7 +111,6 @@ struct Attributes {
 
 /// ParsedAttributes contains the tables of Graphviz attributes and documentation of the attributes.
 final class ParsedAttributes {
-    let attributesdoc: String // documentation from attributes.xml
     let tables: [[ParsedAttribute]] // by kind: AGRAPH, AGNODE, AGEDGE
     
     init() {
@@ -125,11 +123,11 @@ final class ParsedAttributes {
             print("parse failed \(parser.parserError?.localizedDescription ?? "")")
         }
         
-        var attributesdoc = "<h3>Attributes Overview</h3>" + delegate.attributesdoc + "<h3>Attributes Types</h3>"
+        Graph.attributeDocumentation += "<h3>Attributes Overview</h3>" + delegate.overviewDoc + "<h3>Attributes Types</h3>"
         for type in delegate.simpleTypeDoc.keys.sorted() {
-            attributesdoc += " " + delegate.simpleTypeDoc[type]!
+            Graph.attributeDocumentation += " " + delegate.simpleTypeDoc[type]!
         }
-        attributesdoc += "<h3>Attributes</h3>"
+        Graph.attributeDocumentation += "<h3>Attributes</h3>"
         var tables = Array(repeating: [ParsedAttribute](), count: 3)
         for attribute in delegate.attributes.sorted() {
             if let options = delegate.simpleTypes[attribute.simpleType] {
@@ -140,7 +138,7 @@ final class ParsedAttributes {
                 }
             }
             
-            attributesdoc += " " + attribute.doc
+            Graph.attributeDocumentation += " " + attribute.doc
             
             if attribute.graph != nil {
                 tables[AGRAPH].append(ParsedAttribute(copy: attribute, kind: AGRAPH, attribute.graph!))
@@ -152,18 +150,14 @@ final class ParsedAttributes {
                 tables[AGEDGE].append(ParsedAttribute(copy: attribute, kind: AGEDGE, attribute.edge!))
             }
         }
-        self.attributesdoc = attributesdoc.replacingOccurrences(of: "[\t\r]", with: "", options: [.regularExpression])
+        Graph.attributeDocumentation = Graph.attributeDocumentation.replacingOccurrences(of: "[\t\r]", with: "", options: [.regularExpression])
         self.tables = tables
     }
 }
 
 /// AttributesParser reads attributes.xml to produce the tables of Graphviz attributes.
 final class AttributesParser: NSObject, XMLParserDelegate {
-    var attributesdoc = """
-<style>
-  p {font-family:sans-serif;font-size:10pt}
-</style>
-"""
+    var overviewDoc = ""
     var attributes: [ParsedAttribute] = []
     var indices: [String: Int] = [:]
     var simpleTypes: Dictionary<String, [String]> = [:]
@@ -180,7 +174,7 @@ final class AttributesParser: NSObject, XMLParserDelegate {
     func addHTML(stringer: () -> String) {
         let string = stringer()
         if annotation != nil {
-            attributesdoc += string
+            overviewDoc += string
         } else if let name = attribute {
             if attributes[indices[name]!].doc.isEmpty {
                 let type = attributes[indices[name]!].simpleType
@@ -276,7 +270,7 @@ final class AttributesParser: NSObject, XMLParserDelegate {
         case "xsd:annotation":
             if let id = attributeDict["id"] {
                 annotation = id // started special annotation section
-                attributesdoc += "<h4><a name=\"\(id)\">\(id)</a></h4>"
+                overviewDoc += "<h4><a name=\"\(id)\">\(id)</a></h4>"
             }
             //        case "xsd:restriction":
             //        case "xsd:schema":

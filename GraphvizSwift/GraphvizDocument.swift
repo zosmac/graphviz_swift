@@ -9,6 +9,9 @@ import UniformTypeIdentifiers
 import SwiftUI
 
 extension UTType {
+    nonisolated static var canon: UTType {
+        UTType(exportedAs: "com.att.graphviz.graph.canonical")
+    }
     nonisolated static var gv: UTType {
         UTType(exportedAs: "com.att.graphviz.graph")
     }
@@ -18,19 +21,31 @@ extension UTType {
 }
 
 /// GraphvizDocument contains the contents of the file.
-nonisolated
-struct GraphvizDocument: FileDocument {
-    static var readableContentTypes: [UTType] { [.gv, .dot] }
-    static var writableContentTypes: [UTType] { [.pdf, .svg, .gv] }
+final class GraphvizDocument: ReferenceFileDocument {
+    typealias Snapshot = Data
+    static let readableContentTypes: [UTType] = [.gv, .dot, .canon]
+    static let writableContentTypes: [UTType] = [.gv, .dot, .canon]
+
+    func snapshot(contentType: UTType) throws -> Data {
+        Data(text.utf8)
+    }
+    
+    func fileWrapper(snapshot: Data, configuration: WriteConfiguration) throws -> FileWrapper {
+        return .init(regularFileWithContents: snapshot)
+    }
     
     let name: String
-    var text: String
+    let docType: UTType
+    @Published var text: String
+    @Published var graph: Graph
     
     init() {
         self.name = ""
         self.text = ""
+        self.docType = .gv
+        self.graph = Graph()
     }
-    
+
     init(configuration: ReadConfiguration) throws {
         guard let name = configuration.file.filename,
               let data = configuration.file.regularFileContents,
@@ -39,9 +54,7 @@ struct GraphvizDocument: FileDocument {
         }
         self.name = name
         self.text = text
-    }
-    
-    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
-        return .init(regularFileWithContents: Data(text.utf8))
+        self.docType = configuration.contentType
+        self.graph = Graph(name: name, text: text)
     }
 }

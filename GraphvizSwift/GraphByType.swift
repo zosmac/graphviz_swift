@@ -12,14 +12,16 @@ import WebKit
 
 /// GraphByType displays Graphviz PDF and SVG renders in SwiftUI.
 struct GraphByType: NSViewRepresentable {
-    @Binding var graph: Graph
-    var utType: UTType
+    @ObservedObject var document: GraphvizDocument
+    @Binding var viewType: UTType
     @Binding var zoomScale: CGFloat
 
     func makeNSView(context: Context) -> NSView {
-        switch utType {
+        switch viewType {
         case .svg:
-            return WKWebView()
+            let webView = WKWebView()
+            webView.allowsMagnification = true
+            return webView
         case .pdf:
             let pdfView = PDFView()
             pdfView.autoScales = true
@@ -30,17 +32,17 @@ struct GraphByType: NSViewRepresentable {
     }
     
     func updateNSView(_ nsView: NSView, context: Context) {
-        let data = graph.renderGraph(nsView: nsView)
+        let data = document.graph.renderGraph(nsView: nsView)
         switch nsView {
         case let nsView as WKWebView:
             nsView.load(
                 data,
-                mimeType: UTType.svg.preferredMIMEType!,
+                mimeType: viewType.preferredMIMEType!,
                 characterEncodingName: "UTF-8",
                 baseURL: URL(filePath: "")
             )
-            if nsView.magnification != zoomScale {
-                nsView.setMagnification(zoomScale, centeredAt: .zero)
+            if nsView.pageZoom != zoomScale {
+                nsView.pageZoom = zoomScale
             }
         case let nsView as PDFView:
             nsView.document = PDFDocument(data: data)
@@ -62,7 +64,7 @@ struct GraphByType: NSViewRepresentable {
     }
     
     static func dismantleNSView(_ nsView: NSView, coordinator: Coordinator) {
-        print("dismantle view controller called")
+//        print("dismantle view controller called")
         nsView.prepareForReuse()
     }
 }

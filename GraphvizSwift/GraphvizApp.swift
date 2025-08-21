@@ -27,14 +27,16 @@ enum GraphvizError: Int {
 /// GraphvizApp creates the graphviz document views and attributes documentation window.
 @main struct GraphvizApp: App {
     @State private var kindRow = KindRow() // positions attributes doc window to attribute's doc
+    @FocusedValue(\.showExportSheet) private var showExportSheet
     
     var body: some Scene {
-        DocumentGroup(newDocument: GraphvizDocument()) { file in
-            GraphvizView(
-                document: file.$document,
-                utType: .pdf)
+        DocumentGroup(newDocument: { GraphvizDocument() }) { file in
+            GraphvizView(document: file.document)
         }
         .commands {
+            CommandGroup(replacing: .importExport) {
+                ExportSheetButton()
+            }
             CommandGroup(replacing: .help) {
                 Button("Graphviz Help") {
                     print("Help requested...")

@@ -9,15 +9,15 @@ import SwiftUI
 
 /// EditorView enables text editing of a graphviz document.
 struct EditorView: View {
-    @Binding var document: GraphvizDocument
-    @Binding var graph: Graph
+    @ObservedObject var document: GraphvizDocument
     
     var body: some View {
         VStack {
             TextEditor(text: $document.text)
                 .onChange(of: document.text) {
-                    graph = Graph(document: $document)
-                    print("CREATE \(graph.name) \(graph.graph)")
+                    document.graph.observer.observe(name: document.name) {
+                        document.graph = Graph(name: document.name, text: document.text)
+                    }
                 }
                 .monospaced()
         }

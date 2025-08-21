@@ -8,15 +8,15 @@
 import SwiftUI
 
 /// LogObservee provides a place for log messages to be sent for display in the inspector view. This type is observable so that the posting of the message is detectcd by the Text view in InspectorView.
-@Observable final class LogObservee {
+@Observable final class LogObservee: @unchecked Sendable {
     var name: Notification.Name
     var message: String = ""
     init(name: Notification.Name) {
         self.name = name
     }
     
-    isolated deinit {
-        print("deinit LogObservee \(name.rawValue)")
+    deinit {
+//        print("deinit LogObservee \(name.rawValue)")
     }
 }
 
@@ -34,11 +34,11 @@ final class LogObserver {
             object: nil,
             queue: nil,
             using: LogObserver.receiver(observee: observee))
-        print("add observer for \(name) \(observer)")
+//        print("add observer for \(name) \(observer)")
     }
 
-    isolated deinit {
-        print("deinit LogObserver for \(name.rawValue) \(observer)")
+    deinit {
+//        print("deinit LogObserver for \(name.rawValue) \(observer)")
         NotificationCenter.default.removeObserver(
             observer,
             name: name,
@@ -47,12 +47,12 @@ final class LogObserver {
     }
 
     static func receiver(observee: LogObservee) -> @Sendable (_ notification: Notification) -> Void {
-        return { (notification) in
+        return { @Sendable (notification) in
             let string = notification.userInfo?["message"] as! String
-            print(string)
-            DispatchQueue.main.async {
+//            print(string)
+//            DispatchQueue.main.async {
                 observee.message = string
-            }
+//            }
         }
     }
     
@@ -73,7 +73,7 @@ struct LogInterceptor {
     private let duperr = dup(STDERR_FILENO)
 
     private init() {
-        let duperrHandle = FileHandle(fileDescriptor: duperr)
+//        let duperrHandle = FileHandle(fileDescriptor: duperr)
         pipe.fileHandleForReading.readabilityHandler = { handle in
             var data = Data()
             while true {
@@ -85,7 +85,7 @@ struct LogInterceptor {
                     let splits = string.split(separator: "\n")
                     let name = splits[0]
                     let message = splits.count > 1 ? splits[1...].joined(separator: "\n") : ""
-                    duperrHandle.write(Data("\(name): \(message)\n".utf8))
+//                    duperrHandle.write(Data("\(name): \(message)\n".utf8))
                     NotificationCenter.default.post(
                         name: Notification.Name("GraphvizSwift.LogInterceptor.\(name)"),
                         object: nil,

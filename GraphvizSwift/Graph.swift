@@ -11,25 +11,53 @@ import PDFKit
 import WebKit
 
 /// Graph bridges a Graphviz document to its views.
-@Observable final class Graph {
+nonisolated
+struct Graph {
     nonisolated(unsafe) static let graphContext = gvContext()
+    nonisolated(unsafe) static let attributeDefaults = ParsedAttributes()
+    nonisolated(unsafe) static var attributeDocumentation = """
+    <style>
+      p {font-family:sans-serif;font-size:10pt}
+    </style>
+    """
 
     let name: String
-    var observer: LogObserver
-    let graph: UnsafeMutablePointer<Agraph_t>?
+    nonisolated(unsafe) var observer: LogObserver!
+//    nonisolated(unsafe) var graph: UnsafeMutablePointer<Agraph_t>?
 
-    var attributes: Attributes
-    var settings: [[String: String]]
+    class Pointer {
+        var graph: UnsafeMutablePointer<Agraph_t>?
+        init(graph: UnsafeMutablePointer<Agraph_t>?) {
+            self.graph = graph
+        }
+        deinit {
+            if graph != nil {
+                gvFreeLayout(Graph.graphContext, graph)
+                agclose(graph)
+            }
+        }
+    }
 
-    init(document: Binding<GraphvizDocument>) {
-        self.name = document.wrappedValue.name
+    var pointer: Pointer!
+    var attributes: Attributes!
+    var settings: [[String: String]]!
+    
+    nonisolated
+    init() {
+        self.name = ""
+    }
+    
+    nonisolated
+    init(name: String, text: String) {
+        self.name = name
         let observer = LogObserver(name: name)
         var graph: UnsafeMutablePointer<Agraph_t>?
         observer.observe(name: name) {
-            graph = agmemread(document.wrappedValue.text + "\n")
+            graph = agmemread(text + "\n")
         }
-        print("INIT \(name) \(graph)")
-        self.graph = graph
+//        print("INIT \(name) \(graph)")
+        self.pointer = Pointer(graph: graph)
+//        self.graph = graph
         self.observer = observer
         let settings = {
             var settings: [[String: String]] = [[:], [:], [:]]
@@ -49,25 +77,26 @@ import WebKit
         self.attributes = Attributes(applying: settings)
     }
     
-    isolated deinit {
-        print("deinit Graph \(name) \(graph)")
-        if graph != nil {
-            gvFreeLayout(Graph.graphContext, graph)
-            agclose(graph)
-        }
-    }
+//    deinit {
+////        print("deinit Graph \(name) \(graph)")
+//        if graph != nil {
+//            gvFreeLayout(Graph.graphContext, graph)
+//            agclose(graph)
+//        }
+//    }
 
-    func changeAttribute(kind: Int, name: String, value: String) -> Void {
+    mutating func changeAttribute(kind: Int, name: String, value: String) -> Void {
         settings[kind][name] = value
         attributes = Attributes(applying: settings)
     }
 
     func renderGraph(nsView: NSView) -> Data {
-        print("RENDER \(name) \(graph)")
-        if graph != nil {
-            gvFreeLayout(Graph.graphContext, graph)
+//        print("RENDER \(name) \(graph)")
+        var data = Data()
+        if pointer.graph != nil {
+            gvFreeLayout(Graph.graphContext, pointer.graph)
         } else {
-            return Data()
+            return data
         }
 
         var format = ""
@@ -75,31 +104,54 @@ import WebKit
         case nsView as WKWebView:
             format = "svg"
         case nsView as PDFView:
-            format = "pdf:quartz"
+            format = "pdf"
         default:
-            break
+            return data
         }
         
-        if format != "" {
+        observer.observe(name: name) {
             var renderedData: UnsafeMutablePointer<CChar>?
             var renderedLength: size_t = 0
-            // PSinputscale = 72.0  // TODO: set as for -s CLI flag?
-            observer.observe(name: name) {
-                for (kind, settings) in settings.enumerated() {
-                    for (name, value) in settings {
-                        _ = name.withCString { name in
-                            value.withCString { value in
-                                agattr_text(graph, Int32(kind), UnsafeMutablePointer(mutating: name), UnsafeMutablePointer(mutating: value))
-                            }
+            // PSinputscale = 72.0  // TODO: set as for -s CLI flag using Settings View
+            for (kind, settings) in settings.enumerated() {
+                for (name, value) in settings {
+                    _ = name.withCString { name in
+                        value.withCString { value in
+                            agattr_text(pointer.graph, Int32(kind), UnsafeMutablePointer(mutating: name), UnsafeMutablePointer(mutating: value))
                         }
                     }
                 }
-                gvLayout(Graph.graphContext, graph, "dot") // TODO: set as for -K CLI flag?
-                gvRenderData(Graph.graphContext, graph, format, &renderedData, &renderedLength)
             }
-            return Data(bytes:renderedData!, count:renderedLength)
+            gvLayout(Graph.graphContext, pointer.graph, "dot") // TODO: set as for -K CLI flag?
+            if gvRenderData(Graph.graphContext, pointer.graph, format, &renderedData, &renderedLength) == 0 {
+                data = Data(bytesNoCopy: renderedData!,
+                            count: renderedLength,
+                            deallocator: .custom { ptr, _ in
+                    gvFreeRenderData(ptr)
+                })
+            }
         }
         
-        return Data()
+        return data
+    }
+    
+    nonisolated
+    func renderGraph(utType: UTType) throws -> Data {
+        guard let format = utType.preferredFilenameExtension else { throw CocoaError(.fileWriteUnsupportedScheme) }
+        var data: Data?
+        observer.observe(name: name) {
+            var renderedData: UnsafeMutablePointer<CChar>!
+            var renderedLength: size_t = 0
+//            gvLayout(Graph.graphContext, graph, "dot") // TODO: set as for -K CLI flag?
+            if gvRenderData(Graph.graphContext, pointer.graph, format, &renderedData, &renderedLength) == 0 {
+                data = Data(bytesNoCopy: renderedData!,
+                                count: renderedLength,
+                                deallocator: .custom { ptr, _ in
+                    gvFreeRenderData(ptr)
+                })
+            }
+        }
+        guard let data else { throw CocoaError(.fileWriteUnknown) }
+        return data
     }
 }
