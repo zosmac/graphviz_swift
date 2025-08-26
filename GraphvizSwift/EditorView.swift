@@ -15,9 +15,7 @@ struct EditorView: View {
         VStack {
             TextEditor(text: $document.text)
                 .onChange(of: document.text) {
-                    document.graph.observer.observe(name: document.name) {
-                        document.graph = Graph(name: document.name, text: document.text)
-                    }
+                    document.graph = Graph(name: document.name, text: document.text)
                 }
                 .monospaced()
         }

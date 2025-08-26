@@ -7,11 +7,30 @@
 
 import AppKit
 
+nonisolated(unsafe) let parsedAttributes = ParsedAttributes()
+
+/// Attributes for each kind of attribute: graph, node, edge.
+struct AttributesByKind: Identifiable, Hashable {
+    var id: Int { kind }
+    let kind: Int
+    let label: String // for each picker button
+    let attributes: [ParsedAttribute]
+
+    init(_ kind: Int, _ label: String, attributes: [ParsedAttribute]) {
+        self.kind = kind
+        self.label = label
+        self.attributes = attributes
+    }
+
+    func hash(into hasher: inout Hasher) { // Hashable
+        hasher.combine(kind)
+    }
+}
+
 /// Attribute reflects a graph, node, or edge property after the graph's setting applied.
-struct Attribute: Identifiable {
+struct Attribute: Identifiable, Equatable {
     let id: UUID
     let name: String /// Attribute name
-    let kind: Int    /// Whether this attribute applies to graph, node, or edge
     let value: String /// Attribute's value
     let defaultValue: String?
     let simpleType: String
@@ -21,7 +40,6 @@ struct Attribute: Identifiable {
     init(attribute: ParsedAttribute, value: String) {
         self.id = attribute.id
         self.name = attribute.name
-        self.kind = attribute.kind
         self.value = value
         self.defaultValue = attribute.defaultValue
         self.simpleType = attribute.simpleType
@@ -41,7 +59,6 @@ final class ParsedAttribute: Comparable {
     
     let id = UUID()
     let name: String
-    let kind: Int!
     var value: String! // value if set in document, and changed by user in UI
     var defaultValue: String? // from attributes.xml
     var simpleType = ""
@@ -59,14 +76,12 @@ final class ParsedAttribute: Comparable {
     
     init(name: String) {
         self.name = name
-        self.kind = 0
         self.value = ""
     }
     
     // An attribute may apply to a graph, node or edge, so each attribute must be copied to be distinct by kind.
     init(copy: ParsedAttribute, kind: Int, _ defaultValue: String? = nil) { // Copyable
         self.name = copy.name
-        self.kind = kind
         self.simpleType = copy.simpleType
         self.options = copy.options
         self.listItemType = copy.listItemType
@@ -92,26 +107,28 @@ final class ParsedAttribute: Comparable {
 
 /// Attributes holds the attribute settings for a graph.
 struct Attributes {
-    let tables: [[Attribute]] // AGRAPH, AGNODE, AGEDGE
-
+    let attributesByKind: [[Attribute]] // AGRAPH, AGNODE, AGEDGE
+    
     nonisolated
     init(applying settings: [[AnyHashable: Any]]) {
-        var tables = Array(repeating: [Attribute](), count: 3)
-        // merge document's attribute settings into attributes
-        for kind in [AGRAPH, AGNODE, AGEDGE] {
-            for attribute in Graph.attributeDefaults.tables[kind] {
-                tables[kind].append(
+        var attributesByKind = [[Attribute]]()
+        // merge document's attribute settings into its attributes
+        for kind in parsedAttributes.kinds {
+            attributesByKind.append([Attribute]())
+            for attribute in kind.attributes {
+                attributesByKind[kind.kind].append(
                     Attribute(attribute: attribute,
-                              value: settings[kind][attribute.name] as? String ?? attribute.value))
+                              value: settings[kind.kind][attribute.name] as? String ?? attribute.value))
             }
         }
-        self.tables = tables
+        self.attributesByKind = attributesByKind
     }
 }
 
 /// ParsedAttributes contains the tables of Graphviz attributes and documentation of the attributes.
 final class ParsedAttributes {
-    let tables: [[ParsedAttribute]] // by kind: AGRAPH, AGNODE, AGEDGE
+    let kinds: [AttributesByKind] // by kind: AGRAPH, AGNODE, AGEDGE
+    let documentation: String
     
     init() {
         let url = Bundle.main.url(forResource: "attributes", withExtension: "xml")
@@ -122,12 +139,16 @@ final class ParsedAttributes {
         if !parser.parse() {
             print("parse failed \(parser.parserError?.localizedDescription ?? "")")
         }
-        
-        Graph.attributeDocumentation += "<h3>Attributes Overview</h3>" + delegate.overviewDoc + "<h3>Attributes Types</h3>"
-        for type in delegate.simpleTypeDoc.keys.sorted() {
-            Graph.attributeDocumentation += " " + delegate.simpleTypeDoc[type]!
-        }
-        Graph.attributeDocumentation += "<h3>Attributes</h3>"
+        var documentation = """
+<style>
+  p {font-family:sans-serif;font-size:10pt}
+</style>
+<h3>Attributes Overview</h3>
+\(delegate.overviewDoc)
+<h3>Attributes Types</h3>
+\(delegate.simpleTypeDoc.keys.sorted().joined(separator: " "))
+<h3>Attributes</h3>
+"""
         var tables = Array(repeating: [ParsedAttribute](), count: 3)
         for attribute in delegate.attributes.sorted() {
             if let options = delegate.simpleTypes[attribute.simpleType] {
@@ -138,7 +159,7 @@ final class ParsedAttributes {
                 }
             }
             
-            Graph.attributeDocumentation += " " + attribute.doc
+            documentation += " " + attribute.doc
             
             if attribute.graph != nil {
                 tables[AGRAPH].append(ParsedAttribute(copy: attribute, kind: AGRAPH, attribute.graph!))
@@ -150,32 +171,37 @@ final class ParsedAttributes {
                 tables[AGEDGE].append(ParsedAttribute(copy: attribute, kind: AGEDGE, attribute.edge!))
             }
         }
-        Graph.attributeDocumentation = Graph.attributeDocumentation.replacingOccurrences(of: "[\t\r]", with: "", options: [.regularExpression])
-        self.tables = tables
+        
+        self.documentation = documentation.replacingOccurrences(of: "[\t\r]", with: "", options: [.regularExpression])
+        self.kinds = [
+            AttributesByKind(AGRAPH, "􁁀 Graph", attributes: tables[AGRAPH]),
+            AttributesByKind(AGNODE, "􀲞 Node", attributes: tables[AGNODE]),
+            AttributesByKind(AGEDGE, "􀫰 Edge", attributes: tables[AGEDGE])
+        ]
     }
 }
 
 /// AttributesParser reads attributes.xml to produce the tables of Graphviz attributes.
 final class AttributesParser: NSObject, XMLParserDelegate {
     var overviewDoc = ""
-    var attributes: [ParsedAttribute] = []
-    var indices: [String: Int] = [:]
-    var simpleTypes: Dictionary<String, [String]> = [:]
-    var simpleTypeDoc: Dictionary<String, String> = [:]
+    var attributes = [ParsedAttribute]()
+    var indices = [String: Int]()
+    var simpleTypes = Dictionary<String, [String]>()
+    var simpleTypeDoc = Dictionary<String, String>()
     
     // track which XML element within as parsing proceeds
-    var attribute: String?
-    var simpleType: String?
-    var complexType: String?
-    var annotation: String?
-    var documentation = false
+    var inAttribute: String?
+    var inSimpleType: String?
+    var inComplexType: String?
+    var inAnnotation: String?
+    var inDocumentation = false
     var anchorTagTail = ">"
     
     func addHTML(stringer: () -> String) {
         let string = stringer()
-        if annotation != nil {
+        if inAnnotation != nil {
             overviewDoc += string
-        } else if let name = attribute {
+        } else if let name = inAttribute {
             if attributes[indices[name]!].doc.isEmpty {
                 let type = attributes[indices[name]!].simpleType
                 if simpleTypeDoc[type] == nil {
@@ -185,7 +211,7 @@ final class AttributesParser: NSObject, XMLParserDelegate {
                 }
             }
             attributes[indices[name]!].doc += string
-        } else if let name = simpleType {
+        } else if let name = inSimpleType {
             if simpleTypeDoc[name] == nil {
                 simpleTypeDoc[name] = "<h4><a name=\"\(name)\">\(name)</a></h4>"
             }
@@ -208,13 +234,13 @@ final class AttributesParser: NSObject, XMLParserDelegate {
         qualifiedName qName: String?,
         attributes attributeDict: [String: String] = [:]
     ) {
-        if !elementName.hasPrefix("xsd:") && !documentation {
+        if !elementName.hasPrefix("xsd:") && !inDocumentation {
             return
         }
         switch elementName {
         case "xsd:attribute":
             if let name = attributeDict["name"] {
-                attribute = name // started attribute name= section
+                inAttribute = name // started attribute name= section
                 if indices[name] == nil {
                     indices[name] = attributes.count
                     attributes.append(ParsedAttribute(name: name))
@@ -229,7 +255,7 @@ final class AttributesParser: NSObject, XMLParserDelegate {
                 // 3. if not blank, the defaultValue FOR THIS KIND overrides any default set by <attribute name=> tag
                 let index = indices[name]!
                 let defaultValue = attributeDict["default"] ?? ""
-                switch complexType! {
+                switch inComplexType! {
                 case "graph":
                     attributes[index].graph = defaultValue
                 case "subgraph":
@@ -247,29 +273,29 @@ final class AttributesParser: NSObject, XMLParserDelegate {
         case "xsd:list":
             if let value = attributeDict["itemType"] {
                 // assume simpleType enumerations have multiple values, so options count 1 means "listItemType"
-                simpleTypes[simpleType!] = [value]
+                simpleTypes[inSimpleType!] = [value]
             }
         case "xsd:enumeration":
             if let value = attributeDict["value"] {
-                if simpleTypes[simpleType!] == nil {
-                    simpleTypes[simpleType!] = [value]
+                if simpleTypes[inSimpleType!] == nil {
+                    simpleTypes[inSimpleType!] = [value]
                 } else {
-                    simpleTypes[simpleType!]! += [value]
+                    simpleTypes[inSimpleType!]! += [value]
                 }
             }
         case "xsd:simpleType":
             if let name = attributeDict["name"] {
-                simpleType = name // started simpleType section
+                inSimpleType = name // started simpleType section
             }
         case "xsd:complexType":
             if let name = attributeDict["name"] {
-                complexType = name // started complexType section
+                inComplexType = name // started complexType section
             }
         case "xsd:documentation":
-            documentation = true
+            inDocumentation = true
         case "xsd:annotation":
             if let id = attributeDict["id"] {
-                annotation = id // started special annotation section
+                inAnnotation = id // started special annotation section
                 overviewDoc += "<h4><a name=\"\(id)\">\(id)</a></h4>"
             }
             //        case "xsd:restriction":
@@ -302,15 +328,15 @@ final class AttributesParser: NSObject, XMLParserDelegate {
     ) {
         switch elementName {
         case "xsd:attribute":
-            attribute = nil // ended attribute name= element
+            inAttribute = nil // ended attribute name= element
         case "xsd:simpleType":
-            simpleType = nil // ended simpleType element
+            inSimpleType = nil // ended simpleType element
         case "xsd:complexType":
-            complexType = nil // ended complexType element
+            inComplexType = nil // ended complexType element
         case "xsd:documentation":
-            documentation = false
+            inDocumentation = false
         case "xsd:annotation":
-            annotation = nil
+            inAnnotation = nil
         default:
             if elementName.hasPrefix("html:") {
                 addHTML { "</\(elementName.dropFirst(5))>" }

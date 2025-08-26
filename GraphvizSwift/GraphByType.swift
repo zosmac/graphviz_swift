@@ -30,13 +30,16 @@ struct GraphByType: NSViewRepresentable {
             return NSView()
         }
     }
-    
+        
     func updateNSView(_ nsView: NSView, context: Context) {
-        let data = document.graph.renderGraph(nsView: nsView)
+        print("viewtype is \(viewType) \(nsView.frame)")
         switch nsView {
         case let nsView as WKWebView:
+            if viewType != .svg {
+                return
+            }
             nsView.load(
-                data,
+                document.graph.renderGraph(viewType: viewType),
                 mimeType: viewType.preferredMIMEType!,
                 characterEncodingName: "UTF-8",
                 baseURL: URL(filePath: "")
@@ -45,7 +48,10 @@ struct GraphByType: NSViewRepresentable {
                 nsView.pageZoom = zoomScale
             }
         case let nsView as PDFView:
-            nsView.document = PDFDocument(data: data)
+            if viewType != .pdf {
+                return
+            }
+            nsView.document = PDFDocument(data: document.graph.renderGraph(viewType: viewType))
             if nsView.scaleFactor != zoomScale {
                 if zoomScale == 0.0 { // set in GraphvizView to signal "size to fit"
                     zoomScale = nsView.scaleFactorForSizeToFit
@@ -53,18 +59,12 @@ struct GraphByType: NSViewRepresentable {
                 nsView.scaleFactor = zoomScale
             }
         default:
-            if let rect = nsView.superview?.frame {
-                let width = rect.width * zoomScale
-                let height = rect.height * zoomScale
-                let x = rect.origin.x + (rect.width - width) / 2
-                let y = rect.origin.y + (rect.height - height) / 2
-                nsView.frame = CGRect(x: x, y: y, width: width, height: height)
-            }
+            return
         }
     }
     
     static func dismantleNSView(_ nsView: NSView, coordinator: Coordinator) {
-//        print("dismantle view controller called")
+        print("dismantle view controller called \(nsView)")
         nsView.prepareForReuse()
     }
 }

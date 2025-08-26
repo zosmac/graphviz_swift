@@ -22,17 +22,9 @@ extension UTType {
 
 /// GraphvizDocument contains the contents of the file.
 final class GraphvizDocument: ReferenceFileDocument {
-    typealias Snapshot = Data
     static let readableContentTypes: [UTType] = [.gv, .dot, .canon]
     static let writableContentTypes: [UTType] = [.gv, .dot, .canon]
-
-    func snapshot(contentType: UTType) throws -> Data {
-        Data(text.utf8)
-    }
-    
-    func fileWrapper(snapshot: Data, configuration: WriteConfiguration) throws -> FileWrapper {
-        return .init(regularFileWithContents: snapshot)
-    }
+    typealias Snapshot = Data
     
     let name: String
     let docType: UTType
@@ -56,5 +48,13 @@ final class GraphvizDocument: ReferenceFileDocument {
         self.text = text
         self.docType = configuration.contentType
         self.graph = Graph(name: name, text: text)
+    }
+
+    func snapshot(contentType: UTType) throws -> Data {
+        Data(text.utf8)
+    }
+    
+    func fileWrapper(snapshot: Data, configuration: WriteConfiguration) throws -> FileWrapper {
+        return .init(regularFileWithContents: snapshot)
     }
 }

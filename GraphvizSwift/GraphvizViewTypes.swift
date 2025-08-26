@@ -19,13 +19,13 @@ extension UTType: @retroactive Identifiable {
 }
 
 let viewableContentTypes: [UTType] = {
-    var formats: [String] = []
+    var formats = [String]()
     var count: Int32 = 0
     guard let list = gvPluginList(
-        Graph.graphContext,
+        graphContext,
         "device",
         &count) else { return [] }
-    var set: Set<String> = []
+    var set = Set<String>()
     for i in 0..<Int(count) {
         if let device = list[i] {
             if let utType = UTType(filenameExtension: String(cString: device)),

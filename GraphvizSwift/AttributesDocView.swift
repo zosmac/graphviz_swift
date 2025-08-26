@@ -29,14 +29,14 @@ struct AttributesDocView: NSViewRepresentable {
     func makeNSView(context: Context) -> WKWebView {
         let docView = WKWebView()
         docView.navigationDelegate = context.coordinator
-        docView.loadHTMLString(Graph.attributeDocumentation, baseURL: URL(filePath: ""))
+        docView.loadHTMLString(parsedAttributes.documentation, baseURL: URL(filePath: ""))
         return docView
     }
     
     func updateNSView(_ nsView: WKWebView, context: Context) {
         let kind = kindRow.kind
         let row = kindRow.row
-        let table = Graph.attributeDefaults.tables[kind]
+        let table = parsedAttributes.kinds[kind].attributes
         if let row,
            let index = table.firstIndex(where: { $0.id == row }) {
             let name = table[index].name

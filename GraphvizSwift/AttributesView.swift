@@ -7,40 +7,24 @@
 
 import SwiftUI
 
-/// A heading for the AttributesView for each kind of attribute: graph, node, edge.
-struct heading: Identifiable, Hashable {
-    var id: String { heading }
-    var heading: String
-    var kind: Int
-    init(_ heading: String, _ kind: Int) {
-        self.heading = heading
-        self.kind = kind
-    }
-    func hash(into hasher: inout Hasher) { // Hashable
-        hasher.combine(heading)
-    }
-}
-
-let headings: [heading] = [heading("􁁀 Graph", AGRAPH), heading("􀲞 Node", AGNODE), heading("􀫰 Edge", AGEDGE)]
-
 // AttributesView shows the values of graph, node, and edge attributes of a graph.
 struct AttributesView: View {
     @Environment(KindRow.self) private var kindRow: KindRow
     @Binding var graph: Graph
-    @State private var kind: Int = 0
+    @State private var kind: AttributesByKind.ID = AGRAPH
     @State private var row: Attribute.ID?
     
     var body: some View {
         VStack(spacing: 10) {
             Picker("Kinds", selection: $kind) {
-                ForEach(headings) {
-                    Text($0.heading).tag($0.kind)
+                ForEach(parsedAttributes.kinds, id: \.self) {
+                    Text($0.label).tag($0.kind)
                 }
             }
             .pickerStyle(.segmented)
             .labelsHidden()
             .padding(.top, 5.0)
-            let table = graph.attributes.tables[kind]
+            let table = graph.attributes.attributesByKind[kind]
             ScrollViewReader { proxy in
                 Table(table, selection: $row) {
                     TableColumn("Attribute", value: \.name)
@@ -48,7 +32,7 @@ struct AttributesView: View {
                         if let options = attribute.options {
                             OptionView(graph: $graph, kind: kind, name: attribute.name, options: options, value: attribute.value)
                         } else {
-                            ValueView(graph: $graph, kind: kind, name: attribute.name, label: attribute.defaultValue ?? "", value: attribute.value, enabled: attribute.value.isEmpty)
+                            ValueView(graph: $graph, kind: kind, name: attribute.name, label: attribute.defaultValue ?? "", value: attribute.value) //, enabled: attribute.value.isEmpty)
                         }
                     }
                 }
@@ -99,13 +83,13 @@ struct ValueView: View {
     var name: String
     var label: String
     @State var value: String
-    @State var enabled: Bool
+//    @State var enabled: Bool
 
     var body: some View {
         TextField(label, text: $value)
-            .disabled(!enabled)
+//            .disabled(!enabled)
             .onSubmit {
-                enabled = false
+//                enabled = false
                 graph.changeAttribute(kind: kind, name: name, value: value)
             }
     }

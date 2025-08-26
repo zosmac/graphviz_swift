@@ -16,9 +16,9 @@ enum GraphvizError: Int {
 
 /// KindRow links the selection of an attribute from a graph, node, edge table and its row, to an anchor in the AttributesDocView.
 @Observable final class KindRow {
-    var kind: Int
+    var kind: AttributesByKind.ID
     var row: Attribute.ID?
-    init(kind: Int = AGRAPH, row: Attribute.ID? = nil) {
+    init(kind: AttributesByKind.ID = AGRAPH, row: Attribute.ID? = nil) {
         self.kind = kind
         self.row = row
     }
@@ -26,16 +26,19 @@ enum GraphvizError: Int {
 
 /// GraphvizApp creates the graphviz document views and attributes documentation window.
 @main struct GraphvizApp: App {
-    @State private var kindRow = KindRow() // positions attributes doc window to attribute's doc
     @FocusedValue(\.showExportSheet) private var showExportSheet
-    
+    @FocusedValue(\.showExportType) private var showExportType
+    @State private var kindRow = KindRow() // positions attributes doc window to attribute's doc
+
     var body: some Scene {
-        DocumentGroup(newDocument: { GraphvizDocument() }) { file in
-            GraphvizView(document: file.document)
+        DocumentGroup(newDocument: { GraphvizDocument() }) {
+            GraphvizView(document: $0.document, url: $0.fileURL)
         }
         .commands {
+            SidebarCommands()
+            ToolbarCommands()
             CommandGroup(replacing: .importExport) {
-                ExportSheetButton()
+                ExportSheetButton(viewType: showExportType?.wrappedValue ?? .pdf)
             }
             CommandGroup(replacing: .help) {
                 Button("Graphviz Help") {
@@ -54,7 +57,7 @@ enum GraphvizError: Int {
             AttributesDocView()
         }
         .defaultSize(width: 350, height: 400)
-        .defaultPosition(.topTrailing)
+        .defaultPosition(.topLeading)
         .environment(kindRow)
     }
 }

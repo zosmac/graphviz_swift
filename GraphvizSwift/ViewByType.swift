@@ -1,0 +1,55 @@
+//
+//  ViewByType.swift
+//  GraphvizSwift
+//
+//  Created by Keefe Hayes on 8/23/25.
+//
+
+import UniformTypeIdentifiers
+import SwiftUI
+import PDFKit
+import WebKit
+
+struct ViewByType: View {
+    @ObservedObject var document: GraphvizDocument
+    @Binding var viewType: UTType
+    @Binding var zoomScale: CGFloat
+
+    var body: some View {
+        GeometryReader {geometryProxy in
+            switch viewType {
+            case document.docType:
+                TextEditor(text: $document.text)
+                    .monospaced()
+                    .onChange(of: document.text) {
+                        document.graph = Graph(name: document.name, text: document.text)
+                    }
+            case .pdf: // use explicit cases for GraphByType to force recreating when viewType changes
+                GraphByType(document: document, viewType: $viewType, zoomScale: $zoomScale)
+            case .svg: // use explicit cases for GraphByType to force recreating when viewType changes
+                GraphByType(document: document, viewType: $viewType, zoomScale: $zoomScale)
+            case .canon, .gv, .dot, .json:
+                if let text = String(data: document.graph.renderGraph(viewType: viewType), encoding: .utf8) {
+                    ScrollView {
+                        Text(text)
+                    }
+                } else {
+                    Text("Render of text type \(viewType.identifier) failed")
+                        .font(Font.largeTitle)
+                }
+            default:
+                if let image = NSImage(data: document.graph.renderGraph(viewType: viewType)) {
+                    ScrollView([.vertical, .horizontal]) {
+                        Image(nsImage: image)
+                            .resizable()
+                            .scaledToFit() // Scale the image to fit its container
+                            .frame(width: image.size.width*zoomScale, height: image.size.height*zoomScale)
+                    }
+                } else {
+                    Text("Render of image type \(viewType.identifier) failed")
+                        .font(Font.largeTitle)
+                }
+            }
+        }
+    }
+}

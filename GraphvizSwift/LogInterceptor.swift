@@ -5,6 +5,7 @@
 //  Created by Keefe Hayes on 6/16/25.
 //
 
+import os
 import SwiftUI
 
 /// LogObservee provides a place for log messages to be sent for display in the inspector view. This type is observable so that the posting of the message is detectcd by the Text view in InspectorView.
@@ -56,10 +57,16 @@ final class LogObserver {
         }
     }
     
-    func observe(name: String, block: () -> Void) -> Void {
-        LogInterceptor.enter(name)
-        block()
-        LogInterceptor.exit()
+    func observe(name: String, block: () -> Any ) -> Any {
+        LogInterceptor.logLock.lock()
+        fflush(stderr)
+        dup2(LogInterceptor.shared.pipe.fileHandleForWriting.fileDescriptor, STDERR_FILENO)
+        LogInterceptor.shared.pipe.fileHandleForWriting.write(Data("\(name)\n".utf8))
+        let result = block()
+        LogInterceptor.shared.pipe.fileHandleForWriting.write(Data("\n".utf8))
+        dup2(LogInterceptor.shared.duperr, STDERR_FILENO)
+        LogInterceptor.logLock.unlock()
+        return result
     }
 }
 
@@ -69,8 +76,9 @@ let logInterceptor = LogInterceptor.shared
 /// LogInterceptor defines a pipe for capturing log messages sent to stderr.
 struct LogInterceptor {
     static let shared = LogInterceptor()
-    private let pipe = Pipe()
-    private let duperr = dup(STDERR_FILENO)
+    static let logLock = OSAllocatedUnfairLock()
+    let pipe = Pipe()
+    let duperr = dup(STDERR_FILENO)
 
     private init() {
 //        let duperrHandle = FileHandle(fileDescriptor: duperr)
@@ -78,7 +86,8 @@ struct LogInterceptor {
             var data = Data()
             while true {
                 data += handle.availableData
-                if data[data.endIndex-1] == 10 &&
+                if data.count > 2 && // TODO: Scan for "\n\n" instead? Use additional exit string?
+                    data[data.endIndex-1] == 10 &&
                     data[data.endIndex-2] == 10 {
                     data = data.dropLast(2)
                     let string = String(data: data, encoding: .utf8)!
@@ -86,25 +95,16 @@ struct LogInterceptor {
                     let name = splits[0]
                     let message = splits.count > 1 ? splits[1...].joined(separator: "\n") : ""
 //                    duperrHandle.write(Data("\(name): \(message)\n".utf8))
-                    NotificationCenter.default.post(
-                        name: Notification.Name("GraphvizSwift.LogInterceptor.\(name)"),
-                        object: nil,
-                        userInfo: ["message": message]
-                    )
+                    if !message.isEmpty {
+                        NotificationCenter.default.post(
+                            name: Notification.Name("GraphvizSwift.LogInterceptor.\(name)"),
+                            object: nil,
+                            userInfo: ["message": message]
+                        )
+                    }
                     data = Data()
                 }
             }
         }
-    }
-    
-    static func enter(_ name: String) {
-        fflush(stderr)
-        dup2(LogInterceptor.shared.pipe.fileHandleForWriting.fileDescriptor, STDERR_FILENO)
-        LogInterceptor.shared.pipe.fileHandleForWriting.write(Data("\(name)\n".utf8))
-    }
-    
-    static func exit() {
-        LogInterceptor.shared.pipe.fileHandleForWriting.write(Data("\n".utf8))
-        dup2(LogInterceptor.shared.duperr, STDERR_FILENO)
     }
 }
