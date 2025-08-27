@@ -26,8 +26,8 @@ enum GraphvizError: Int {
 
 /// GraphvizApp creates the graphviz document views and attributes documentation window.
 @main struct GraphvizApp: App {
-    @FocusedValue(\.showExportSheet) private var showExportSheet
-    @FocusedValue(\.showExportType) private var showExportType
+    @FocusedValue(\.saveViewShow) private var saveViewShow
+    @FocusedValue(\.saveViewType) private var saveViewType
     @State private var kindRow = KindRow() // positions attributes doc window to attribute's doc
 
     var body: some Scene {
@@ -38,7 +38,7 @@ enum GraphvizError: Int {
             SidebarCommands()
             ToolbarCommands()
             CommandGroup(replacing: .importExport) {
-                ExportSheetButton(viewType: showExportType?.wrappedValue ?? .pdf)
+                SaveViewButton(viewType: saveViewType?.wrappedValue ?? .pdf)
             }
             CommandGroup(replacing: .help) {
                 Button("Graphviz Help") {

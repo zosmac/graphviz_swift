@@ -1,5 +1,5 @@
 //
-//  SaveViewView.swift
+//  SaveViewSheet.swift
 //  GraphvizSwift
 //
 //  Created by Keefe Hayes on 8/16/25.
@@ -39,7 +39,7 @@ struct SaveViewButton: View {
         } label: {
             Label("Save \(viewType.preferredFilenameExtension!.uppercased())", systemImage: "square.and.arrow.down.on.square")
         }
-        .keyboardShortcut("E")
+        .keyboardShortcut("S", modifiers: [.option, .command])
         .disabled(saveViewShow == nil)
     }
 }
@@ -47,37 +47,43 @@ struct SaveViewButton: View {
 struct SaveViewSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Binding var saveViewShow: Bool
-    var url: URL
+    var url: URL?
     @Binding var viewType: UTType
     @Binding var graph: Graph
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Save File:")
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(Color.blue)
-            Text(url.deletingPathExtension().appendingPathExtension(viewType.preferredFilenameExtension!).path)
-                .font(.system(size: 14, weight: .semibold, design: .rounded))
-            HStack {
-                Spacer()
-                Button("Cancel") {
-                    saveViewShow = false
-                    dismiss()
-                }
-                Button("Save") {
-                    if let ext = viewType.preferredFilenameExtension {
-                        let url = url.deletingPathExtension().appendingPathExtension(ext)
+            if let ext = viewType.preferredFilenameExtension,
+                let url = url?.deletingPathExtension().appendingPathExtension(ext) {
+                Text("Save File:")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(Color.blue)
+                Text(url.path)
+                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+                HStack {
+                    Spacer()
+                    Button("Cancel") {
+                        saveViewShow = false
+                        dismiss()
+                    }
+                    Button("Save") {
                         do {
                             print("save \(url.path)")
                             try graph.renderGraph(viewType: viewType).write(to: url)
                         } catch {
                             print("Save failed \(error)")
                         }
+                        saveViewShow = false
+                        dismiss()
                     }
+                    .keyboardShortcut(.defaultAction)
+                }
+            } else {
+                Text("Unnamed file requires a name to save.")
+                Button("Dismiss") {
                     saveViewShow = false
                     dismiss()
                 }
-                .keyboardShortcut(.defaultAction)
             }
         }
         .padding(20)
