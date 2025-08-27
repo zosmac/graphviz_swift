@@ -1,5 +1,5 @@
 //
-//  ExportSheetView.swift
+//  SaveViewView.swift
 //  GraphvizSwift
 //
 //  Created by Keefe Hayes on 8/16/25.
@@ -8,45 +8,45 @@
 import UniformTypeIdentifiers
 import SwiftUI
 
-struct ExportSheetKey: FocusedValueKey {
+struct SaveViewShow: FocusedValueKey {
     typealias Value = Binding<Bool>
 }
 
-struct ExportSheetType: FocusedValueKey {
+struct SaveViewType: FocusedValueKey {
     typealias Value = Binding<UTType>
 }
 
 extension FocusedValues {
-    var showExportSheet: Binding<Bool>? {
-        get { self[ExportSheetKey.self] }
-        set { self[ExportSheetKey.self] = newValue }
+    var saveViewShow: Binding<Bool>? {
+        get { self[SaveViewShow.self] }
+        set { self[SaveViewShow.self] = newValue }
     }
-    var showExportType: Binding<UTType>? {
-        get { self[ExportSheetType.self] }
-        set { self[ExportSheetType.self] = newValue }
+    var saveViewType: Binding<UTType>? {
+        get { self[SaveViewType.self] }
+        set { self[SaveViewType.self] = newValue }
     }
 }
 
-struct ExportSheetButton: View {
-    @FocusedValue(\.showExportSheet) private var showExportSheet
-    @FocusedValue(\.showExportType) private var showExportType
+struct SaveViewButton: View {
+    @FocusedValue(\.saveViewShow) private var saveViewShow
+    @FocusedValue(\.saveViewType) private var saveViewType
     var viewType: UTType
     
     var body: some View {
         Button {
-            showExportSheet?.wrappedValue = true
-            showExportType?.wrappedValue = viewType
+            saveViewShow?.wrappedValue = true
+            saveViewType?.wrappedValue = viewType
         } label: {
             Label("Save \(viewType.preferredFilenameExtension!.uppercased())", systemImage: "square.and.arrow.down.on.square")
         }
         .keyboardShortcut("E")
-        .disabled(showExportSheet == nil)
+        .disabled(saveViewShow == nil)
     }
 }
 
-struct ExportSheetView: View {
+struct SaveViewSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @Binding var showExportSheet: Bool
+    @Binding var saveViewShow: Bool
     var url: URL
     @Binding var viewType: UTType
     @Binding var graph: Graph
@@ -61,7 +61,7 @@ struct ExportSheetView: View {
             HStack {
                 Spacer()
                 Button("Cancel") {
-                    showExportSheet = false
+                    saveViewShow = false
                     dismiss()
                 }
                 Button("Save") {
@@ -74,7 +74,7 @@ struct ExportSheetView: View {
                             print("Save failed \(error)")
                         }
                     }
-                    showExportSheet = false
+                    saveViewShow = false
                     dismiss()
                 }
                 .keyboardShortcut(.defaultAction)
