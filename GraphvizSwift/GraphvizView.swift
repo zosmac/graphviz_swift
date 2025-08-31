@@ -19,7 +19,9 @@ struct GraphvizView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var document: GraphvizDocument
     let url: URL?
-    
+    @Binding var kind: AttributesByKind.ID
+    @Binding var row: Attribute.ID?
+
     @State private var viewType: UTType = .pdf // TODO: set default in app settings
     @State private var sidebarVisibility: NavigationSplitViewVisibility = .detailOnly
     @State private var inspectorPresented: Bool = false
@@ -30,12 +32,14 @@ struct GraphvizView: View {
     var body: some View {
         NavigationSplitView(columnVisibility: $sidebarVisibility) {
             AttributesView(graph: $document.graph)
+                .focusedValue(\.attributesKind, $kind)
+                .focusedValue(\.attributesRow, $row)
                 .toolbar(removing: .sidebarToggle)
         }
         detail: {
             ViewByType(document: document, viewType: $viewType, zoomScale: $zoomScale)
-                .focusedSceneValue(\.saveViewShow, $saveViewShow)
-                .focusedSceneValue(\.saveViewType, $viewType)
+                .focusedValue(\.saveViewShow, $saveViewShow)
+                .focusedValue(\.saveViewType, $viewType)
                 .sheet(isPresented: $saveViewShow) {
                     SaveViewSheet(saveViewShow: $saveViewShow, url: url, viewType: $viewType, graph: $document.graph)
                 }

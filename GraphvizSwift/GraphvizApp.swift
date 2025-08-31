@@ -14,25 +14,20 @@ enum GraphvizError: Int {
     case FileParse
 }
 
-/// KindRow links the selection of an attribute from a graph, node, edge table and its row, to an anchor in the AttributesDocView.
-@Observable final class KindRow {
-    var kind: AttributesByKind.ID
-    var row: Attribute.ID?
-    init(kind: AttributesByKind.ID = AGRAPH, row: Attribute.ID? = nil) {
-        self.kind = kind
-        self.row = row
-    }
-}
-
 /// GraphvizApp creates the graphviz document views and attributes documentation window.
 @main struct GraphvizApp: App {
+    @FocusedValue(\.attributesKind) private var attributesKind
+    @FocusedValue(\.attributesRow) private var attributesRow
     @FocusedValue(\.saveViewShow) private var saveViewShow
     @FocusedValue(\.saveViewType) private var saveViewType
-    @State private var kindRow = KindRow() // positions attributes doc window to attribute's doc
+    @State private var kind: AttributesByKind.ID = AGRAPH
+    @State private var row: Attribute.ID?
 
     var body: some Scene {
         DocumentGroup(newDocument: { GraphvizDocument() }) {
-            GraphvizView(document: $0.document, url: $0.fileURL)
+            GraphvizView(document: $0.document, url: $0.fileURL, kind: $kind, row: $row)
+                .focusedValue(\.attributesKind, $kind)
+                .focusedValue(\.attributesRow, $row)
         }
         .commands {
             SidebarCommands()
@@ -51,13 +46,14 @@ enum GraphvizError: Int {
         }
         .defaultSize(width: 800, height: 600)
         .defaultPosition(.top)
-        .environment(kindRow)
         
         Window("Attributes", id: "AttributesDocView") {
             AttributesDocView()
+                .focusedValue(\.attributesKind, $kind)
+                .focusedValue(\.attributesRow, $row)
         }
         .defaultSize(width: 350, height: 400)
         .defaultPosition(.topLeading)
-        .environment(kindRow)
     }
+
 }

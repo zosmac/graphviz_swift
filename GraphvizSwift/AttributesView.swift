@@ -7,9 +7,15 @@
 
 import SwiftUI
 
+extension FocusedValues {
+    @Entry var attributesKind: Binding<AttributesByKind.ID>?
+    @Entry var attributesRow: Binding<Attribute.ID?>?
+}
+
 // AttributesView shows the values of graph, node, and edge attributes of a graph.
 struct AttributesView: View {
-    @Environment(KindRow.self) private var kindRow: KindRow
+    @FocusedValue(\.attributesKind) private var attributesKind
+    @FocusedValue(\.attributesRow) private var attributesRow
     @Binding var graph: Graph
     @State private var kind: AttributesByKind.ID = AGRAPH
     @State private var row: Attribute.ID?
@@ -28,7 +34,7 @@ struct AttributesView: View {
             ScrollViewReader { proxy in
                 Table(table, selection: $row) {
                     TableColumn("Attribute", value: \.name)
-                    TableColumn("Value") { (attribute: Attribute) in
+                    TableColumn("Value") { attribute in
                         if let options = attribute.options {
                             OptionView(graph: $graph, kind: kind, name: attribute.name, options: options, value: attribute.value)
                         } else {
@@ -37,18 +43,21 @@ struct AttributesView: View {
                     }
                 }
                 .onChange(of: kind) { // table kind changed
+                    attributesKind?.wrappedValue = kind
                     if let index = table.firstIndex(where: { $0.id == row }) {
                         // row in this table kind previously selected, scroll to it
                         // (direct scroll using row itself doesn't work)
-                        proxy.scrollTo(table[index].id, anchor: .top)
+                        attributesRow?.wrappedValue = row!
+                        proxy.scrollTo(table[index].id, anchor: .center)
                     } else if let toprow = table.first {
                         // scroll to top
-                        proxy.scrollTo(toprow.id)
+                        attributesRow?.wrappedValue = nil
+                        proxy.scrollTo(toprow.id, anchor: .top)
                     }
                 }
                 .onChange(of: row) {
-                    kindRow.kind = kind
-                    kindRow.row = row
+                    attributesKind?.wrappedValue = kind
+                    attributesRow?.wrappedValue = row!
                 }
             }
         }

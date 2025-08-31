@@ -10,7 +10,8 @@ import WebKit
 
 /// AttributesDocView displays the documentation for attributes from attributes.xml.
 struct AttributesDocView: NSViewRepresentable {
-    @Environment(KindRow.self) private var kindRow: KindRow
+    @FocusedValue(\.attributesKind) private var attributesKind
+    @FocusedValue(\.attributesRow) private var attributesRow
     
     class Coordinator: NSObject, WKNavigationDelegate {
         func webView(
@@ -34,25 +35,25 @@ struct AttributesDocView: NSViewRepresentable {
     }
     
     func updateNSView(_ nsView: WKWebView, context: Context) {
-        let kind = kindRow.kind
-        let row = kindRow.row
+        guard let kind = attributesKind?.wrappedValue else { return }
         let table = parsedAttributes.kinds[kind].attributes
-        if let row,
+        var name = "#"
+        if let row = attributesRow?.wrappedValue,
            let index = table.firstIndex(where: { $0.id == row }) {
-            let name = table[index].name
-            nsView.evaluateJavaScript("window.location.hash='#\(name)'") { (result: Any?, error: Error?) in
-                if let result {
-                    print("Result from JavaScript: \(result)")
-                }
-                if let error = error {
-                    print("Error evaluating JavaScript: \(error)")
-                }
+            name += table[index].name
+        }
+        nsView.evaluateJavaScript("window.location.hash='\(name)'") { (result: Any?, error: Error?) in
+            if let result {
+                print("Result from JavaScript: \(result)")
+            }
+            if let error = error {
+                print("Error evaluating JavaScript: \(error)")
             }
         }
     }
     
     static func dismantleNSView(_ nsView: WKWebView, coordinator: Coordinator) {
-//        print("dismantling AttributeDocView", nsView)
+        //        print("dismantling AttributeDocView", nsView)
         nsView.prepareForReuse()
     }
 }
