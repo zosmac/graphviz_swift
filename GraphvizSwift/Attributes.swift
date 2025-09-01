@@ -146,9 +146,14 @@ final class ParsedAttributes {
 <h3>Attributes Overview</h3>
 \(delegate.overviewDoc)
 <h3>Attributes Types</h3>
-\(delegate.simpleTypeDoc.keys.sorted().joined(separator: " "))
-<h3>Attributes</h3>
 """
+        for key in delegate.simpleTypeDoc.keys.sorted() {
+            if let simpleTypeDoc = delegate.simpleTypeDoc[key], !simpleTypeDoc.isEmpty {
+                documentation += simpleTypeDoc
+            }
+        }
+        
+        documentation += "<h3>Attributes</h3>"
         var tables = Array(repeating: [ParsedAttribute](), count: 3)
         for attribute in delegate.attributes.sorted() {
             if let options = delegate.simpleTypes[attribute.simpleType] {

@@ -19,7 +19,7 @@ struct AttributesDocView: NSViewRepresentable {
             decidePolicyFor navigationAction: WKNavigationAction,
             decisionHandler: @escaping @MainActor (WKNavigationActionPolicy) -> Void
         ) {
-            decisionHandler(webView.url?.relativePath == "/" ? .allow : .cancel) // prevent navigation away from doc page
+            decisionHandler(navigationAction.request.url?.relativePath == "/" ? .allow : .cancel) // prevent navigation away from doc page
         }
     }
     
@@ -35,21 +35,15 @@ struct AttributesDocView: NSViewRepresentable {
     }
     
     func updateNSView(_ nsView: WKWebView, context: Context) {
-        guard let kind = attributesKind?.wrappedValue else { return }
-        let table = parsedAttributes.kinds[kind].attributes
         var name = "#"
-        if let row = attributesRow?.wrappedValue,
-           let index = table.firstIndex(where: { $0.id == row }) {
-            name += table[index].name
+        if let kind = attributesKind?.wrappedValue {
+           let table = parsedAttributes.kinds[kind].attributes
+           if let row = attributesRow?.wrappedValue,
+              let index = table.firstIndex(where: { $0.id == row }) {
+               name += table[index].name
+           }
         }
-        nsView.evaluateJavaScript("window.location.hash='\(name)'") { (result: Any?, error: Error?) in
-            if let result {
-                print("Result from JavaScript: \(result)")
-            }
-            if let error = error {
-                print("Error evaluating JavaScript: \(error)")
-            }
-        }
+        nsView.evaluateJavaScript("window.location.hash='\(name)'")
     }
     
     static func dismantleNSView(_ nsView: WKWebView, coordinator: Coordinator) {

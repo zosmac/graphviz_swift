@@ -8,6 +8,12 @@
 import UniformTypeIdentifiers
 import SwiftUI
 
+@Observable final class OpenSidebarCount {
+    var count: Int = 0
+    init(_ count: Int = 0) {
+        self.count = count
+    }
+}
 @Observable final class Sheet {
     var isPresented: Bool = false
 }
@@ -17,6 +23,8 @@ struct GraphvizView: View {
     @Environment(\.openWindow) private var openWindow
     @Environment(\.dismissWindow) private var dismissWindow
     @Environment(\.dismiss) private var dismiss
+    @Environment(OpenSidebarCount.self) private var openSidebarCount: OpenSidebarCount
+    
     @ObservedObject var document: GraphvizDocument
     let url: URL?
     @Binding var kind: AttributesByKind.ID
@@ -32,14 +40,14 @@ struct GraphvizView: View {
     var body: some View {
         NavigationSplitView(columnVisibility: $sidebarVisibility) {
             AttributesView(graph: $document.graph)
-                .focusedValue(\.attributesKind, $kind)
-                .focusedValue(\.attributesRow, $row)
+                .focusedSceneValue(\.attributesKind, $kind)
+                .focusedSceneValue(\.attributesRow, $row)
                 .toolbar(removing: .sidebarToggle)
         }
         detail: {
             ViewByType(document: document, viewType: $viewType, zoomScale: $zoomScale)
-                .focusedValue(\.saveViewShow, $saveViewShow)
-                .focusedValue(\.saveViewType, $viewType)
+                .focusedSceneValue(\.saveViewShow, $saveViewShow)
+                .focusedSceneValue(\.saveViewType, $viewType)
                 .sheet(isPresented: $saveViewShow) {
                     SaveViewSheet(saveViewShow: $saveViewShow, url: url, viewType: $viewType, graph: $document.graph)
                 }
@@ -50,10 +58,16 @@ struct GraphvizView: View {
                 Button("Attributes", systemImage: "tablecells") {
                     if sidebarVisibility == .detailOnly {
                         sidebarVisibility = .doubleColumn
-                        openWindow(id: "AttributesDocView")
+                        openSidebarCount.count += 1
                     } else {
                         sidebarVisibility = .detailOnly
-                        dismissWindow(id: "AttributesDocView") // TODO: only dismiss when all attributesviews closed
+                        openSidebarCount.count -= 1
+                    }
+                    if openSidebarCount.count > 0 {
+                        openWindow(id: "AttributesDocView")
+                    } else {
+                        openSidebarCount.count = 0
+                        dismissWindow(id: "AttributesDocView")
                     }
                 }
             }

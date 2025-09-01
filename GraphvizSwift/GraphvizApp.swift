@@ -16,6 +16,7 @@ enum GraphvizError: Int {
 
 /// GraphvizApp creates the graphviz document views and attributes documentation window.
 @main struct GraphvizApp: App {
+    @State private var openSidebarCount = OpenSidebarCount(0)
     @FocusedValue(\.attributesKind) private var attributesKind
     @FocusedValue(\.attributesRow) private var attributesRow
     @FocusedValue(\.saveViewShow) private var saveViewShow
@@ -26,12 +27,14 @@ enum GraphvizError: Int {
     var body: some Scene {
         DocumentGroup(newDocument: { GraphvizDocument() }) {
             GraphvizView(document: $0.document, url: $0.fileURL, kind: $kind, row: $row)
-                .focusedValue(\.attributesKind, $kind)
-                .focusedValue(\.attributesRow, $row)
+                .environment(openSidebarCount)
+                .focusedSceneValue(\.attributesKind, $kind)
+                .focusedSceneValue(\.attributesRow, $row)
         }
         .commands {
             SidebarCommands()
             ToolbarCommands()
+            CommandGroup(replacing: .newItem) {}
             CommandGroup(replacing: .importExport) {
                 SaveViewButton(viewType: saveViewType?.wrappedValue ?? .pdf)
             }
@@ -49,11 +52,11 @@ enum GraphvizError: Int {
         
         Window("Attributes", id: "AttributesDocView") {
             AttributesDocView()
-                .focusedValue(\.attributesKind, $kind)
-                .focusedValue(\.attributesRow, $row)
+                .focusedSceneValue(\.attributesKind, $kind)
+                .focusedSceneValue(\.attributesRow, $row)
         }
+//        .restorationBehavior(.disabled)
+        .defaultPosition(.topTrailing)
         .defaultSize(width: 350, height: 400)
-        .defaultPosition(.topLeading)
     }
-
 }
