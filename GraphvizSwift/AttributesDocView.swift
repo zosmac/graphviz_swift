@@ -8,6 +8,10 @@
 import SwiftUI
 import WebKit
 
+@Observable final class AttributesDocViewLaunch {
+    var firstTime: Bool = true
+}
+
 /// AttributesDocView displays the documentation for attributes from attributes.xml.
 struct AttributesDocView: NSViewRepresentable {
     @FocusedValue(\.attributesKind) private var attributesKind
@@ -19,7 +23,7 @@ struct AttributesDocView: NSViewRepresentable {
             decidePolicyFor navigationAction: WKNavigationAction,
             decisionHandler: @escaping @MainActor (WKNavigationActionPolicy) -> Void
         ) {
-            decisionHandler(navigationAction.request.url?.relativePath == "/" ? .allow : .cancel) // prevent navigation away from doc page
+            decisionHandler(navigationAction.request.url?.absoluteString.hasPrefix("file:///") ?? false ? .allow : .cancel) // prevent navigation away from doc page
         }
     }
     
@@ -30,7 +34,7 @@ struct AttributesDocView: NSViewRepresentable {
     func makeNSView(context: Context) -> WKWebView {
         let docView = WKWebView()
         docView.navigationDelegate = context.coordinator
-        docView.loadHTMLString(parsedAttributes.documentation, baseURL: URL(filePath: ""))
+        docView.loadHTMLString(parsedAttributes.documentation, baseURL: URL(filePath: "")) // aka: "file:///"
         return docView
     }
     

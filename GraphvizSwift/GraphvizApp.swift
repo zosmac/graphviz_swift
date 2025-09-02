@@ -16,18 +16,18 @@ enum GraphvizError: Int {
 
 /// GraphvizApp creates the graphviz document views and attributes documentation window.
 @main struct GraphvizApp: App {
-    @State private var openSidebarCount = OpenSidebarCount(0)
     @FocusedValue(\.attributesKind) private var attributesKind
     @FocusedValue(\.attributesRow) private var attributesRow
     @FocusedValue(\.saveViewShow) private var saveViewShow
     @FocusedValue(\.saveViewType) private var saveViewType
+    @State private var attributesDocViewLaunch = AttributesDocViewLaunch()
     @State private var kind: AttributesByKind.ID = AGRAPH
     @State private var row: Attribute.ID?
 
     var body: some Scene {
         DocumentGroup(newDocument: { GraphvizDocument() }) {
             GraphvizView(document: $0.document, url: $0.fileURL, kind: $kind, row: $row)
-                .environment(openSidebarCount)
+                .environment(attributesDocViewLaunch)
                 .focusedSceneValue(\.attributesKind, $kind)
                 .focusedSceneValue(\.attributesRow, $row)
         }
@@ -49,13 +49,12 @@ enum GraphvizError: Int {
         }
         .defaultSize(width: 800, height: 600)
         .defaultPosition(.top)
-        
-        Window("Attributes", id: "AttributesDocView") {
+
+        UtilityWindow("Attributes Documentation", id: "AttributesDocView") {
             AttributesDocView()
                 .focusedSceneValue(\.attributesKind, $kind)
                 .focusedSceneValue(\.attributesRow, $row)
         }
-//        .restorationBehavior(.disabled)
         .defaultPosition(.topTrailing)
         .defaultSize(width: 350, height: 400)
     }

@@ -20,11 +20,8 @@ import SwiftUI
 
 /// GraphvizView displays the rendered graph and the attributes and file contents inspectors.
 struct GraphvizView: View {
-    @Environment(\.openWindow) private var openWindow
-    @Environment(\.dismissWindow) private var dismissWindow
-    @Environment(\.dismiss) private var dismiss
-    @Environment(OpenSidebarCount.self) private var openSidebarCount: OpenSidebarCount
-    
+    @Environment(\.openWindow) var openWindow
+    @Environment(AttributesDocViewLaunch.self) var attributesDocViewLaunch
     @ObservedObject var document: GraphvizDocument
     let url: URL?
     @Binding var kind: AttributesByKind.ID
@@ -51,23 +48,20 @@ struct GraphvizView: View {
                 .sheet(isPresented: $saveViewShow) {
                     SaveViewSheet(saveViewShow: $saveViewShow, url: url, viewType: $viewType, graph: $document.graph)
                 }
-                .coordinateSpace(name: "Image View")
+        }
+        .onAppear {
+            if attributesDocViewLaunch.firstTime {
+                openWindow(id: "AttributesDocView")
+            }
+            attributesDocViewLaunch.firstTime = false
         }
         .toolbar(id: "GraphvizViewToolbar") {
             ToolbarItem(id: "Sidebar", placement: .navigation) {
                 Button("Attributes", systemImage: "tablecells") {
                     if sidebarVisibility == .detailOnly {
                         sidebarVisibility = .doubleColumn
-                        openSidebarCount.count += 1
                     } else {
                         sidebarVisibility = .detailOnly
-                        openSidebarCount.count -= 1
-                    }
-                    if openSidebarCount.count > 0 {
-                        openWindow(id: "AttributesDocView")
-                    } else {
-                        openSidebarCount.count = 0
-                        dismissWindow(id: "AttributesDocView")
                     }
                 }
             }
@@ -75,14 +69,14 @@ struct GraphvizView: View {
                 ControlGroup("􀁞") {
                     ScrollView {
                         // observee must be an observable class type
-                        Text(document.graph.observer.observee.message)
+                        Text(document.graph.logMessage.message)
                             .foregroundStyle(.red)
                     }
                     .defaultScrollAnchor(.zero)
                 }
                 .controlGroupStyle(.menu)
             }
-            .hidden(document.graph.observer.observee.message.isEmpty)
+            .hidden(document.graph.logMessage.message.isEmpty)
             ToolbarSpacer()
             ToolbarItem(id: "View Type", placement: .primaryAction) {
                 ControlGroup("View Type") {

@@ -14,8 +14,7 @@ nonisolated(unsafe) let graphContext = gvContext()
 
 /// Graph bridges a Graphviz document to its views.
 @Observable final class Graph {
-    let name: String
-    var observer: LogObserver!
+    let logMessage = LogMessage()
     nonisolated(unsafe) let graph: UnsafeMutablePointer<Agraph_t>?
 
     var attributes: Attributes!
@@ -23,19 +22,15 @@ nonisolated(unsafe) let graphContext = gvContext()
     
     nonisolated
     init() {
-        self.name = ""
         self.graph = nil
     }
     
     nonisolated
     init(name: String, text: String) {
-        self.name = name
-        let observer = LogObserver(name: name)
-        self.graph = observer.observe(name: name) {
+        self.graph = GraphvizLogHandler.capture(logMessage: self.logMessage) {
             return agmemread(text + "\n") as Any
         } as! UnsafeMutablePointer<Agraph_t>?
-//        print("INIT \(name) \(graph)")
-        self.observer = observer
+        print("INIT \(graph, default: "nil")")
         var settings: [[String: String]] = [[:], [:], [:]]
         if let graph {
             for kind in parsedAttributes.kinds { // assumes these are 0, 1, 2 ;)
@@ -53,7 +48,7 @@ nonisolated(unsafe) let graphContext = gvContext()
     }
     
     deinit {
-        print("deinit Graph \(name) \(graph)")
+        print("deinit Graph \(graph, default: "nil")")
         if graph != nil {
             agclose(graph)
         }
@@ -66,11 +61,11 @@ nonisolated(unsafe) let graphContext = gvContext()
 
     nonisolated
     func renderGraph(viewType: UTType) -> Data {
-        print("RENDER \(name) \(viewType) \(graph)")
+        print("RENDER \(viewType) \(graph, default: "nil")")
         guard let format = viewType.preferredFilenameExtension,
               let graph else { return Data() }
 
-        return observer.observe(name: name) {
+        return GraphvizLogHandler.capture(logMessage: self.logMessage) {
             var data = Data()
             var renderedData: UnsafeMutablePointer<CChar>?
             var renderedLength: size_t = 0
@@ -79,17 +74,13 @@ nonisolated(unsafe) let graphContext = gvContext()
                 for (name, value) in settings {
                     _ = name.withCString { name in
                         value.withCString { value in
+                            // withCString returns an UnsafePointer type. Because agattr does not declare
+                            // its parameters as const, must recast arguments to UnsafeMutablePointers.
                             return agattr_text(graph, Int32(kind), UnsafeMutablePointer(mutating: name), UnsafeMutablePointer(mutating: value))
                         }
                     }
-//                    guard let symbol else { continue }
-//                    print ("SET? \(name) \(value)")
-//                    let name = String(cString: symbol.pointee.name)
-//                    let value = String(cString: symbol.pointee.defval)
-//                    print ("SET! \(name) \(value)")
                 }
             }
-//            let device = format+":quartz"
             gvLayout(graphContext, graph, "dot") // TODO: set as for -K CLI flag?
             if gvRenderData(graphContext, graph, format, &renderedData, &renderedLength) == 0 {
                 data = Data(bytesNoCopy: renderedData!,
