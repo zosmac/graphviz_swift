@@ -51,7 +51,7 @@ struct AttributesDocView: NSViewRepresentable {
     }
     
     static func dismantleNSView(_ nsView: WKWebView, coordinator: Coordinator) {
-        //        print("dismantling AttributeDocView", nsView)
+        print("dismantling AttributeDocView", nsView)
         nsView.prepareForReuse()
     }
 }

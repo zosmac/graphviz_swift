@@ -28,14 +28,13 @@ final class GraphvizDocument: ReferenceFileDocument {
     
     let name: String
     let docType: UTType
-    @Published var text: String
-    @Published var graph: Graph
+    @Published var text: String!
+    @Published var graph: Graph!
     
     init() {
         self.name = ""
         self.text = ""
         self.docType = .gv
-        self.graph = Graph()
     }
 
     init(configuration: ReadConfiguration) throws {
@@ -47,7 +46,7 @@ final class GraphvizDocument: ReferenceFileDocument {
         self.name = name
         self.text = text
         self.docType = configuration.contentType
-        self.graph = Graph(name: name, text: text)
+        self.graph = Graph(text: text, viewType: .pdf)
     }
 
     func snapshot(contentType: UTType) throws -> Data {

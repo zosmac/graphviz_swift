@@ -67,9 +67,9 @@ struct SaveViewSheet: View {
                         dismiss()
                     }
                     Button("Save") {
+                        print("save \(url.path) of viewType: \(viewType.identifier)")
                         do {
-                            print("save \(url.path)")
-                            try graph.renderGraph(viewType: viewType).write(to: url)
+                            try graph.data.write(to: url)
                         } catch {
                             print("Save failed \(error)")
                         }

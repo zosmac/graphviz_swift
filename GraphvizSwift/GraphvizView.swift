@@ -22,6 +22,7 @@ import SwiftUI
 struct GraphvizView: View {
     @Environment(\.openWindow) var openWindow
     @Environment(AttributesDocViewLaunch.self) var attributesDocViewLaunch
+    @Environment(GraphvizLogHandler.self) var logHandler
     @ObservedObject var document: GraphvizDocument
     let url: URL?
     @Binding var kind: AttributesByKind.ID
@@ -36,7 +37,7 @@ struct GraphvizView: View {
 
     var body: some View {
         NavigationSplitView(columnVisibility: $sidebarVisibility) {
-            AttributesView(graph: $document.graph)
+            AttributesView(document: document)
                 .focusedSceneValue(\.attributesKind, $kind)
                 .focusedSceneValue(\.attributesRow, $row)
                 .toolbar(removing: .sidebarToggle)
@@ -48,6 +49,7 @@ struct GraphvizView: View {
                 .sheet(isPresented: $saveViewShow) {
                     SaveViewSheet(saveViewShow: $saveViewShow, url: url, viewType: $viewType, graph: $document.graph)
                 }
+                .coordinateSpace(name: "Image View") // for geometryReader of ViewByType Image View
         }
         .onAppear {
             if attributesDocViewLaunch.firstTime {
@@ -65,18 +67,18 @@ struct GraphvizView: View {
                     }
                 }
             }
-            ToolbarItem(id: "Message", placement: .primaryAction) {
-                ControlGroup("􀁞") {
-                    ScrollView {
-                        // observee must be an observable class type
-                        Text(document.graph.logMessage.message)
-                            .foregroundStyle(.red)
-                    }
-                    .defaultScrollAnchor(.zero)
-                }
-                .controlGroupStyle(.menu)
-            }
-            .hidden(document.graph.logMessage.message.isEmpty)
+//            ToolbarItem(id: "Message", placement: .primaryAction) {
+//                ControlGroup("􀁞") {
+//                    ScrollView {
+//                        // logMessage must be an observable class type
+//                        Text(document.graph.logMessage.message)
+//                            .foregroundStyle(.red)
+//                    }
+//                    .defaultScrollAnchor(.zero)
+//                }
+//                .controlGroupStyle(.menu)
+//            }
+//            .hidden(document.graph.logMessage.message.isEmpty)
             ToolbarSpacer()
             ToolbarItem(id: "View Type", placement: .primaryAction) {
                 ControlGroup("View Type") {
@@ -86,6 +88,7 @@ struct GraphvizView: View {
                             Text(label).tag(label)
                         }
                     }
+                    .frame(width: 80)
                     SaveViewButton(viewType: viewType)
                 }
             }
@@ -103,15 +106,12 @@ struct GraphvizView: View {
                         if zoomScale == 0.0 { zoomScale = 1.0 }
                         else { zoomScale *= 2.0.squareRoot() }
                     }
+                    Button("Zoom to Fit", systemImage: "arrow.up.left.and.down.right.magnifyingglass") {
+                        zoomScale = 0.0 // use as flag to get "sizeToFit"
+                    }
                 }
             }
-            .hidden([.dot, .gv, .canon].contains(where: { $0 == viewType }))
-            ToolbarItem(id: "Zoom to Fit", placement: .primaryAction) {
-                Button("Zoom to Fit", systemImage: "arrow.up.left.and.down.right.magnifyingglass") {
-                    zoomScale = 0.0 // use as flag to get "sizeToFit"
-                }
-            }
-            .hidden([.dot, .gv, .canon].contains(where: { $0 == viewType }))
+//            .hidden([.dot, .gv, .canon].contains(where: { $0 == viewType }))
         }
     }
 }

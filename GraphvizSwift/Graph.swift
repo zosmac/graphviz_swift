@@ -14,25 +14,39 @@ nonisolated(unsafe) let graphContext = gvContext()
 
 /// Graph bridges a Graphviz document to its views.
 @Observable final class Graph {
-    let logMessage = LogMessage()
-    nonisolated(unsafe) let graph: UnsafeMutablePointer<Agraph_t>?
+    var text: String!
+    var viewType: UTType!
+    var data: Data!
 
     var attributes: Attributes!
     var settings: [[String: String]]!
-    
+
     nonisolated
-    init() {
-        self.graph = nil
+    init(text: String, viewType: UTType, settings: [[String: String]] = [[:], [:], [:]]) {
+        self.text = text
+        self.settings = settings
+        self.viewType = viewType
+        self.data = render(text: text, viewType: viewType, attributeChanged: true)
     }
-    
+
+    func changeAttribute(kind: Int, name: String, value: String) -> Void {
+        settings[kind][name] = value
+        attributes = Attributes(applying: settings)
+        print("update attribute \(kind) \(name) \(value)")
+        data = render(text: text, viewType: viewType, attributeChanged: true)
+    }
+
     nonisolated
-    init(name: String, text: String) {
-        self.graph = GraphvizLogHandler.capture(logMessage: self.logMessage) {
-            return agmemread(text + "\n") as Any
-        } as! UnsafeMutablePointer<Agraph_t>?
-        print("INIT \(graph, default: "nil")")
-        var settings: [[String: String]] = [[:], [:], [:]]
-        if let graph {
+    func render(text: String, viewType: UTType, attributeChanged: Bool = false) -> Data {
+        if !attributeChanged && self.viewType == viewType {
+            return self.data
+        }
+        self.viewType = viewType
+
+        self.data = GraphvizLogHandler.capture(logMessage: LogMessage()) {
+            guard let format = viewType.preferredFilenameExtension,
+                  let graph = agmemread(text + "\n") else { return Data() }
+            print("RENDER \(viewType) \(graph, default: "nil")")
             for kind in parsedAttributes.kinds { // assumes these are 0, 1, 2 ;)
                 var nextSymbol: UnsafeMutablePointer<Agsym_t>? = nil
                 while let symbol = agnxtattr(graph, Int32(kind.kind), nextSymbol) {
@@ -42,31 +56,9 @@ nonisolated(unsafe) let graphContext = gvContext()
                     nextSymbol = symbol
                 }
             }
-        }
-        self.settings = settings
-        self.attributes = Attributes(applying: settings)
-    }
-    
-    deinit {
-        print("deinit Graph \(graph, default: "nil")")
-        if graph != nil {
-            agclose(graph)
-        }
-    }
+            self.settings = settings
+            self.attributes = Attributes(applying: settings)
 
-    func changeAttribute(kind: Int, name: String, value: String) -> Void {
-        settings[kind][name] = value
-        attributes = Attributes(applying: settings)
-    }
-
-    nonisolated
-    func renderGraph(viewType: UTType) -> Data {
-        print("RENDER \(viewType) \(graph, default: "nil")")
-        guard let format = viewType.preferredFilenameExtension,
-              let graph else { return Data() }
-
-        return GraphvizLogHandler.capture(logMessage: self.logMessage) {
-            var data = Data()
             var renderedData: UnsafeMutablePointer<CChar>?
             var renderedLength: size_t = 0
             // PSinputscale = 72.0  // TODO: set as for -s CLI flag using Settings View
@@ -74,23 +66,25 @@ nonisolated(unsafe) let graphContext = gvContext()
                 for (name, value) in settings {
                     _ = name.withCString { name in
                         value.withCString { value in
-                            // withCString returns an UnsafePointer type. Because agattr does not declare
-                            // its parameters as const, must recast arguments to UnsafeMutablePointers.
+                            // withCString's sends in an UnsafePointer. Because agattr does not declare
+                            // its parameters as const, must recast argument to UnsafeMutablePointer.
                             return agattr_text(graph, Int32(kind), UnsafeMutablePointer(mutating: name), UnsafeMutablePointer(mutating: value))
                         }
                     }
                 }
             }
             gvLayout(graphContext, graph, "dot") // TODO: set as for -K CLI flag?
+            defer { gvFreeLayout(graphContext, graph) }
             if gvRenderData(graphContext, graph, format, &renderedData, &renderedLength) == 0 {
-                data = Data(bytesNoCopy: renderedData!,
+                return Data(bytesNoCopy: renderedData!,
                             count: renderedLength,
                             deallocator: .custom { ptr, _ in
-                    gvFreeRenderData(ptr)
+                    gvFreeRenderData(ptr) // presumably frees up render memory
                 })
             }
-            gvFreeLayout(graphContext, graph)
-            return data
-        } as! Data
+            return Data()
+        } as? Data
+        
+        return self.data
     }
 }

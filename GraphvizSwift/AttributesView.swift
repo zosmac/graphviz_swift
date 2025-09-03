@@ -16,7 +16,7 @@ extension FocusedValues {
 struct AttributesView: View {
     @FocusedValue(\.attributesKind) private var attributesKind
     @FocusedValue(\.attributesRow) private var attributesRow
-    @Binding var graph: Graph
+    @ObservedObject var document: GraphvizDocument
     @State private var kind: AttributesByKind.ID = AGRAPH
     @State private var row: Attribute.ID?
     
@@ -30,15 +30,15 @@ struct AttributesView: View {
             .pickerStyle(.segmented)
             .labelsHidden()
             .padding(.top, 5.0)
-            let table = graph.attributes.attributesByKind[kind]
+            let table = document.graph.attributes.attributesByKind[kind]
             ScrollViewReader { proxy in
                 Table(table, selection: $row) {
                     TableColumn("Attribute", value: \.name)
                     TableColumn("Value") { attribute in
                         if let options = attribute.options {
-                            OptionView(graph: $graph, kind: kind, name: attribute.name, options: options, value: attribute.value)
+                            OptionView(document: document, kind: kind, name: attribute.name, options: options, value: attribute.value)
                         } else {
-                            ValueView(graph: $graph, kind: kind, name: attribute.name, label: attribute.defaultValue ?? "", value: attribute.value) //, enabled: attribute.value.isEmpty)
+                            ValueView(document: document, kind: kind, name: attribute.name, label: attribute.defaultValue ?? "", value: attribute.value) //, enabled: attribute.value.isEmpty)
                         }
                     }
                 }
@@ -66,7 +66,7 @@ struct AttributesView: View {
 
 /// OptionView defines a picker for selecting an attribute value from a list of options.
 struct OptionView: View {
-    @Binding var graph: Graph
+    @ObservedObject var document: GraphvizDocument
     var kind: Int
     var name: String
     var options: [String]
@@ -80,14 +80,14 @@ struct OptionView: View {
         }
         .labelsHidden()
         .onChange(of: value) {
-            graph.changeAttribute(kind: kind, name: name, value: value)
+            document.graph.changeAttribute(kind: kind, name: name, value: value)
         }
     }
 }
 
 /// ValueView defines a text field for entering an attribute value.
 struct ValueView: View {
-    @Binding var graph: Graph
+    @ObservedObject var document: GraphvizDocument
     var kind: Int
     var name: String
     var label: String
@@ -99,7 +99,7 @@ struct ValueView: View {
 //            .disabled(!enabled)
             .onSubmit {
 //                enabled = false
-                graph.changeAttribute(kind: kind, name: name, value: value)
+                document.graph.changeAttribute(kind: kind, name: name, value: value)
             }
     }
 }

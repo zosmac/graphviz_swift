@@ -17,6 +17,7 @@ struct GraphByType: NSViewRepresentable {
     @Binding var zoomScale: CGFloat
 
     func makeNSView(context: Context) -> NSView {
+        print("making a view with frame \(NSView().frame)")
         switch viewType {
         case .svg:
             let webView = WKWebView()
@@ -39,7 +40,7 @@ struct GraphByType: NSViewRepresentable {
                 return
             }
             nsView.load(
-                document.graph.renderGraph(viewType: viewType),
+                document.graph.render(text: document.text, viewType: viewType),
                 mimeType: viewType.preferredMIMEType!,
                 characterEncodingName: "UTF-8",
                 baseURL: URL(filePath: "")
@@ -51,7 +52,7 @@ struct GraphByType: NSViewRepresentable {
             if viewType != .pdf {
                 return
             }
-            nsView.document = PDFDocument(data: document.graph.renderGraph(viewType: viewType))
+            nsView.document = PDFDocument(data: document.graph.render(text: document.text, viewType: viewType))
             if nsView.scaleFactor != zoomScale {
                 if zoomScale == 0.0 { // set in GraphvizView to signal "size to fit"
                     zoomScale = nsView.scaleFactorForSizeToFit

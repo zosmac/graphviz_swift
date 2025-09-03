@@ -20,24 +20,27 @@ struct ViewByType: View {
         case document.docType:
             TextEditor(text: $document.text)
                 .monospaced()
+                .font(.system(size: 12*zoomScale)) // TODO: get an accessible default from system?
                 .onChange(of: document.text) {
-                    document.graph = Graph(name: document.name, text: document.text)
+                    _ = document.graph.render(text: document.text, viewType: viewType)
                 }
-        case .pdf: // use explicit cases for GraphByType to force recreating when viewType changes
-            GraphByType(document: document, viewType: $viewType, zoomScale: $zoomScale)
+//        case .pdf: // use explicit cases for GraphByType to force recreating when viewType changes
+//            GraphByType(document: document, viewType: $viewType, zoomScale: $zoomScale)
 //        case .svg: // use explicit cases for GraphByType to force recreating when viewType changes
 //            GraphByType(document: document, viewType: $viewType, zoomScale: $zoomScale)
         case .canon, .gv, .dot, .json:
-            if let text = String(data: document.graph.renderGraph(viewType: viewType), encoding: .utf8) {
+            if let text = String(data: document.graph.render(text: document.text, viewType: viewType), encoding: .utf8) {
                 ScrollView {
                     Text(text)
+                        .multilineTextAlignment(.leading)
+                        .font(.system(size: 12*zoomScale)) // TODO: get an accessible default from system?
                 }
             } else {
                 Text("Render of text type \(viewType.identifier) failed")
                     .font(Font.largeTitle)
             }
         default:
-            if let image = NSImage(data: document.graph.renderGraph(viewType: viewType)) {
+            if let image = NSImage(data: document.graph.render(text: document.text, viewType: viewType)) {
                 GeometryReader { geometryProxy in
                     let size = geometryProxy.frame(in: .named("Image View")).size
                     let zoomScale = zoomScale != 0.0 ? zoomScale :
