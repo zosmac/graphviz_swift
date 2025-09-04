@@ -24,12 +24,11 @@ enum GraphvizError: Int {
     @State private var attributesDocViewLaunch = AttributesDocViewLaunch()
     @State private var kind: AttributesByKind.ID = AGRAPH
     @State private var row: Attribute.ID?
-    @State private var logHandler = GraphvizLogHandler()
+    @State private var graphvizLogHandler = GraphvizLogHandler()
 
     var body: some Scene {
         DocumentGroup(newDocument: { GraphvizDocument() }) {
             GraphvizView(document: $0.document, url: $0.fileURL, kind: $kind, row: $row)
-                .environment(logHandler)
                 .environment(attributesDocViewLaunch)
                 .focusedSceneValue(\.attributesKind, $kind)
                 .focusedSceneValue(\.attributesRow, $row)
@@ -63,7 +62,7 @@ enum GraphvizError: Int {
         
         UtilityWindow("Graphviz Log", id: "GraphvizLogView") {
             GraphvizLogView()
-                .environment(logHandler.logMessage)
+                .environment(graphvizLogHandler.logMessage)
         }
         .defaultPosition(.trailing)
         .defaultSize(width: 350, height: 400)

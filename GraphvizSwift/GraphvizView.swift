@@ -22,7 +22,7 @@ import SwiftUI
 struct GraphvizView: View {
     @Environment(\.openWindow) var openWindow
     @Environment(AttributesDocViewLaunch.self) var attributesDocViewLaunch
-    @Environment(GraphvizLogHandler.self) var logHandler
+    
     @ObservedObject var document: GraphvizDocument
     let url: URL?
     @Binding var kind: AttributesByKind.ID

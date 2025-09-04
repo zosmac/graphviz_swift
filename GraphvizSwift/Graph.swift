@@ -43,7 +43,7 @@ nonisolated(unsafe) let graphContext = gvContext()
         }
         self.viewType = viewType
 
-        self.data = GraphvizLogHandler.capture(logMessage: LogMessage()) {
+        self.data = GraphvizLogHandler.capture() {
             guard let format = viewType.preferredFilenameExtension,
                   let graph = agmemread(text + "\n") else { return Data() }
             print("RENDER \(viewType) \(graph, default: "nil")")
