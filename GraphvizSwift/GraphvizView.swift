@@ -8,12 +8,6 @@
 import UniformTypeIdentifiers
 import SwiftUI
 
-@Observable final class OpenSidebarCount {
-    var count: Int = 0
-    init(_ count: Int = 0) {
-        self.count = count
-    }
-}
 @Observable final class Sheet {
     var isPresented: Bool = false
 }
@@ -22,7 +16,8 @@ import SwiftUI
 struct GraphvizView: View {
     @Environment(\.openWindow) var openWindow
     @Environment(AttributesDocViewLaunch.self) var attributesDocViewLaunch
-    
+    @Environment(\.colorScheme) private var colorScheme
+
     @ObservedObject var document: GraphvizDocument
     let url: URL?
     @Binding var kind: AttributesByKind.ID
@@ -34,6 +29,7 @@ struct GraphvizView: View {
     @State private var zoomScale: CGFloat = 1.0
     @State private var saveViewShow: Bool = false
     @State private var saveViewType: UTType? = nil
+    @State private var viewScale: CGFloat = 1.0
 
     var body: some View {
         NavigationSplitView(columnVisibility: $sidebarVisibility) {
@@ -43,13 +39,51 @@ struct GraphvizView: View {
                 .toolbar(removing: .sidebarToggle)
         }
         detail: {
-            ViewByType(document: document, viewType: $viewType, zoomScale: $zoomScale)
-                .focusedSceneValue(\.saveViewShow, $saveViewShow)
-                .focusedSceneValue(\.saveViewType, $viewType)
-                .sheet(isPresented: $saveViewShow) {
-                    SaveViewSheet(saveViewShow: $saveViewShow, url: url, viewType: $viewType, graph: $document.graph)
+            switch viewType {
+            case document.docType:
+                TextEditor(text: $document.text)
+                    .font(.system(size: 12*zoomScale, design: .monospaced)) // TODO: get an accessible default from system?
+                    .onChange(of: document.text) {
+                        _ = document.graph.render(text: document.text, viewType: viewType)
+                    }
+            case .canon, .gv, .dot, .json:
+                if let text = String(data: document.graph.render(text: document.text, viewType: viewType), encoding: .utf8) {
+                    ScrollView {
+                        Text(text)
+                            .multilineTextAlignment(.leading)
+                            .font(.system(size: 12*zoomScale)) // TODO: get an accessible default from system?
+                    }
+                } else {
+                    Text("Render of text type \(viewType.identifier) failed")
+                        .font(Font.title)
                 }
-                .coordinateSpace(name: "Image View") // for geometryReader of ViewByType Image View
+            default:
+                if let image = NSImage(data: document.graph.render(text: document.text, viewType: viewType)) {
+                    GeometryReader { geometryProxy in
+                        ScrollView([.vertical, .horizontal]) {
+                            Image(nsImage: image)
+                                .resizable()
+                                .frame(width: image.size.width*zoomScale, height: image.size.height*zoomScale)
+                                .background(colorScheme == .light ? Color.gray : Color.white)
+                        }
+                    }
+                    .onGeometryChange(for: CGSize.self) { proxy in
+                        proxy.size
+                    }
+                    action: { size in
+                        viewScale = min(size.width/image.size.width, size.height/image.size.height)
+                    }
+                } else {
+                    Text("Render of image type \(viewType.identifier) unsupported")
+                        .font(Font.title)
+                }
+            }
+        }
+//        .background(Color.secondary.opacity(0.5))
+        .focusedSceneValue(\.saveViewShow, $saveViewShow)
+        .focusedSceneValue(\.saveViewType, $viewType)
+        .sheet(isPresented: $saveViewShow) {
+            SaveViewSheet(saveViewShow: $saveViewShow, url: url, viewType: $viewType, graph: $document.graph)
         }
         .onAppear {
             if attributesDocViewLaunch.firstTime {
@@ -96,22 +130,20 @@ struct GraphvizView: View {
             ToolbarItem(id: "Zoom", placement: .primaryAction) {
                 ControlGroup("Zoom") {
                     Button("Zoom out", systemImage: "minus.magnifyingglass") {
-                        if zoomScale == 0.0 { zoomScale = 1.0 }
-                        else { zoomScale /= 2.0.squareRoot() }
+                        zoomScale /= 2.0.squareRoot()
                     }
                     Button("Actual Size", systemImage: "1.magnifyingglass") {
                         zoomScale = 1.0
                     }
                     Button("Zoom in", systemImage: "plus.magnifyingglass") {
-                        if zoomScale == 0.0 { zoomScale = 1.0 }
-                        else { zoomScale *= 2.0.squareRoot() }
+                        zoomScale *= 2.0.squareRoot()
                     }
                     Button("Zoom to Fit", systemImage: "arrow.up.left.and.down.right.magnifyingglass") {
-                        zoomScale = 0.0 // use as flag to get "sizeToFit"
+                        zoomScale = viewScale
                     }
                 }
             }
-//            .hidden([.dot, .gv, .canon].contains(where: { $0 == viewType }))
         }
+//        .toolbarBackground(Color.primary.opacity(0.5))
     }
 }
