@@ -1,0 +1,41 @@
+//
+//  PreferencesView.swift
+//  GraphvizSwift
+//
+//  Created by Keefe Hayes on 9/5/25.
+//
+
+import UniformTypeIdentifiers
+import SwiftUI
+
+// TODO: define settings corresponding to graphviz command line options
+// e.g: PSinputscale = 72.0 for -s (scale) flag, -K for layout engine (default "dot")
+
+let defaultViewType = "pdf"
+let defaultTextSize = 12.0
+
+struct PreferencesView: View {
+    @AppStorage("viewType") var viewType = defaultViewType
+    @AppStorage("textSize") var textSize = defaultTextSize
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            Picker("View Type", selection: $viewType) {
+                ForEach(viewableContentTypes, id: \.self) {
+                    let label = $0.preferredFilenameExtension!
+                    Text(label.uppercased()).tag(label)
+                }
+            }
+            Slider(value: $textSize, in: 9...32, step: 1) {
+                Text("Font Size (\(textSize, specifier: "%.f") pts)")
+            } minimumValueLabel: {
+                Text("9")
+            } maximumValueLabel: {
+                Text("32")
+            }
+            
+        }
+        .frame(minWidth: 250, maxWidth: 250, minHeight: 150, maxHeight: 150)
+        .padding(EdgeInsets(top: 0, leading: 20, bottom: 40, trailing: 30))
+    }
+}

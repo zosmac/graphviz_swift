@@ -16,6 +16,8 @@ enum GraphvizError: Int {
 
 /// GraphvizApp creates the graphviz document views and attributes documentation window.
 @main struct GraphvizApp: App {
+    @AppStorage("viewType") var viewType = defaultViewType
+
     @FocusedValue(\.attributesKind) private var attributesKind
     @FocusedValue(\.attributesRow) private var attributesRow
     @FocusedValue(\.saveViewShow) private var saveViewShow
@@ -38,7 +40,7 @@ enum GraphvizError: Int {
             ToolbarCommands()
             CommandGroup(replacing: .newItem) {}
             CommandGroup(replacing: .importExport) {
-                SaveViewButton(viewType: saveViewType?.wrappedValue ?? .pdf)
+                SaveViewButton(viewType: (saveViewType?.wrappedValue ?? UTType(filenameExtension: viewType))!)
             }
             CommandGroup(replacing: .help) {
                 Button("Graphviz Help") {
@@ -66,5 +68,9 @@ enum GraphvizError: Int {
         }
         .defaultPosition(.trailing)
         .defaultSize(width: 350, height: 400)
+
+        Settings {
+            PreferencesView()
+        }
     }
 }

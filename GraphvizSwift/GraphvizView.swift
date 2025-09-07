@@ -14,22 +14,22 @@ import SwiftUI
 
 /// GraphvizView displays the rendered graph and the attributes and file contents inspectors.
 struct GraphvizView: View {
+    @AppStorage("textSize") var textSize = defaultTextSize
+
     @Environment(\.openWindow) var openWindow
-    @Environment(AttributesDocViewLaunch.self) var attributesDocViewLaunch
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(AttributesDocViewLaunch.self) var attributesDocViewLaunch
 
     @ObservedObject var document: GraphvizDocument
     let url: URL?
     @Binding var kind: AttributesByKind.ID
     @Binding var row: Attribute.ID?
 
-    @State private var viewType: UTType = .pdf // TODO: set default in app settings
     @State private var sidebarVisibility: NavigationSplitViewVisibility = .detailOnly
-    @State private var inspectorPresented: Bool = false
     @State private var zoomScale: CGFloat = 1.0
+    @State private var viewScale: CGFloat = 1.0
     @State private var saveViewShow: Bool = false
     @State private var saveViewType: UTType? = nil
-    @State private var viewScale: CGFloat = 1.0
 
     var body: some View {
         NavigationSplitView(columnVisibility: $sidebarVisibility) {
@@ -39,32 +39,31 @@ struct GraphvizView: View {
                 .toolbar(removing: .sidebarToggle)
         }
         detail: {
-            switch viewType {
+            switch document.graph.viewType {
             case document.docType:
                 TextEditor(text: $document.text)
-                    .font(.system(size: 12*zoomScale, design: .monospaced)) // TODO: get an accessible default from system?
+                    .font(.system(size: textSize*zoomScale, design: .monospaced))
                     .onChange(of: document.text) {
-                        _ = document.graph.render(text: document.text, viewType: viewType)
+                        _ = document.graph.render(text: document.text, viewType: document.graph.viewType)
                     }
             case .canon, .gv, .dot, .json:
-                if let text = String(data: document.graph.render(text: document.text, viewType: viewType), encoding: .utf8) {
+                if let text = String(data: document.graph.render(text: document.text, viewType: document.graph.viewType), encoding: .utf8) {
                     ScrollView {
                         Text(text)
                             .multilineTextAlignment(.leading)
-                            .font(.system(size: 12*zoomScale)) // TODO: get an accessible default from system?
+                            .font(.system(size: textSize*zoomScale))
                     }
                 } else {
-                    Text("Render of text type \(viewType.identifier) failed")
+                    Text("Render of text type \(document.graph.viewType.identifier) failed")
                         .font(Font.title)
                 }
             default:
-                if let image = NSImage(data: document.graph.render(text: document.text, viewType: viewType)) {
+                if let image = NSImage(data: document.graph.render(text: document.text, viewType: document.graph.viewType)) {
                     GeometryReader { geometryProxy in
                         ScrollView([.vertical, .horizontal]) {
                             Image(nsImage: image)
                                 .resizable()
                                 .frame(width: image.size.width*zoomScale, height: image.size.height*zoomScale)
-                                .background(colorScheme == .light ? Color.gray : Color.white)
                         }
                     }
                     .onGeometryChange(for: CGSize.self) { proxy in
@@ -74,16 +73,15 @@ struct GraphvizView: View {
                         viewScale = min(size.width/image.size.width, size.height/image.size.height)
                     }
                 } else {
-                    Text("Render of image type \(viewType.identifier) unsupported")
+                    Text("Render of image type \(document.graph.viewType.identifier) unsupported")
                         .font(Font.title)
                 }
             }
         }
-//        .background(Color.secondary.opacity(0.5))
         .focusedSceneValue(\.saveViewShow, $saveViewShow)
-        .focusedSceneValue(\.saveViewType, $viewType)
+        .focusedSceneValue(\.saveViewType, $document.graph.viewType)
         .sheet(isPresented: $saveViewShow) {
-            SaveViewSheet(saveViewShow: $saveViewShow, url: url, viewType: $viewType, graph: $document.graph)
+            SaveViewSheet(saveViewShow: $saveViewShow, url: url, viewType: $document.graph.viewType, graph: $document.graph)
         }
         .onAppear {
             if attributesDocViewLaunch.firstTime {
@@ -116,14 +114,14 @@ struct GraphvizView: View {
             ToolbarSpacer()
             ToolbarItem(id: "View Type", placement: .primaryAction) {
                 ControlGroup("View Type") {
-                    Picker("View Type", selection: $viewType) {
+                    Picker("View Type", selection: $document.graph.viewType) {
                         ForEach(viewableContentTypes, id: \.self) {
-                            let label = $0.preferredFilenameExtension!.uppercased()
-                            Text(label).tag(label)
+                            let label = $0.preferredFilenameExtension!
+                            Text(label.uppercased()).tag($0)
                         }
                     }
                     .frame(width: 80)
-                    SaveViewButton(viewType: viewType)
+                    SaveViewButton(viewType: document.graph.viewType)
                 }
             }
             ToolbarSpacer()
@@ -144,6 +142,5 @@ struct GraphvizView: View {
                 }
             }
         }
-//        .toolbarBackground(Color.primary.opacity(0.5))
     }
 }

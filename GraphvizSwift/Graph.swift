@@ -7,46 +7,51 @@
 
 import UniformTypeIdentifiers
 import SwiftUI
-import PDFKit
-import WebKit
 
 nonisolated(unsafe) let graphContext = gvContext()
 
 /// Graph bridges a Graphviz document to its views.
 @Observable final class Graph {
     var text: String!
-    var viewType: UTType!
-    var data: Data!
 
-    var attributes: Attributes!
-    var settings: [[String: String]]!
+    private var sceneViewType: UTType?
+    var viewType: UTType! {
+        get {
+            sceneViewType
+        }
+        set {
+            self.sceneViewType = newValue
+            self.data = render(text: text, viewType: newValue, attributeChanged: true)
+        }
+    }
+    var data = Data()
+    var settings: [[String: String]] = [[:], [:], [:]]
+    var attributes: Attributes! // set in render
 
     nonisolated
-    init(text: String, viewType: UTType, settings: [[String: String]] = [[:], [:], [:]]) {
+    init(text: String) {
         self.text = text
-        self.settings = settings
-        self.viewType = viewType
-        self.data = render(text: text, viewType: viewType, attributeChanged: true)
+        self.viewType = UTType(filenameExtension: UserDefaults.standard.string(forKey: "viewType")!)
     }
 
     func changeAttribute(kind: Int, name: String, value: String) -> Void {
         settings[kind][name] = value
-        attributes = Attributes(applying: settings)
         print("update attribute \(kind) \(name) \(value)")
         data = render(text: text, viewType: viewType, attributeChanged: true)
     }
 
     nonisolated
     func render(text: String, viewType: UTType, attributeChanged: Bool = false) -> Data {
-        if !attributeChanged && self.viewType == viewType {
-            return self.data
+        print("RENDER requested for \(viewType) (attributeChanged: \(attributeChanged), current: \(sceneViewType))")
+        if !attributeChanged && sceneViewType == viewType {
+            return data
         }
-        self.viewType = viewType
+        sceneViewType = viewType
 
-        self.data = GraphvizLogHandler.capture() {
+        data = GraphvizLogHandler.capture() {
             guard let format = viewType.preferredFilenameExtension,
                   let graph = agmemread(text + "\n") else { return Data() }
-            print("RENDER \(viewType) \(graph, default: "nil")")
+            print("RENDER performed for \(viewType) \(graph, default: "nil")")
             for kind in parsedAttributes.kinds { // assumes these are 0, 1, 2 ;)
                 var nextSymbol: UnsafeMutablePointer<Agsym_t>? = nil
                 while let symbol = agnxtattr(graph, Int32(kind.kind), nextSymbol) {
@@ -56,12 +61,10 @@ nonisolated(unsafe) let graphContext = gvContext()
                     nextSymbol = symbol
                 }
             }
-            self.settings = settings
-            self.attributes = Attributes(applying: settings)
+            attributes = Attributes(applying: settings)
 
             var renderedData: UnsafeMutablePointer<CChar>?
             var renderedLength: size_t = 0
-            // PSinputscale = 72.0  // TODO: set as for -s CLI flag using Settings View
             for (kind, settings) in settings.enumerated() {
                 for (name, value) in settings {
                     _ = name.withCString { name in
@@ -83,8 +86,8 @@ nonisolated(unsafe) let graphContext = gvContext()
                 })
             }
             return Data()
-        } as? Data
+        } as! Data
         
-        return self.data
+        return data
     }
 }

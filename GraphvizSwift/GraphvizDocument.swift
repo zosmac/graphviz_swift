@@ -46,7 +46,7 @@ final class GraphvizDocument: ReferenceFileDocument {
         self.name = name
         self.text = text
         self.docType = configuration.contentType
-        self.graph = Graph(text: text, viewType: .pdf)
+        self.graph = Graph(text: text)
     }
 
     func snapshot(contentType: UTType) throws -> Data {
