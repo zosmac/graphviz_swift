@@ -15,22 +15,22 @@ import SwiftUI
 /// GraphvizView displays the rendered graph and the attributes and file contents inspectors.
 struct GraphvizView: View {
     @AppStorage("textSize") var textSize = defaultTextSize
-
+    
     @Environment(\.openWindow) var openWindow
     @Environment(\.colorScheme) private var colorScheme
     @Environment(AttributesDocViewLaunch.self) var attributesDocViewLaunch
-
+    
     @ObservedObject var document: GraphvizDocument
     let url: URL?
     @Binding var kind: AttributesByKind.ID
     @Binding var row: Attribute.ID?
-
+    
     @State private var sidebarVisibility: NavigationSplitViewVisibility = .detailOnly
     @State private var zoomScale: CGFloat = 1.0
     @State private var viewScale: CGFloat = 1.0
     @State private var saveViewShow: Bool = false
     @State private var saveViewType: UTType? = nil
-
+    
     var body: some View {
         NavigationSplitView(columnVisibility: $sidebarVisibility) {
             AttributesView(document: document)
@@ -44,10 +44,13 @@ struct GraphvizView: View {
                 TextEditor(text: $document.text)
                     .font(.system(size: textSize*zoomScale, design: .monospaced))
                     .onChange(of: document.text) {
-                        _ = document.graph.render(text: document.text, viewType: document.graph.viewType)
+                        document.graph.render(text: document.text, viewType: document.graph.viewType)
                     }
             case .canon, .gv, .dot, .json:
-                if let text = String(data: document.graph.render(text: document.text, viewType: document.graph.viewType), encoding: .utf8) {
+                if let data = {
+                    document.graph.render(text: document.text, viewType: document.graph.viewType)
+                    return document.graph.data }(),
+                let text = String(data: data, encoding: .utf8) {
                     ScrollView {
                         Text(text)
                             .multilineTextAlignment(.leading)
@@ -58,7 +61,10 @@ struct GraphvizView: View {
                         .font(Font.title)
                 }
             default:
-                if let image = NSImage(data: document.graph.render(text: document.text, viewType: document.graph.viewType)) {
+                if let data = {
+                    document.graph.render(text: document.text, viewType: document.graph.viewType)
+                    return document.graph.data }(),
+                let image = NSImage(data: data) {
                     GeometryReader { geometryProxy in
                         ScrollView([.vertical, .horizontal]) {
                             Image(nsImage: image)
@@ -99,18 +105,18 @@ struct GraphvizView: View {
                     }
                 }
             }
-//            ToolbarItem(id: "Message", placement: .primaryAction) {
-//                ControlGroup("􀁞") {
-//                    ScrollView {
-//                        // logMessage must be an observable class type
-//                        Text(document.graph.logMessage.message)
-//                            .foregroundStyle(.red)
-//                    }
-//                    .defaultScrollAnchor(.zero)
-//                }
-//                .controlGroupStyle(.menu)
-//            }
-//            .hidden(document.graph.logMessage.message.isEmpty)
+            //            ToolbarItem(id: "Message", placement: .primaryAction) {
+            //                ControlGroup("􀁞") {
+            //                    ScrollView {
+            //                        // logMessage must be an observable class type
+            //                        Text(document.graph.logMessage.message)
+            //                            .foregroundStyle(.red)
+            //                    }
+            //                    .defaultScrollAnchor(.zero)
+            //                }
+            //                .controlGroupStyle(.menu)
+            //            }
+            //            .hidden(document.graph.logMessage.message.isEmpty)
             ToolbarSpacer()
             ToolbarItem(id: "View Type", placement: .primaryAction) {
                 ControlGroup("View Type") {

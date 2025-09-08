@@ -39,8 +39,9 @@ struct GraphByType: NSViewRepresentable {
             if viewType != .svg {
                 return
             }
+            document.graph.render(text: document.text, viewType: viewType)
             nsView.load(
-                document.graph.render(text: document.text, viewType: viewType),
+                document.graph.data,
                 mimeType: viewType.preferredMIMEType!,
                 characterEncodingName: "UTF-8",
                 baseURL: URL(filePath: "")
@@ -52,7 +53,8 @@ struct GraphByType: NSViewRepresentable {
             if viewType != .pdf {
                 return
             }
-            nsView.document = PDFDocument(data: document.graph.render(text: document.text, viewType: viewType))
+            document.graph.render(text: document.text, viewType: viewType)
+            nsView.document = PDFDocument(data: document.graph.data)
             if nsView.scaleFactor != zoomScale {
                 if zoomScale == 0.0 { // set in GraphvizView to signal "size to fit"
                     zoomScale = nsView.scaleFactorForSizeToFit

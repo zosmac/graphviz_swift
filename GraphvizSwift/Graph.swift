@@ -21,7 +21,7 @@ nonisolated(unsafe) let graphContext = gvContext()
         }
         set {
             self.sceneViewType = newValue
-            self.data = render(text: text, viewType: newValue, attributeChanged: true)
+            render(text: text, viewType: newValue, attributeChanged: true)
         }
     }
     var data = Data()
@@ -37,14 +37,14 @@ nonisolated(unsafe) let graphContext = gvContext()
     func changeAttribute(kind: Int, name: String, value: String) -> Void {
         settings[kind][name] = value
         print("update attribute \(kind) \(name) \(value)")
-        data = render(text: text, viewType: viewType, attributeChanged: true)
+        render(text: text, viewType: viewType, attributeChanged: true)
     }
 
     nonisolated
-    func render(text: String, viewType: UTType, attributeChanged: Bool = false) -> Data {
-        print("RENDER requested for \(viewType) (attributeChanged: \(attributeChanged), current: \(sceneViewType))")
+    func render(text: String, viewType: UTType, attributeChanged: Bool = false) -> Void {
+        print("RENDER requested for \(viewType) (attributeChanged: \(attributeChanged), current: \(sceneViewType, default: "nil"))")
         if !attributeChanged && sceneViewType == viewType {
-            return data
+            return
         }
         sceneViewType = viewType
 
@@ -87,7 +87,5 @@ nonisolated(unsafe) let graphContext = gvContext()
             }
             return Data()
         } as! Data
-        
-        return data
     }
 }
