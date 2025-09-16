@@ -20,23 +20,17 @@ enum GraphvizError: Int {
 
     @FocusedValue(\.attributesKind) private var attributesKind
     @FocusedValue(\.attributesRow) private var attributesRow
-    @FocusedValue(\.saveViewShow) private var saveViewShow
+    @FocusedValue(\.saveViewPresented) private var saveViewPresented
     @FocusedValue(\.saveViewType) private var saveViewType
 
     @State private var attributesDocViewLaunch = AttributesDocViewLaunch()
-    @State private var kind: AttributesByKind.ID = AGRAPH
-    @State private var row: Attribute.ID?
-    @State private var graphvizLogHandler = GraphvizLogHandler()
 
     var body: some Scene {
         DocumentGroup(newDocument: { GraphvizDocument() }) {
-            GraphvizView(document: $0.document, url: $0.fileURL, kind: $kind, row: $row)
+            GraphvizView(document: $0.document, url: $0.fileURL) //, kind: $kind, row: $row) //, handler: $graphvizLogHandler)
                 .environment(attributesDocViewLaunch)
-                .focusedSceneValue(\.attributesKind, $kind)
-                .focusedSceneValue(\.attributesRow, $row)
         }
         .commands {
-            SidebarCommands()
             ToolbarCommands()
             CommandGroup(replacing: .newItem) {}
             CommandGroup(replacing: .importExport) {
@@ -56,21 +50,22 @@ enum GraphvizError: Int {
 
         UtilityWindow("Attributes Documentation", id: "AttributesDocView") {
             AttributesDocView()
-                .focusedSceneValue(\.attributesKind, $kind)
-                .focusedSceneValue(\.attributesRow, $row)
+                .focusedSceneValue(\.attributesKind, attributesKind)
+                .focusedSceneValue(\.attributesRow, attributesRow)
         }
         .defaultPosition(.topTrailing)
         .defaultSize(width: 350, height: 400)
         
-        UtilityWindow("Graphviz Log", id: "GraphvizLogView") {
-            GraphvizLogView()
-                .environment(graphvizLogHandler.logMessage)
-        }
-        .defaultPosition(.trailing)
-        .defaultSize(width: 350, height: 400)
+//        UtilityWindow("Graphviz Log", id: "GraphvizLogView") {
+//            GraphvizLogView()
+//                .environment(graphvizLogHandler.logMessage)
+//        }
+//        .defaultPosition(.trailing)
+//        .defaultSize(width: 350, height: 400)
 
         Settings {
             PreferencesView()
         }
+        .defaultPosition(.topLeading)
     }
 }

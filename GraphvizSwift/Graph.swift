@@ -8,56 +8,46 @@
 import UniformTypeIdentifiers
 import SwiftUI
 
-nonisolated(unsafe) let graphContext = gvContext()
-
 /// Graph bridges a Graphviz document to its views.
 @Observable final class Graph {
+    nonisolated(unsafe) static let context = gvContext()
+
     var text: String!
-
-    private var sceneViewType: UTType?
-    var viewType: UTType! {
-        get {
-            sceneViewType
-        }
-        set {
-            self.sceneViewType = newValue
-            render(text: text, viewType: newValue, attributeChanged: true)
-        }
-    }
+    var viewType: UTType
     var data = Data()
-    var settings: [[String: String]] = [[:], [:], [:]]
-    var attributes: Attributes! // set in render
+    var settings = Array(repeating: [String: String](), count: 3)
+    var attributes: Attributes? // set in render
+    let logMessage = LogMessage()
+    let handler: GraphvizLogHandler
 
     nonisolated
-    init(text: String) {
+    init(text: String, viewType: UTType) {
+        self.handler = GraphvizLogHandler(logMessage: logMessage)
         self.text = text
-        self.viewType = UTType(filenameExtension: UserDefaults.standard.string(forKey: "viewType")!)
+        self.viewType = viewType
+        render(text: text, viewType: viewType)
     }
 
-    func changeAttribute(kind: Int, name: String, value: String) -> Void {
-        settings[kind][name] = value
-        print("update attribute \(kind) \(name) \(value)")
-        render(text: text, viewType: viewType, attributeChanged: true)
+    func changeAttribute(kind: Int?, name: String, value: String) -> Void {
+        if let kind {
+            settings[kind][name] = value
+            print("update attribute \(kind) \(name) \(value)")
+            render(text: text, viewType: viewType)
+        }
     }
 
     nonisolated
-    func render(text: String, viewType: UTType, attributeChanged: Bool = false) -> Void {
-        print("RENDER requested for \(viewType) (attributeChanged: \(attributeChanged), current: \(sceneViewType, default: "nil"))")
-        if !attributeChanged && sceneViewType == viewType {
-            return
-        }
-        sceneViewType = viewType
-
-        data = GraphvizLogHandler.capture() {
+    func render(text: String, viewType: UTType) -> Void {
+        data = handler.capture {
             guard let format = viewType.preferredFilenameExtension,
                   let graph = agmemread(text + "\n") else { return Data() }
             print("RENDER performed for \(viewType) \(graph, default: "nil")")
-            for kind in parsedAttributes.kinds { // assumes these are 0, 1, 2 ;)
+            for kind in [AGRAPH, AGNODE, AGEDGE] {
                 var nextSymbol: UnsafeMutablePointer<Agsym_t>? = nil
-                while let symbol = agnxtattr(graph, Int32(kind.kind), nextSymbol) {
+                while let symbol = agnxtattr(graph, Int32(kind), nextSymbol) {
                     let name = String(cString: symbol.pointee.name)
                     let value = String(cString: symbol.pointee.defval)
-                    settings[kind.kind][name] = value
+                    settings[kind][name] = value
                     nextSymbol = symbol
                 }
             }
@@ -69,16 +59,15 @@ nonisolated(unsafe) let graphContext = gvContext()
                 for (name, value) in settings {
                     _ = name.withCString { name in
                         value.withCString { value in
-                            // withCString's sends in an UnsafePointer. Because agattr does not declare
-                            // its parameters as const, must recast argument to UnsafeMutablePointer.
+                            // withCString sends in an UnsafePointer. Because agattr does not declare its parameters as const, must recast argument to UnsafeMutablePointer.
                             return agattr_text(graph, Int32(kind), UnsafeMutablePointer(mutating: name), UnsafeMutablePointer(mutating: value))
                         }
                     }
                 }
             }
-            gvLayout(graphContext, graph, "dot") // TODO: set as for -K CLI flag?
-            defer { gvFreeLayout(graphContext, graph) }
-            if gvRenderData(graphContext, graph, format, &renderedData, &renderedLength) == 0 {
+            gvLayout(Graph.context, graph, "dot") // TODO: set as for -K CLI flag?
+            defer { gvFreeLayout(Graph.context, graph) }
+            if gvRenderData(Graph.context, graph, format, &renderedData, &renderedLength) == 0 {
                 return Data(bytesNoCopy: renderedData!,
                             count: renderedLength,
                             deallocator: .custom { ptr, _ in

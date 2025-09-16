@@ -12,10 +12,15 @@ import WebKit
     var firstTime: Bool = true
 }
 
+extension FocusedValues {
+    @Entry var attributesKind: Binding<[Attribute]?>?  // by kind: AGRAPH, AGNODE, AGEDGE
+    @Entry var attributesRow: Binding<Attribute.ID?>?
+}
+
 /// AttributesDocView displays the documentation for attributes from attributes.xml.
 struct AttributesDocView: NSViewRepresentable {
-    @FocusedValue(\.attributesKind) private var attributesKind
-    @FocusedValue(\.attributesRow) private var attributesRow
+    @FocusedBinding(\.attributesKind) private var attributes
+    @FocusedBinding(\.attributesRow) private var row
     
     class Coordinator: NSObject, WKNavigationDelegate {
         func webView(
@@ -39,15 +44,14 @@ struct AttributesDocView: NSViewRepresentable {
     }
     
     func updateNSView(_ nsView: WKWebView, context: Context) {
-        var name = "#"
-        if let kind = attributesKind?.wrappedValue {
-           let table = parsedAttributes.kinds[kind].attributes
-           if let row = attributesRow?.wrappedValue,
-              let index = table.firstIndex(where: { $0.id == row }) {
-               name += table[index].name
-           }
+        var href = "#"
+        if let attributes,
+           let row,
+           let index = attributes?.firstIndex(where: { $0.id == row }),
+           let name = attributes?[index].name {
+               href += name
         }
-        nsView.evaluateJavaScript("window.location.hash='\(name)'")
+        nsView.evaluateJavaScript("window.location.hash='\(href)'")
     }
     
     static func dismantleNSView(_ nsView: WKWebView, coordinator: Coordinator) {

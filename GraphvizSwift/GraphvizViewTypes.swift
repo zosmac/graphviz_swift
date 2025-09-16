@@ -22,7 +22,7 @@ let viewableContentTypes: [UTType] = {
     var formats = [String]()
     var count: Int32 = 0
     guard let list = gvPluginList(
-        graphContext,
+        Graph.context,
         "device",
         &count) else { return [] }
     var set = Set<String>()

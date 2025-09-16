@@ -8,45 +8,30 @@
 import UniformTypeIdentifiers
 import SwiftUI
 
-struct SaveViewShow: FocusedValueKey {
-    typealias Value = Binding<Bool>
-}
-
-struct SaveViewType: FocusedValueKey {
-    typealias Value = Binding<UTType>
-}
-
 extension FocusedValues {
-    var saveViewShow: Binding<Bool>? {
-        get { self[SaveViewShow.self] }
-        set { self[SaveViewShow.self] = newValue }
-    }
-    var saveViewType: Binding<UTType>? {
-        get { self[SaveViewType.self] }
-        set { self[SaveViewType.self] = newValue }
-    }
+    @Entry var saveViewPresented: Binding<Bool>?
+    @Entry var saveViewType: Binding<UTType>?
 }
 
 struct SaveViewButton: View {
-    @FocusedValue(\.saveViewShow) private var saveViewShow
+    @FocusedValue(\.saveViewPresented) private var saveViewPresented
     @FocusedValue(\.saveViewType) private var saveViewType
     var viewType: UTType
     
     var body: some View {
         Button {
-            saveViewShow?.wrappedValue = true
+            saveViewPresented?.wrappedValue = true
             saveViewType?.wrappedValue = viewType
         } label: {
             Label("Save \(viewType.preferredFilenameExtension!.uppercased())", systemImage: "square.and.arrow.down.on.square")
         }
         .keyboardShortcut("S", modifiers: [.option, .command])
-        .disabled(saveViewShow == nil)
+        .disabled(saveViewPresented == nil)
     }
 }
 
 struct SaveViewSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @Binding var saveViewShow: Bool
     var url: URL?
     @Binding var viewType: UTType
     @Binding var graph: Graph
@@ -63,7 +48,6 @@ struct SaveViewSheet: View {
                 HStack {
                     Spacer()
                     Button("Cancel") {
-                        saveViewShow = false
                         dismiss()
                     }
                     Button("Save") {
@@ -73,7 +57,6 @@ struct SaveViewSheet: View {
                         } catch {
                             print("Save failed \(error)")
                         }
-                        saveViewShow = false
                         dismiss()
                     }
                     .keyboardShortcut(.defaultAction)
@@ -81,7 +64,6 @@ struct SaveViewSheet: View {
             } else {
                 Text("Unnamed file requires a name to save.")
                 Button("Dismiss") {
-                    saveViewShow = false
                     dismiss()
                 }
             }

@@ -8,8 +8,6 @@
 import os
 import SwiftUI
 
-let handler = GraphvizLogHandler()
-
 // GraphvizLogView reports messages from graphviz API operations.
 struct GraphvizLogView: View {
     @Environment(LogMessage.self) var logMessage: LogMessage
@@ -36,10 +34,59 @@ struct GraphvizLogView: View {
     private var errf: agusererrf? // type is @convention(c) (_ : UnsafeMutablePointer<CChar>?) -> Int32
     let logMessage: LogMessage
 
-    init() {
+    init(logMessage: LogMessage) {
+        self.logMessage = logMessage
+    }
+
+    func capture(block: () -> Any ) -> Any {
+        Self.captureLock.lock()
+        defer { Self.captureLock.unlock() }
+        self.logMessage.message = ""
+
+        let observer = NotificationCenter.default.addObserver(
+            forName: Notification.Name("GraphvizSwift.LogMessage"),
+            object: nil,
+            queue: nil // .main?
+        ) { @Sendable notification in
+            if let fragment = notification.userInfo?["fragment"] as? String {
+                self.logMessage.message += fragment
+            }
+        }
+        defer {
+            NotificationCenter.default.removeObserver(
+                observer,
+                name: Notification.Name("GraphvizSwift.LogMessage"),
+                object: nil)
+        }
+
+        let errf = agseterrf { fragment in
+            // A closure for a C function cannot capture variables from its enclosing
+            // context, and therefore cannot simply append fragment to message. Use a
+            // notification to post the fragment to an observer.
+            if let fragment {
+                let fragment = String(cString: fragment)
+                if !fragment.isEmpty {
+                    NotificationCenter.default.post(
+                        name: Notification.Name("GraphvizSwift.LogMessage"),
+                        object: nil,
+                        userInfo: ["fragment": fragment]
+                    )
+                }
+            }
+            return 0
+        }
+        defer { agseterrf(errf) }
+
+        return block()
+    }
+
+    // The following is for a global message handler that displays all
+    // graphviz messages in a single LogView window.
+    static let logHandler = GraphvizLogHandler()
+    private init() {
         let logMessage = LogMessage()
         self.observer = NotificationCenter.default.addObserver(
-            forName: Notification.Name("GraphvizSwift.LogPipe"),
+            forName: Notification.Name("GraphvizSwift.LogHandler"),
             object: nil,
             queue: nil // .main?
         ) { @Sendable notification in
@@ -54,7 +101,7 @@ struct GraphvizLogView: View {
                 let fragment = String(cString: fragment)
                 if !fragment.isEmpty {
                     NotificationCenter.default.post(
-                        name: Notification.Name("GraphvizSwift.LogPipe"),
+                        name: Notification.Name("GraphvizSwift.LogHandler"),
                         object: nil,
                         userInfo: ["fragment": fragment]
                     )
@@ -69,7 +116,7 @@ struct GraphvizLogView: View {
         if let observer {
             NotificationCenter.default.removeObserver(
                 observer,
-                name: Notification.Name("GraphvizSwift.LogPipe"),
+                name: Notification.Name("GraphvizSwift.LogHandler"),
                 object: nil)
         }
     }

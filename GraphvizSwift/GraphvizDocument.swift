@@ -21,15 +21,15 @@ extension UTType {
 }
 
 /// GraphvizDocument contains the contents of the file.
-final class GraphvizDocument: ReferenceFileDocument {
+@Observable final class GraphvizDocument: ReferenceFileDocument {
     static let readableContentTypes: [UTType] = [.gv, .dot, .canon]
     static let writableContentTypes: [UTType] = [.gv, .dot, .canon]
     typealias Snapshot = Data
     
     let name: String
     let docType: UTType
-    @Published var text: String!
-    @Published var graph: Graph!
+    var text: String!
+    var graph: Graph!
     
     init() {
         self.name = ""
@@ -46,7 +46,7 @@ final class GraphvizDocument: ReferenceFileDocument {
         self.name = name
         self.text = text
         self.docType = configuration.contentType
-        self.graph = Graph(text: text)
+        self.graph = Graph(text: text, viewType: UTType(filenameExtension: UserDefaults.standard.string(forKey: "viewType") ?? defaultViewType)!)
     }
 
     func snapshot(contentType: UTType) throws -> Data {

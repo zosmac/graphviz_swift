@@ -6,29 +6,30 @@
 //
 
 import AppKit
+import SwiftUI
 
 nonisolated(unsafe) let parsedAttributes = ParsedAttributes()
 
-/// Attributes for each kind of attribute: graph, node, edge.
-struct AttributesByKind: Identifiable, Hashable {
-    var id: Int { kind }
-    let kind: Int
-    let label: String // for each picker button
-    let attributes: [ParsedAttribute]
-
-    init(_ kind: Int, _ label: String, attributes: [ParsedAttribute]) {
-        self.kind = kind
-        self.label = label
-        self.attributes = attributes
-    }
-
-    func hash(into hasher: inout Hasher) { // Hashable
-        hasher.combine(kind)
-    }
-}
+///// Attributes for each kind of attribute: graph, node, edge.
+//struct AttributesByKind: Identifiable, Hashable {
+//    var id: Int { kind }
+//    let kind: Int
+//    let label: LocalizedStringKey // for each picker button
+//    let attributes: [ParsedAttribute]
+//
+//    init(_ kind: Int, _ label: String, imageName: String, attributes: [ParsedAttribute]) {
+//        self.kind = kind
+//        self.label = "\(Image(systemName: imageName)) \(label)"
+//        self.attributes = attributes
+//    }
+//
+//    func hash(into hasher: inout Hasher) { // Hashable
+//        hasher.combine(kind)
+//    }
+//}
 
 /// Attribute reflects a graph, node, or edge property after the graph's setting applied.
-struct Attribute: Identifiable, Equatable {
+struct Attribute: Identifiable, Equatable, Hashable {
     let id: UUID
     let name: String /// Attribute name
     let value: String /// Attribute's value
@@ -45,6 +46,10 @@ struct Attribute: Identifiable, Equatable {
         self.simpleType = attribute.simpleType
         self.options = attribute.options
         self.listItemType = attribute.listItemType
+    }
+
+    func hash(into hasher: inout Hasher) { // Hashable
+        hasher.combine(id)
     }
 }
 
@@ -107,27 +112,26 @@ final class ParsedAttribute: Comparable {
 
 /// Attributes holds the attribute settings for a graph.
 struct Attributes {
-    let attributesByKind: [[Attribute]] // AGRAPH, AGNODE, AGEDGE
+    let kinds: [[Attribute]] // by kind: AGRAPH, AGNODE, AGEDGE
     
     nonisolated
     init(applying settings: [[AnyHashable: Any]]) {
-        var attributesByKind = [[Attribute]]()
+        var kinds = Array(repeating: [Attribute](), count: 3)
         // merge document's attribute settings into its attributes
-        for kind in parsedAttributes.kinds {
-            attributesByKind.append([Attribute]())
-            for attribute in kind.attributes {
-                attributesByKind[kind.kind].append(
+        for (kind, attributes) in parsedAttributes.kinds.enumerated() {
+            for attribute in attributes {
+                kinds[kind].append(
                     Attribute(attribute: attribute,
-                              value: settings[kind.kind][attribute.name] as? String ?? attribute.value))
+                              value: settings[kind][attribute.name] as? String ?? attribute.value))
             }
         }
-        self.attributesByKind = attributesByKind
+        self.kinds = kinds
     }
 }
 
-/// ParsedAttributes contains the tables of Graphviz attributes and documentation of the attributes.
+/// ParsedAttributes contains Graphviz attributes, by kind of graph, node, or edge, and documentation of the attributes.
 final class ParsedAttributes {
-    let kinds: [AttributesByKind] // by kind: AGRAPH, AGNODE, AGEDGE
+    let kinds: [[ParsedAttribute]] // by kind: AGRAPH, AGNODE, AGEDGE
     let documentation: String
     
     init() {
@@ -154,7 +158,7 @@ final class ParsedAttributes {
         }
         
         documentation += "<h3>Attributes</h3>"
-        var tables = Array(repeating: [ParsedAttribute](), count: 3)
+        var kinds = Array(repeating: [ParsedAttribute](), count: 3)
         for attribute in delegate.attributes.sorted() {
             if let options = delegate.simpleTypes[attribute.simpleType] {
                 if options.count == 1 {
@@ -167,26 +171,24 @@ final class ParsedAttributes {
             documentation += " " + attribute.doc
             
             if attribute.graph != nil {
-                tables[AGRAPH].append(ParsedAttribute(copy: attribute, kind: AGRAPH, attribute.graph!))
+                kinds[AGRAPH].append(ParsedAttribute(copy: attribute, kind: AGRAPH, attribute.graph!))
             }
             if attribute.node != nil {
-                tables[AGNODE].append(ParsedAttribute(copy: attribute, kind: AGNODE, attribute.node!))
+                kinds[AGNODE].append(ParsedAttribute(copy: attribute, kind: AGNODE, attribute.node!))
             }
             if attribute.edge != nil {
-                tables[AGEDGE].append(ParsedAttribute(copy: attribute, kind: AGEDGE, attribute.edge!))
+                kinds[AGEDGE].append(ParsedAttribute(copy: attribute, kind: AGEDGE, attribute.edge!))
             }
         }
         
-        self.documentation = documentation.replacingOccurrences(of: "[\t\r]", with: "", options: [.regularExpression])
-        self.kinds = [
-            AttributesByKind(AGRAPH, "􁁀 Graph", attributes: tables[AGRAPH]),
-            AttributesByKind(AGNODE, "􀲞 Node", attributes: tables[AGNODE]),
-            AttributesByKind(AGEDGE, "􀫰 Edge", attributes: tables[AGEDGE])
-        ]
+        self.documentation = documentation.filter({
+            $0 != "\t" && $0 != "\r"
+        })
+        self.kinds = kinds
     }
 }
 
-/// AttributesParser reads attributes.xml to produce the tables of Graphviz attributes.
+/// AttributesParser reads attributes.xml and parses out the Graphviz attributes.
 final class AttributesParser: NSObject, XMLParserDelegate {
     var overviewDoc = ""
     var attributes = [ParsedAttribute]()

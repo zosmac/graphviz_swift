@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5855E74B2E5165770022DBA1 /* arguments.xml in Resources */ = {isa = PBXBuildFile; fileRef = 5855E74A2E5165770022DBA1 /* arguments.xml */; };
 		5885F76B2DDA9DD200CA803D /* attributes.xml in Resources */ = {isa = PBXBuildFile; fileRef = 5885F76A2DDA9DD200CA803D /* attributes.xml */; };
 		589669E42E385216001DA9A0 /* graphviz.help in Resources */ = {isa = PBXBuildFile; fileRef = 589669E32E385216001DA9A0 /* graphviz.help */; };
 		58AA16362DFD956200C4345A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 58AA16282DFD956200C4345A /* Assets.xcassets */; };
@@ -37,7 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		5855E74A2E5165770022DBA1 /* arguments.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = arguments.xml; path = ../../../../../../usr/local/graphviz/share/doc/graphviz/schema/arguments.xml; sourceTree = "<group>"; };
+		5855E74A2E5165770022DBA1 /* arguments.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = arguments.xml; path = /usr/local/graphviz/share/doc/graphviz/schema/arguments.xml; sourceTree = "<absolute>"; };
 		5885F76A2DDA9DD200CA803D /* attributes.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = attributes.xml; path = /usr/local/graphviz/share/doc/graphviz/schema/attributes.xml; sourceTree = "<absolute>"; };
 		589669E32E385216001DA9A0 /* graphviz.help */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = graphviz.help; sourceTree = "<group>"; };
 		58AA16282DFD956200C4345A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -273,7 +272,6 @@
 				58AA16372DFD956200C4345A /* GraphDot.icns in Resources */,
 				58AA16382DFD956200C4345A /* GraphGv.icns in Resources */,
 				58AA16392DFD956200C4345A /* Graphviz.icns in Resources */,
-				5855E74B2E5165770022DBA1 /* arguments.xml in Resources */,
 				5885F76B2DDA9DD200CA803D /* attributes.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

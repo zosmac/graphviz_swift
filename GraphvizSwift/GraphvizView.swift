@@ -8,86 +8,41 @@
 import UniformTypeIdentifiers
 import SwiftUI
 
-@Observable final class Sheet {
-    var isPresented: Bool = false
-}
-
 /// GraphvizView displays the rendered graph and the attributes and file contents inspectors.
 struct GraphvizView: View {
     @AppStorage("textSize") var textSize = defaultTextSize
-    
+
     @Environment(\.openWindow) var openWindow
     @Environment(\.colorScheme) private var colorScheme
     @Environment(AttributesDocViewLaunch.self) var attributesDocViewLaunch
     
-    @ObservedObject var document: GraphvizDocument
+    @Bindable var document: GraphvizDocument
     let url: URL?
-    @Binding var kind: AttributesByKind.ID
-    @Binding var row: Attribute.ID?
-    
-    @State private var sidebarVisibility: NavigationSplitViewVisibility = .detailOnly
+
+    @State private var kind: Int?
+    @State private var row: Attribute.ID?
     @State private var zoomScale: CGFloat = 1.0
-    @State private var viewScale: CGFloat = 1.0
-    @State private var saveViewShow: Bool = false
-    @State private var saveViewType: UTType? = nil
+    @State private var viewScale: CGFloat = 0.0
+    @State private var saveViewPresented: Bool = false
+    @State private var inspectorPresented: Bool = false
+    @State private var viewType = UTType(filenameExtension: UserDefaults.standard.string(forKey: "viewType") ?? defaultViewType)!
     
     var body: some View {
-        NavigationSplitView(columnVisibility: $sidebarVisibility) {
-            AttributesView(document: document)
-                .focusedSceneValue(\.attributesKind, $kind)
-                .focusedSceneValue(\.attributesRow, $row)
-                .toolbar(removing: .sidebarToggle)
+//        VStack {
+//            if viewType == .pdf {
+//                GraphByType(document: document, viewType: $viewType, zoomScale: $zoomScale, viewScale: $viewScale)
+//            } else {
+        ViewByType(document: document, viewType: $viewType, zoomScale: $zoomScale, viewScale: $viewScale)
+//            }
+//        }
+        .inspector(isPresented: $inspectorPresented) {
+            AttributesView(document: document) // , kind: $kind, row: $row)
+                .inspectorColumnWidth(min: 200, ideal: 300, max: 400)
         }
-        detail: {
-            switch document.graph.viewType {
-            case document.docType:
-                TextEditor(text: $document.text)
-                    .font(.system(size: textSize*zoomScale, design: .monospaced))
-                    .onChange(of: document.text) {
-                        document.graph.render(text: document.text, viewType: document.graph.viewType)
-                    }
-            case .canon, .gv, .dot, .json:
-                if let data = {
-                    document.graph.render(text: document.text, viewType: document.graph.viewType)
-                    return document.graph.data }(),
-                let text = String(data: data, encoding: .utf8) {
-                    ScrollView {
-                        Text(text)
-                            .multilineTextAlignment(.leading)
-                            .font(.system(size: textSize*zoomScale))
-                    }
-                } else {
-                    Text("Render of text type \(document.graph.viewType.identifier) failed")
-                        .font(Font.title)
-                }
-            default:
-                if let data = {
-                    document.graph.render(text: document.text, viewType: document.graph.viewType)
-                    return document.graph.data }(),
-                let image = NSImage(data: data) {
-                    GeometryReader { geometryProxy in
-                        ScrollView([.vertical, .horizontal]) {
-                            Image(nsImage: image)
-                                .resizable()
-                                .frame(width: image.size.width*zoomScale, height: image.size.height*zoomScale)
-                        }
-                    }
-                    .onGeometryChange(for: CGSize.self) { proxy in
-                        proxy.size
-                    }
-                    action: { size in
-                        viewScale = min(size.width/image.size.width, size.height/image.size.height)
-                    }
-                } else {
-                    Text("Render of image type \(document.graph.viewType.identifier) unsupported")
-                        .font(Font.title)
-                }
-            }
-        }
-        .focusedSceneValue(\.saveViewShow, $saveViewShow)
-        .focusedSceneValue(\.saveViewType, $document.graph.viewType)
-        .sheet(isPresented: $saveViewShow) {
-            SaveViewSheet(saveViewShow: $saveViewShow, url: url, viewType: $document.graph.viewType, graph: $document.graph)
+        .focusedSceneValue(\.saveViewPresented, $saveViewPresented)
+        .focusedSceneValue(\.saveViewType, $viewType)
+        .sheet(isPresented: $saveViewPresented) {
+            SaveViewSheet(url: url, viewType: $viewType, graph: $document.graph)
         }
         .onAppear {
             if attributesDocViewLaunch.firstTime {
@@ -96,55 +51,52 @@ struct GraphvizView: View {
             attributesDocViewLaunch.firstTime = false
         }
         .toolbar(id: "GraphvizViewToolbar") {
-            ToolbarItem(id: "Sidebar", placement: .navigation) {
-                Button("Attributes", systemImage: "tablecells") {
-                    if sidebarVisibility == .detailOnly {
-                        sidebarVisibility = .doubleColumn
-                    } else {
-                        sidebarVisibility = .detailOnly
-                    }
-                }
-            }
-            //            ToolbarItem(id: "Message", placement: .primaryAction) {
-            //                ControlGroup("􀁞") {
-            //                    ScrollView {
-            //                        // logMessage must be an observable class type
-            //                        Text(document.graph.logMessage.message)
-            //                            .foregroundStyle(.red)
-            //                    }
-            //                    .defaultScrollAnchor(.zero)
-            //                }
-            //                .controlGroupStyle(.menu)
-            //            }
-            //            .hidden(document.graph.logMessage.message.isEmpty)
-            ToolbarSpacer()
-            ToolbarItem(id: "View Type", placement: .primaryAction) {
+            ToolbarItem(id: "View Type") {
                 ControlGroup("View Type") {
-                    Picker("View Type", selection: $document.graph.viewType) {
+                    Picker("View Type", selection: $viewType) {
                         ForEach(viewableContentTypes, id: \.self) {
                             let label = $0.preferredFilenameExtension!
                             Text(label.uppercased()).tag($0)
                         }
                     }
                     .frame(width: 80)
-                    SaveViewButton(viewType: document.graph.viewType)
+                    .onChange(of: viewType) {
+                        document.graph.render(text: document.text, viewType: $1)
+                    }
+                    SaveViewButton(viewType: viewType)
                 }
             }
-            ToolbarSpacer()
-            ToolbarItem(id: "Zoom", placement: .primaryAction) {
+            ToolbarItem(id: "Zoom") {
                 ControlGroup("Zoom") {
-                    Button("Zoom out", systemImage: "minus.magnifyingglass") {
+                    Button("Zoom out", systemImage: "minus.magnifyingglass") { // "arrow.down.right.and.arrow.up.left") {
                         zoomScale /= 2.0.squareRoot()
                     }
-                    Button("Actual Size", systemImage: "1.magnifyingglass") {
+                    Button("Actual Size", systemImage: "1.magnifyingglass") { // "arrow.uturn.left") {
                         zoomScale = 1.0
                     }
-                    Button("Zoom in", systemImage: "plus.magnifyingglass") {
+                    Button("Zoom in", systemImage: "plus.magnifyingglass") { // "arrow.up.left.and.arrow.down.right") {
                         zoomScale *= 2.0.squareRoot()
                     }
-                    Button("Zoom to Fit", systemImage: "arrow.up.left.and.down.right.magnifyingglass") {
+                    Button("Zoom to Fit", systemImage: "square.arrowtriangle.4.outward") { // "arrow.up.left.and.down.right.magnifyingglass") { // "arrow.up.left.and.down.right.and.arrow.up.right.and.down.left") {
                         zoomScale = viewScale
                     }
+                }
+            }
+            ToolbarItem(id: "Message") {
+                ControlGroup {
+                        ScrollView {
+                            Text(document.graph.logMessage.message)
+                                .foregroundStyle(.red)
+                        }
+                        .defaultScrollAnchor(.zero)
+                } label: {
+                    Label("Message", systemImage: "exclamationmark.circle")
+                }
+                .controlGroupStyle(.menu)
+            }
+            ToolbarItem(id: "Attributes") {
+                Button("Attributes", systemImage: "info.circle") {
+                    inspectorPresented.toggle()
                 }
             }
         }
