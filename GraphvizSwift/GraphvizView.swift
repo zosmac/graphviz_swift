@@ -28,13 +28,7 @@ struct GraphvizView: View {
     @State private var viewType = UTType(filenameExtension: UserDefaults.standard.string(forKey: "viewType") ?? defaultViewType)!
     
     var body: some View {
-//        VStack {
-//            if viewType == .pdf {
-//                GraphByType(document: document, viewType: $viewType, zoomScale: $zoomScale, viewScale: $viewScale)
-//            } else {
         ViewByType(document: document, viewType: $viewType, zoomScale: $zoomScale, viewScale: $viewScale)
-//            }
-//        }
         .inspector(isPresented: $inspectorPresented) {
             AttributesView(document: document) // , kind: $kind, row: $row)
                 .inspectorColumnWidth(min: 200, ideal: 300, max: 400)

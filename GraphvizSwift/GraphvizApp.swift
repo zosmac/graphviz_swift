@@ -27,7 +27,7 @@ enum GraphvizError: Int {
 
     var body: some Scene {
         DocumentGroup(newDocument: { GraphvizDocument() }) {
-            GraphvizView(document: $0.document, url: $0.fileURL) //, kind: $kind, row: $row) //, handler: $graphvizLogHandler)
+            GraphvizView(document: $0.document, url: $0.fileURL)
                 .environment(attributesDocViewLaunch)
         }
         .commands {
@@ -55,13 +55,6 @@ enum GraphvizError: Int {
         }
         .defaultPosition(.topTrailing)
         .defaultSize(width: 350, height: 400)
-        
-//        UtilityWindow("Graphviz Log", id: "GraphvizLogView") {
-//            GraphvizLogView()
-//                .environment(graphvizLogHandler.logMessage)
-//        }
-//        .defaultPosition(.trailing)
-//        .defaultSize(width: 350, height: 400)
 
         Settings {
             PreferencesView()

@@ -10,24 +10,6 @@ import SwiftUI
 
 nonisolated(unsafe) let parsedAttributes = ParsedAttributes()
 
-///// Attributes for each kind of attribute: graph, node, edge.
-//struct AttributesByKind: Identifiable, Hashable {
-//    var id: Int { kind }
-//    let kind: Int
-//    let label: LocalizedStringKey // for each picker button
-//    let attributes: [ParsedAttribute]
-//
-//    init(_ kind: Int, _ label: String, imageName: String, attributes: [ParsedAttribute]) {
-//        self.kind = kind
-//        self.label = "\(Image(systemName: imageName)) \(label)"
-//        self.attributes = attributes
-//    }
-//
-//    func hash(into hasher: inout Hasher) { // Hashable
-//        hasher.combine(kind)
-//    }
-//}
-
 /// Attribute reflects a graph, node, or edge property after the graph's setting applied.
 struct Attribute: Identifiable, Equatable, Hashable {
     let id: UUID

@@ -8,20 +8,6 @@
 import os
 import SwiftUI
 
-// GraphvizLogView reports messages from graphviz API operations.
-struct GraphvizLogView: View {
-    @Environment(LogMessage.self) var logMessage: LogMessage
-
-    var body: some View {
-        ScrollView {
-            // logMessage must be an observable class type
-            Text(logMessage.message)
-                .foregroundStyle(.red)
-        }
-        .defaultScrollAnchor(.bottomLeading)
-    }
-}
-
 /// LogMessage holds the log message from graphviz log. This type is a member of an instance of observable class Graph so that the post of the message is detected by a Text view.
 @Observable final class LogMessage: @unchecked Sendable {
     var message: String = ""
@@ -77,53 +63,6 @@ struct GraphvizLogView: View {
         }
         defer { agseterrf(errf) }
 
-        return block()
-    }
-
-    // The following is for a global message handler that displays all
-    // graphviz messages in a single LogView window.
-    static let logHandler = GraphvizLogHandler()
-    private init() {
-        let logMessage = LogMessage()
-        self.observer = NotificationCenter.default.addObserver(
-            forName: Notification.Name("GraphvizSwift.LogHandler"),
-            object: nil,
-            queue: nil // .main?
-        ) { @Sendable notification in
-            if let fragment = notification.userInfo?["fragment"] as? String {
-                logMessage.message += fragment
-            }
-        }
-        self.logMessage = logMessage
-
-        self.errf = agseterrf { fragment in
-            if let fragment {
-                let fragment = String(cString: fragment)
-                if !fragment.isEmpty {
-                    NotificationCenter.default.post(
-                        name: Notification.Name("GraphvizSwift.LogHandler"),
-                        object: nil,
-                        userInfo: ["fragment": fragment]
-                    )
-                }
-            }
-            return 0
-        }
-    }
-
-    deinit {
-        agseterrf(errf)
-        if let observer {
-            NotificationCenter.default.removeObserver(
-                observer,
-                name: Notification.Name("GraphvizSwift.LogHandler"),
-                object: nil)
-        }
-    }
-
-    static func capture(block: () -> Any ) -> Any {
-        captureLock.lock()
-        defer { captureLock.unlock() }
         return block()
     }
 }
