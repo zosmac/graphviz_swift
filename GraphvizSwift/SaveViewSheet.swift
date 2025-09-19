@@ -41,7 +41,7 @@ struct SaveViewSheet: View {
             if let url = url?.deletingPathExtension().appendingPathExtension(graph.viewType) {
                 Text("Save File:")
                     .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.accentColor)
                 Text(url.path)
                     .font(.system(size: 14, weight: .semibold, design: .rounded))
                 HStack {

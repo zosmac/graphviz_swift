@@ -16,8 +16,6 @@ struct GraphvizView: View {
     @Bindable var document: GraphvizDocument
     let url: URL?
 
-//    @State private var kind: Int?
-//    @State private var row: Attribute.ID?
     @State private var zoomScale: CGFloat = 1.0
     @State private var viewScale: CGFloat = 1.0
     @State private var saveViewPresented: Bool = false
@@ -41,6 +39,7 @@ struct GraphvizView: View {
             }
             attributesDocViewLaunch.firstTime = false
         }
+        .toolbarBackground(Color.accentColor.opacity(0.3))
         .toolbar(id: "GraphvizViewToolbar") {
             ToolbarItem(id: "View Type") {
                 ControlGroup("View Type") {
@@ -77,18 +76,18 @@ struct GraphvizView: View {
                 Button("Message", systemImage: "exclamationmark.message") {
                     messagePresented = document.graph.logMessage.message.isEmpty ? false : !messagePresented
                 }
-                .foregroundColor(document.graph.logMessage.message.isEmpty ? .primary : .red)
+                .foregroundStyle(document.graph.logMessage.message.isEmpty ? .secondary : Color.red)
                 .popover(isPresented: $messagePresented, arrowEdge: .trailing) {
                     ScrollView {
                         Text(document.graph.logMessage.message)
-                            .foregroundStyle(.red)
+                            .foregroundStyle(Color.accentColor)
                     }
                     .frame(minWidth: 200)
                     .defaultScrollAnchor(.topLeading)
                 }
             }
             ToolbarItem(id: "Attributes") {
-                Button("Attributes", systemImage: "list.dash") {
+                Button("Attributes", systemImage: "sidebar.trailing") {
                     inspectorPresented.toggle()
                 }
             }

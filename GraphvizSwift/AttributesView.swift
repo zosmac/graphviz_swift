@@ -20,17 +20,17 @@ struct Kinds: View {
                 kind = AGRAPH
                 attributes = document.graph.attributes?.kinds[kind!]
             }
-            .foregroundColor(kind == AGRAPH ? .accentColor : .primary)
+            .foregroundStyle(kind == AGRAPH ? Color.accentColor : .primary)
             Button("Node", systemImage: "oval") {
                 kind = AGNODE
                 attributes = document.graph.attributes?.kinds[kind!]
             }
-            .foregroundColor(kind == AGNODE ? .accentColor : .primary)
+            .foregroundStyle(kind == AGNODE ? Color.accentColor : .primary)
             Button("Edge", systemImage: "stroke.line.diagonal") {
                 kind = AGEDGE
                 attributes = document.graph.attributes?.kinds[kind!]
             }
-            .foregroundColor(kind == AGEDGE ? .accentColor : .primary)
+            .foregroundStyle(kind == AGEDGE ? Color.accentColor : .primary)
         }
     }
 }
