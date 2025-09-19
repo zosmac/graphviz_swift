@@ -22,8 +22,7 @@ struct PreferencesView: View {
         VStack(alignment: .leading, spacing: 20) {
             Picker("View Type", selection: $viewType) {
                 ForEach(viewableContentTypes, id: \.self) {
-                    let label = $0.preferredFilenameExtension!
-                    Text(label.uppercased()).tag(label)
+                    Text($0.uppercased()).tag($0)
                 }
             }
             Slider(value: $textSize, in: 9...32, step: 1) {

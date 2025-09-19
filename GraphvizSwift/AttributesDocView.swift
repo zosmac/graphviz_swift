@@ -13,13 +13,13 @@ import WebKit
 }
 
 extension FocusedValues {
-    @Entry var attributesKind: Binding<[Attribute]?>?  // by kind: AGRAPH, AGNODE, AGEDGE
+    @Entry var attributesKind: Binding<Int>?  // by kind: AGRAPH, AGNODE, AGEDGE
     @Entry var attributesRow: Binding<Attribute.ID?>?
 }
 
 /// AttributesDocView displays the documentation for attributes from attributes.xml.
 struct AttributesDocView: NSViewRepresentable {
-    @FocusedBinding(\.attributesKind) private var attributes
+    @FocusedBinding(\.attributesKind) private var kind
     @FocusedBinding(\.attributesRow) private var row
     
     class Coordinator: NSObject, WKNavigationDelegate {
@@ -45,11 +45,12 @@ struct AttributesDocView: NSViewRepresentable {
     
     func updateNSView(_ nsView: WKWebView, context: Context) {
         var href = "#"
-        if let attributes,
-           let row,
-           let index = attributes?.firstIndex(where: { $0.id == row }),
-           let name = attributes?[index].name {
-               href += name
+        if let kind,
+           let row {
+           let attributes = parsedAttributes.kinds[kind]
+            if let index = attributes.firstIndex(where: { $0.id == row }) {
+                href += attributes[index].name
+            }
         }
         nsView.evaluateJavaScript("window.location.hash='\(href)'")
     }

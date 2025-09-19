@@ -9,13 +9,13 @@ import UniformTypeIdentifiers
 import SwiftUI
 
 extension UTType {
-    nonisolated static var canon: UTType {
+    static var canon: UTType {
         UTType(exportedAs: "com.att.graphviz.graph.canonical")
     }
-    nonisolated static var gv: UTType {
+    static var gv: UTType {
         UTType(exportedAs: "com.att.graphviz.graph")
     }
-    nonisolated static var dot: UTType {
+    static var dot: UTType {
         UTType(importedAs: "com.att.graphviz.graph.dot")
     }
 }
@@ -46,7 +46,7 @@ extension UTType {
         self.name = name
         self.text = text
         self.docType = configuration.contentType
-        self.graph = Graph(text: text, viewType: UTType(filenameExtension: UserDefaults.standard.string(forKey: "viewType") ?? defaultViewType)!)
+        self.graph = Graph(text: text, viewType: UserDefaults.standard.string(forKey: "viewType") ?? defaultViewType)
     }
 
     func snapshot(contentType: UTType) throws -> Data {

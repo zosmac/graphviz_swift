@@ -8,17 +8,7 @@
 import UniformTypeIdentifiers
 import Foundation
 
-extension UTType: @retroactive Identifiable {
-    public var id: String { preferredFilenameExtension! }
-    static func == (lhs: UTType, rhs: UTType) -> Bool {
-        lhs.preferredFilenameExtension! == rhs.preferredFilenameExtension!
-    }
-    func hash(into hasher: inout Hasher) { // Hashable
-        hasher.combine(preferredFilenameExtension!)
-    }
-}
-
-let viewableContentTypes: [UTType] = {
+let viewableContentTypes: [String] = {
     var formats = [String]()
     var count: Int32 = 0
     guard let list = gvPluginList(
@@ -38,7 +28,5 @@ let viewableContentTypes: [UTType] = {
     }
     free(list)
     formats = Array(set)
-    return formats.sorted().map {
-        UTType(filenameExtension: $0)!
-    }
+    return formats.sorted()
 }()

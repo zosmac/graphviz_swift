@@ -13,34 +13,31 @@ import SwiftUI
     nonisolated(unsafe) static let context = gvContext()
 
     var text: String!
-    var viewType: UTType
+    var viewType: String
     var data = Data()
     var settings = Array(repeating: [String: String](), count: 3)
     var attributes: Attributes? // set in render
     let logMessage = LogMessage()
     let handler: GraphvizLogHandler
 
-    nonisolated
-    init(text: String, viewType: UTType) {
+    init(text: String, viewType: String) {
         self.handler = GraphvizLogHandler(logMessage: logMessage)
         self.text = text
         self.viewType = viewType
-        render(text: text, viewType: viewType)
+        render(text: text)
     }
 
     func changeAttribute(kind: Int?, name: String, value: String) -> Void {
         if let kind {
             settings[kind][name] = value
             print("update attribute \(kind) \(name) \(value)")
-            render(text: text, viewType: viewType)
+            render(text: text)
         }
     }
 
-    nonisolated
-    func render(text: String, viewType: UTType) -> Void {
+    func render(text: String) -> Void {
         data = handler.capture {
-            guard let format = viewType.preferredFilenameExtension,
-                  let graph = agmemread(text + "\n") else { return Data() }
+            guard let graph = agmemread(text + "\n") else { return Data() }
             print("RENDER performed for \(viewType) \(graph, default: "nil")")
             for kind in [AGRAPH, AGNODE, AGEDGE] {
                 var nextSymbol: UnsafeMutablePointer<Agsym_t>? = nil
@@ -67,7 +64,7 @@ import SwiftUI
             }
             gvLayout(Graph.context, graph, "dot") // TODO: set as for -K CLI flag?
             defer { gvFreeLayout(Graph.context, graph) }
-            if gvRenderData(Graph.context, graph, format, &renderedData, &renderedLength) == 0 {
+            if gvRenderData(Graph.context, graph, viewType, &renderedData, &renderedLength) == 0 {
                 return Data(bytesNoCopy: renderedData!,
                             count: renderedLength,
                             deallocator: .custom { ptr, _ in

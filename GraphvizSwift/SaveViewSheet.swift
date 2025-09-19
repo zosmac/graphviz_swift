@@ -10,36 +10,35 @@ import SwiftUI
 
 extension FocusedValues {
     @Entry var saveViewPresented: Binding<Bool>?
-    @Entry var saveViewType: Binding<UTType>?
+    @Entry var saveViewType: Binding<String>?
 }
 
 struct SaveViewButton: View {
-    @FocusedValue(\.saveViewPresented) private var saveViewPresented
-    @FocusedValue(\.saveViewType) private var saveViewType
-    var viewType: UTType
+    @FocusedBinding(\.saveViewPresented) private var saveViewPresented
+    @FocusedBinding(\.saveViewType) private var saveViewType
+
+    var viewType: String
     
     var body: some View {
         Button {
-            saveViewPresented?.wrappedValue = true
-            saveViewType?.wrappedValue = viewType
+            saveViewType = viewType
+            saveViewPresented = true
         } label: {
-            Label("Save \(viewType.preferredFilenameExtension!.uppercased())", systemImage: "square.and.arrow.down.on.square")
+            Label("Save \(viewType.uppercased())", systemImage: "square.and.arrow.down.on.square")
         }
         .keyboardShortcut("S", modifiers: [.option, .command])
-        .disabled(saveViewPresented == nil)
+        .disabled(saveViewType == nil)
     }
 }
 
 struct SaveViewSheet: View {
     @Environment(\.dismiss) private var dismiss
     var url: URL?
-    @Binding var viewType: UTType
-    @Binding var graph: Graph
+    var graph: Graph
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            if let ext = viewType.preferredFilenameExtension,
-                let url = url?.deletingPathExtension().appendingPathExtension(ext) {
+            if let url = url?.deletingPathExtension().appendingPathExtension(graph.viewType) {
                 Text("Save File:")
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(.blue)
@@ -51,7 +50,7 @@ struct SaveViewSheet: View {
                         dismiss()
                     }
                     Button("Save") {
-                        print("save \(url.path) of viewType: \(viewType.identifier)")
+                        print("save \(url.path) of viewType: \(graph.viewType)")
                         do {
                             try graph.data.write(to: url)
                         } catch {

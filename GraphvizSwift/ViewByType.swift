@@ -7,26 +7,23 @@
 
 import UniformTypeIdentifiers
 import SwiftUI
-import PDFKit
-import WebKit
 
 struct ViewByType: View {
     @AppStorage("textSize") var textSize = defaultTextSize
     
     @Bindable var document: GraphvizDocument
-    @Binding var viewType: UTType
-    @Binding var zoomScale: CGFloat
+    let zoomScale: CGFloat
     @Binding var viewScale: CGFloat
-    
+
     var body: some View {
-        switch viewType {
+        switch UTType(filenameExtension: document.graph.viewType)! {
         case document.docType:
             TextEditor(text: $document.text)
                 .autocorrectionDisabled()
                 .font(.system(size: textSize*zoomScale, design: .monospaced))
                 .onChange(of: document.text) { oldValue, newValue in
                     print("text changed")
-                    document.graph.render(text: newValue, viewType: viewType)
+                    document.graph.render(text: newValue)
                 }
         case .canon, .gv, .dot, .json:
             if let text = String(data: document.graph.data, encoding: .utf8) {
@@ -36,7 +33,7 @@ struct ViewByType: View {
                         .font(.system(size: textSize*zoomScale))
                 }
             } else {
-                Text("Render of text type \(viewType.identifier) failed")
+                Text("Render of \(document.graph.viewType) failed")
                     .font(Font.title)
             }
         default:
@@ -46,8 +43,10 @@ struct ViewByType: View {
                         Image(nsImage: image)
                             .resizable()
                             .frame(width: image.size.width*zoomScale, height: image.size.height*zoomScale)
+                            .background(.white)
                     }
                 }
+                .background(.gray.opacity(0.2))
                 .onGeometryChange(for: CGSize.self) { proxy in
                     proxy.size
                 }
@@ -55,7 +54,7 @@ struct ViewByType: View {
                     viewScale = min(viewSize.width/image.size.width, viewSize.height/image.size.height)
                 }
             } else {
-                Text("Render of image type \(viewType.identifier) unsupported")
+                Text("Render of \(document.graph.viewType) failed")
                     .font(Font.title)
             }
         }

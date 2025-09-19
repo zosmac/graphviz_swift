@@ -20,8 +20,7 @@ enum GraphvizError: Int {
 
     @FocusedValue(\.attributesKind) private var attributesKind
     @FocusedValue(\.attributesRow) private var attributesRow
-    @FocusedValue(\.saveViewPresented) private var saveViewPresented
-    @FocusedValue(\.saveViewType) private var saveViewType
+    @FocusedBinding(\.saveViewType) private var saveViewType
 
     @State private var attributesDocViewLaunch = AttributesDocViewLaunch()
 
@@ -34,7 +33,7 @@ enum GraphvizError: Int {
             ToolbarCommands()
             CommandGroup(replacing: .newItem) {}
             CommandGroup(replacing: .importExport) {
-                SaveViewButton(viewType: (saveViewType?.wrappedValue ?? UTType(filenameExtension: viewType))!)
+                SaveViewButton(viewType: (saveViewType ?? viewType))
             }
             CommandGroup(replacing: .help) {
                 Button("Graphviz Help") {
@@ -53,7 +52,7 @@ enum GraphvizError: Int {
                 .focusedSceneValue(\.attributesKind, attributesKind)
                 .focusedSceneValue(\.attributesRow, attributesRow)
         }
-        .defaultPosition(.topTrailing)
+        .defaultPosition(.trailing)
         .defaultSize(width: 350, height: 400)
 
         Settings {

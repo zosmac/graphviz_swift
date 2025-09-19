@@ -5,8 +5,7 @@
 //  Created by Keefe Hayes on 5/20/25.
 //
 
-import AppKit
-import SwiftUI
+import Foundation
 
 nonisolated(unsafe) let parsedAttributes = ParsedAttributes()
 
@@ -96,7 +95,6 @@ final class ParsedAttribute: Comparable {
 struct Attributes {
     let kinds: [[Attribute]] // by kind: AGRAPH, AGNODE, AGEDGE
     
-    nonisolated
     init(applying settings: [[AnyHashable: Any]]) {
         var kinds = Array(repeating: [Attribute](), count: 3)
         // merge document's attribute settings into its attributes

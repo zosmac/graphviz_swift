@@ -14,10 +14,8 @@ import SwiftUI
 }
 
 /// GraphvizLogHandler receives log messages from graphviz render operations. Its static capture function provides a wrapper for capturing log messages from graphviz API calls to display in the UI. All of its instance methods are private.
-@Observable final class GraphvizLogHandler: @unchecked Sendable {
+@Observable final class GraphvizLogHandler: Sendable {
     static let captureLock = OSAllocatedUnfairLock()
-    private var observer: Any?
-    private var errf: agusererrf? // type is @convention(c) (_ : UnsafeMutablePointer<CChar>?) -> Int32
     let logMessage: LogMessage
 
     init(logMessage: LogMessage) {
