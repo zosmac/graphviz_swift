@@ -13,8 +13,8 @@
 		58AA16372DFD956200C4345A /* GraphDot.icns in Resources */ = {isa = PBXBuildFile; fileRef = 58AA162C2DFD956200C4345A /* GraphDot.icns */; };
 		58AA16382DFD956200C4345A /* GraphGv.icns in Resources */ = {isa = PBXBuildFile; fileRef = 58AA162D2DFD956200C4345A /* GraphGv.icns */; };
 		58AA16392DFD956200C4345A /* Graphviz.icns in Resources */ = {isa = PBXBuildFile; fileRef = 58AA162F2DFD956200C4345A /* Graphviz.icns */; };
-		58E5A5CA2DD0200F00303648 /* libcdt.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58E5A5C92DD0200F00303648 /* libcdt.6.dylib */; };
-		58E5A5CE2DD0207F00303648 /* libcgraph.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58E5A5CD2DD0207F00303648 /* libcgraph.7.dylib */; };
+		58B4FB002E7D989B00FE3B38 /* libcgraph.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58B4FAFF2E7D989B00FE3B38 /* libcgraph.7.dylib */; };
+		58B4FB022E7D98D300FE3B38 /* libcdt.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58B4FB012E7D98D300FE3B38 /* libcdt.6.dylib */; };
 		58E5A5D12DD020BA00303648 /* libgvc.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58E5A5D02DD020BA00303648 /* libgvc.7.dylib */; };
 /* End PBXBuildFile section */
 
@@ -45,11 +45,11 @@
 		58AA162F2DFD956200C4345A /* Graphviz.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Graphviz.icns; sourceTree = "<group>"; };
 		58AA16302DFD956200C4345A /* Graphviz-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Graphviz-Bridging-Header.h"; sourceTree = "<group>"; };
 		58AA16342DFD956200C4345A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		58B4FAFF2E7D989B00FE3B38 /* libcgraph.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcgraph.7.dylib; path = /usr/local/graphviz/lib/libcgraph.7.dylib; sourceTree = "<absolute>"; };
+		58B4FB012E7D98D300FE3B38 /* libcdt.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcdt.6.dylib; path = /usr/local/graphviz/lib/libcdt.6.dylib; sourceTree = "<absolute>"; };
 		58E5A58A2DCF89F000303648 /* GraphvizSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GraphvizSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		58E5A59B2DCF89F100303648 /* GraphvizSwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphvizSwiftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		58E5A5A52DCF89F100303648 /* GraphvizSwiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphvizSwiftUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		58E5A5C92DD0200F00303648 /* libcdt.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcdt.6.dylib; path = ../../../../../usr/local/graphviz/lib/libcdt.6.dylib; sourceTree = "<group>"; };
-		58E5A5CD2DD0207F00303648 /* libcgraph.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcgraph.7.dylib; path = ../../../../../usr/local/graphviz/lib/libcgraph.7.dylib; sourceTree = "<group>"; };
 		58E5A5D02DD020BA00303648 /* libgvc.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgvc.7.dylib; path = /usr/local/graphviz/lib/libgvc.7.dylib; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
@@ -76,9 +76,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				58E5A5CE2DD0207F00303648 /* libcgraph.7.dylib in Frameworks */,
+				58B4FB022E7D98D300FE3B38 /* libcdt.6.dylib in Frameworks */,
+				58B4FB002E7D989B00FE3B38 /* libcgraph.7.dylib in Frameworks */,
 				58E5A5D12DD020BA00303648 /* libgvc.7.dylib in Frameworks */,
-				58E5A5CA2DD0200F00303648 /* libcdt.6.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,9 +140,9 @@
 		58E5A5C82DD0200F00303648 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				58B4FB012E7D98D300FE3B38 /* libcdt.6.dylib */,
+				58B4FAFF2E7D989B00FE3B38 /* libcgraph.7.dylib */,
 				58E5A5D02DD020BA00303648 /* libgvc.7.dylib */,
-				58E5A5CD2DD0207F00303648 /* libcgraph.7.dylib */,
-				58E5A5C92DD0200F00303648 /* libcdt.6.dylib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
