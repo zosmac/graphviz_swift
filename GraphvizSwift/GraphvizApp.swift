@@ -44,7 +44,7 @@ enum GraphvizError: Int {
                 }
             }
         }
-        .defaultSize(width: 800, height: 600)
+        .defaultSize(width: 900, height: 600)
         .defaultPosition(.top)
 
         UtilityWindow("Attributes Documentation", id: "AttributesDocView") {

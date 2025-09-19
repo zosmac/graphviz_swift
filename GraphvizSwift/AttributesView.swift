@@ -11,24 +11,24 @@ import SwiftUI
 
 struct Kinds: View {
     @Bindable var document: GraphvizDocument
-    @Binding var kind: Int
+    @Binding var kind: Int?
     @Binding var attributes: [Attribute]?
     
     var body: some View {
         HStack {
             Button("Graph", systemImage: "rectangle.2.swap") {
                 kind = AGRAPH
-                attributes = document.graph.attributes?.kinds[kind]
+                attributes = document.graph.attributes?.kinds[kind!]
             }
             .foregroundColor(kind == AGRAPH ? .accentColor : .primary)
             Button("Node", systemImage: "oval") {
                 kind = AGNODE
-                attributes = document.graph.attributes?.kinds[kind]
+                attributes = document.graph.attributes?.kinds[kind!]
             }
             .foregroundColor(kind == AGNODE ? .accentColor : .primary)
             Button("Edge", systemImage: "stroke.line.diagonal") {
                 kind = AGEDGE
-                attributes = document.graph.attributes?.kinds[kind]
+                attributes = document.graph.attributes?.kinds[kind!]
             }
             .foregroundColor(kind == AGEDGE ? .accentColor : .primary)
         }
@@ -41,7 +41,7 @@ struct AttributesView: View {
     @FocusedBinding(\.attributesRow) private var attributesRow
     
     @Bindable var document: GraphvizDocument
-    @State private var kind: Int = AGRAPH
+    @State private var kind: Int?
     @State private var attributes: [Attribute]?
     @State private var row: Attribute.ID?
     @State private var scrollRow = ScrollPosition(idType: Attribute.ID.self)

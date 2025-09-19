@@ -88,7 +88,7 @@ struct GraphvizView: View {
                 }
             }
             ToolbarItem(id: "Attributes") {
-                Button("Attributes", systemImage: "info") {
+                Button("Attributes", systemImage: "list.dash") {
                     inspectorPresented.toggle()
                 }
             }

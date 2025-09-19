@@ -13,7 +13,7 @@ import WebKit
 }
 
 extension FocusedValues {
-    @Entry var attributesKind: Binding<Int>?  // by kind: AGRAPH, AGNODE, AGEDGE
+    @Entry var attributesKind: Binding<Int?>?  // by kind: AGRAPH, AGNODE, AGEDGE
     @Entry var attributesRow: Binding<Attribute.ID?>?
 }
 
@@ -47,7 +47,7 @@ struct AttributesDocView: NSViewRepresentable {
         var href = "#"
         if let kind,
            let row {
-           let attributes = parsedAttributes.kinds[kind]
+           let attributes = parsedAttributes.kinds[kind!]
             if let index = attributes.firstIndex(where: { $0.id == row }) {
                 href += attributes[index].name
             }
