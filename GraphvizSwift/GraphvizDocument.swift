@@ -9,14 +9,14 @@ import UniformTypeIdentifiers
 import SwiftUI
 
 extension UTType {
-    static var canon: UTType {
-        UTType(exportedAs: "com.att.graphviz.graph.canonical")
-    }
-    static var gv: UTType {
-        UTType(exportedAs: "com.att.graphviz.graph")
-    }
     static var dot: UTType {
         UTType(importedAs: "com.att.graphviz.graph.dot")
+    }
+    static var gv: UTType {
+        UTType(exportedAs: "com.att.graphviz.graph.gv")
+    }
+    static var canon: UTType {
+        UTType(exportedAs: "com.att.graphviz.graph.canon")
     }
 }
 

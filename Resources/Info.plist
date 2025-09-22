@@ -8,23 +8,9 @@
 	<array>
 		<dict>
 			<key>CFBundleTypeIconFile</key>
-			<string>GraphDot.icns</string>
-			<key>CFBundleTypeName</key>
-			<string>GraphvizDocument (dot)</string>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>LSHandlerRank</key>
-			<string>Default</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>com.att.graphviz.graph.dot</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeIconFile</key>
 			<string>GraphGv.icns</string>
 			<key>CFBundleTypeName</key>
-			<string>GraphvizDocument (gv)</string>
+			<string>GVDocumentTypeGraph</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSHandlerRank</key>
@@ -32,6 +18,9 @@
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>com.att.graphviz.graph</string>
+				<string>com.att.graphviz.graph.gv</string>
+				<string>com.att.graphviz.graph.dot</string>
+				<string>com.att.graphviz.graph.canon</string>
 			</array>
 		</dict>
 	</array>
@@ -56,53 +45,20 @@
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string></string>
-			</array>
-			<key>UTTypeIdentifier</key>
-			<string></string>
-			<key>UTTypeTagSpecification</key>
-			<dict/>
-		</dict>
-		<dict>
+			<key>UTTypeDescription</key>
+			<string>GVDocumentTypeGraph</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.text</string>
+				<string>com.att.graphviz.graph</string>
+				<string>com.att.graphviz.graph.gv</string>
 			</array>
-			<key>UTTypeDescription</key>
-			<string>GVDocumentTypeGraph</string>
 			<key>UTTypeIconFile</key>
 			<string>GraphGv.icns</string>
 			<key>UTTypeIcons</key>
 			<dict/>
 			<key>UTTypeIdentifier</key>
-			<string>com.att.graphviz.graph.canonical</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>canon</string>
-				</array>
-				<key>public.mime-type</key>
-				<array>
-					<string>text/vnd.graphviz</string>
-				</array>
-			</dict>
-		</dict>
-		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.text</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>GVDocumentTypeGraph</string>
-			<key>UTTypeIconFile</key>
-			<string>GraphGv.icns</string>
-			<key>UTTypeIcons</key>
-			<dict/>
-			<key>UTTypeIdentifier</key>
-			<string>com.att.graphviz.graph</string>
+			<string>com.att.graphviz.graph.gv</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
@@ -115,16 +71,41 @@
 				</array>
 			</dict>
 		</dict>
-	</array>
-	<key>UTImportedTypeDeclarations</key>
-	<array>
 		<dict>
+			<key>UTTypeDescription</key>
+			<string>GVDocumentTypeGraph</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.text</string>
 			</array>
+			<key>UTTypeIconFile</key>
+			<string>GraphGv.icns</string>
+			<key>UTTypeIcons</key>
+			<dict/>
+			<key>UTTypeIdentifier</key>
+			<string>com.att.graphviz.graph.canon</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>canon</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>text/vnd.graphviz</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
 			<key>UTTypeDescription</key>
 			<string>GVDocumentTypeGraph</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.text</string>
+			</array>
 			<key>UTTypeIconFile</key>
 			<string>GraphDot.icns</string>
 			<key>UTTypeIcons</key>

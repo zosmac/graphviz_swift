@@ -7,15 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5876B3D32E802824003C177A /* libcdt.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876B3D22E802824003C177A /* libcdt.6.dylib */; };
+		5876B3D52E8028C0003C177A /* libcgraph.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876B3D42E8028C0003C177A /* libcgraph.7.dylib */; };
+		5876C1002E802B17003C177A /* libgvc.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876C0FF2E802B17003C177A /* libgvc.7.dylib */; };
 		5885F76B2DDA9DD200CA803D /* attributes.xml in Resources */ = {isa = PBXBuildFile; fileRef = 5885F76A2DDA9DD200CA803D /* attributes.xml */; };
 		589669E42E385216001DA9A0 /* graphviz.help in Resources */ = {isa = PBXBuildFile; fileRef = 589669E32E385216001DA9A0 /* graphviz.help */; };
 		58AA16362DFD956200C4345A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 58AA16282DFD956200C4345A /* Assets.xcassets */; };
 		58AA16372DFD956200C4345A /* GraphDot.icns in Resources */ = {isa = PBXBuildFile; fileRef = 58AA162C2DFD956200C4345A /* GraphDot.icns */; };
 		58AA16382DFD956200C4345A /* GraphGv.icns in Resources */ = {isa = PBXBuildFile; fileRef = 58AA162D2DFD956200C4345A /* GraphGv.icns */; };
 		58AA16392DFD956200C4345A /* Graphviz.icns in Resources */ = {isa = PBXBuildFile; fileRef = 58AA162F2DFD956200C4345A /* Graphviz.icns */; };
-		58B4FB002E7D989B00FE3B38 /* libcgraph.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58B4FAFF2E7D989B00FE3B38 /* libcgraph.7.dylib */; };
-		58B4FB022E7D98D300FE3B38 /* libcdt.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58B4FB012E7D98D300FE3B38 /* libcdt.6.dylib */; };
-		58E5A5D12DD020BA00303648 /* libgvc.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58E5A5D02DD020BA00303648 /* libgvc.7.dylib */; };
+		58C1F7A22E7E220800FC6690 /* Component.plist in Resources */ = {isa = PBXBuildFile; fileRef = 58C1F7A12E7E220800FC6690 /* Component.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +38,9 @@
 
 /* Begin PBXFileReference section */
 		5855E74A2E5165770022DBA1 /* arguments.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = arguments.xml; path = /usr/local/graphviz/share/doc/graphviz/schema/arguments.xml; sourceTree = "<absolute>"; };
+		5876B3D22E802824003C177A /* libcdt.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcdt.6.dylib; path = "build/graphviz-13.1.2/lib/cdt/.libs/libcdt.6.dylib"; sourceTree = "<group>"; };
+		5876B3D42E8028C0003C177A /* libcgraph.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcgraph.7.dylib; path = "build/graphviz-13.1.2/lib/cgraph/.libs/libcgraph.7.dylib"; sourceTree = "<group>"; };
+		5876C0FF2E802B17003C177A /* libgvc.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgvc.7.dylib; path = "build/graphviz-13.1.2/lib/gvc/.libs/libgvc.7.dylib"; sourceTree = "<group>"; };
 		5885F76A2DDA9DD200CA803D /* attributes.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = attributes.xml; path = /usr/local/graphviz/share/doc/graphviz/schema/attributes.xml; sourceTree = "<absolute>"; };
 		589669E32E385216001DA9A0 /* graphviz.help */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = graphviz.help; sourceTree = "<group>"; };
 		58AA16282DFD956200C4345A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -45,12 +49,11 @@
 		58AA162F2DFD956200C4345A /* Graphviz.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Graphviz.icns; sourceTree = "<group>"; };
 		58AA16302DFD956200C4345A /* Graphviz-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Graphviz-Bridging-Header.h"; sourceTree = "<group>"; };
 		58AA16342DFD956200C4345A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		58B4FAFF2E7D989B00FE3B38 /* libcgraph.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcgraph.7.dylib; path = /usr/local/graphviz/lib/libcgraph.7.dylib; sourceTree = "<absolute>"; };
-		58B4FB012E7D98D300FE3B38 /* libcdt.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcdt.6.dylib; path = /usr/local/graphviz/lib/libcdt.6.dylib; sourceTree = "<absolute>"; };
+		58C1F79F2E7DF04500FC6690 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		58C1F7A12E7E220800FC6690 /* Component.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Component.plist; sourceTree = "<group>"; };
 		58E5A58A2DCF89F000303648 /* GraphvizSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GraphvizSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		58E5A59B2DCF89F100303648 /* GraphvizSwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphvizSwiftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		58E5A5A52DCF89F100303648 /* GraphvizSwiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphvizSwiftUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		58E5A5D02DD020BA00303648 /* libgvc.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgvc.7.dylib; path = /usr/local/graphviz/lib/libgvc.7.dylib; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -76,9 +79,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				58B4FB022E7D98D300FE3B38 /* libcdt.6.dylib in Frameworks */,
-				58B4FB002E7D989B00FE3B38 /* libcgraph.7.dylib in Frameworks */,
-				58E5A5D12DD020BA00303648 /* libgvc.7.dylib in Frameworks */,
+				5876B3D32E802824003C177A /* libcdt.6.dylib in Frameworks */,
+				5876B3D52E8028C0003C177A /* libcgraph.7.dylib in Frameworks */,
+				5876C1002E802B17003C177A /* libgvc.7.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -106,11 +109,13 @@
 				58AA16282DFD956200C4345A /* Assets.xcassets */,
 				5855E74A2E5165770022DBA1 /* arguments.xml */,
 				5885F76A2DDA9DD200CA803D /* attributes.xml */,
+				58C1F7A12E7E220800FC6690 /* Component.plist */,
 				58AA162C2DFD956200C4345A /* GraphDot.icns */,
 				58AA162D2DFD956200C4345A /* GraphGv.icns */,
 				58AA162F2DFD956200C4345A /* Graphviz.icns */,
 				58AA16302DFD956200C4345A /* Graphviz-Bridging-Header.h */,
 				58AA16342DFD956200C4345A /* Info.plist */,
+				58C1F79F2E7DF04500FC6690 /* Makefile */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -118,11 +123,11 @@
 		58E5A5812DCF89F000303648 = {
 			isa = PBXGroup;
 			children = (
-				58E5A5C82DD0200F00303648 /* Frameworks */,
 				58E5A58C2DCF89F000303648 /* GraphvizSwift */,
 				58E5A59E2DCF89F100303648 /* GraphvizSwiftTests */,
 				58E5A5A82DCF89F100303648 /* GraphvizSwiftUITests */,
 				58E5A58B2DCF89F000303648 /* Products */,
+				58E5A5C82DD0200F00303648 /* Frameworks */,
 				5885F76C2DDA9E1500CA803D /* Resources */,
 			);
 			sourceTree = "<group>";
@@ -140,9 +145,9 @@
 		58E5A5C82DD0200F00303648 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				58B4FB012E7D98D300FE3B38 /* libcdt.6.dylib */,
-				58B4FAFF2E7D989B00FE3B38 /* libcgraph.7.dylib */,
-				58E5A5D02DD020BA00303648 /* libgvc.7.dylib */,
+				5876B3D22E802824003C177A /* libcdt.6.dylib */,
+				5876B3D42E8028C0003C177A /* libcgraph.7.dylib */,
+				5876C0FF2E802B17003C177A /* libgvc.7.dylib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -247,6 +252,7 @@
 			knownRegions = (
 				en,
 				Base,
+				English,
 			);
 			mainGroup = 58E5A5812DCF89F000303648;
 			minimizedProjectReferenceProxies = 1;
@@ -268,11 +274,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				58AA16362DFD956200C4345A /* Assets.xcassets in Resources */,
+				5885F76B2DDA9DD200CA803D /* attributes.xml in Resources */,
+				58C1F7A22E7E220800FC6690 /* Component.plist in Resources */,
 				589669E42E385216001DA9A0 /* graphviz.help in Resources */,
 				58AA16372DFD956200C4345A /* GraphDot.icns in Resources */,
 				58AA16382DFD956200C4345A /* GraphGv.icns in Resources */,
 				58AA16392DFD956200C4345A /* Graphviz.icns in Resources */,
-				5885F76B2DDA9DD200CA803D /* attributes.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -358,8 +365,15 @@
 				"INFOPLIST_KEY_UISupportsDocumentBrowser[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UISupportsDocumentBrowser[sdk=iphonesimulator*]" = YES;
 				LD_RUNPATH_SEARCH_PATHS = /usr/local/graphviz/lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/build/graphviz-13.1.2/lib/cdt/.libs",
+					"$(PROJECT_DIR)/build/graphviz-13.1.2/lib/cgraph/.libs",
+					"$(PROJECT_DIR)/build/graphviz-13.1.2/lib/gvc/.libs",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.att.graphviz.swift;
+				PRODUCT_BUNDLE_IDENTIFIER = org.graphviz.app.swift;
 				PRODUCT_NAME = GraphvizSwift;
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SDKROOT = auto;
@@ -399,8 +413,15 @@
 				"INFOPLIST_KEY_UISupportsDocumentBrowser[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UISupportsDocumentBrowser[sdk=iphonesimulator*]" = YES;
 				LD_RUNPATH_SEARCH_PATHS = /usr/local/graphviz/lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/build/graphviz-13.1.2/lib/cdt/.libs",
+					"$(PROJECT_DIR)/build/graphviz-13.1.2/lib/cgraph/.libs",
+					"$(PROJECT_DIR)/build/graphviz-13.1.2/lib/gvc/.libs",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.att.graphviz.swift;
+				PRODUCT_BUNDLE_IDENTIFIER = org.graphviz.app.swift;
 				PRODUCT_NAME = GraphvizSwift;
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SDKROOT = auto;
@@ -445,9 +466,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DEAD_CODE_STRIPPING = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -509,7 +528,6 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				DEAD_CODE_STRIPPING = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
