@@ -63,10 +63,8 @@ struct AttributesView: View {
                         }
                     }
                     .onChange(of: kind) {
-                        print("onChange of kind: \($0) -> \($1)")
                         if let index = attributes.firstIndex(where: { $0.id == row }) {
                             proxy.scrollTo(attributes[index].id, anchor: .top)
-                            print("row: \(index)")
                         } else {
                             proxy.scrollTo(attributes[0].id, anchor: .top)
                         }

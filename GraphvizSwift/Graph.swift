@@ -30,7 +30,6 @@ import SwiftUI
     func changeAttribute(kind: Int?, name: String, value: String) -> Void {
         if let kind {
             settings[kind][name] = value
-            print("update attribute \(kind) \(name) \(value)")
             render(text: text)
         }
     }

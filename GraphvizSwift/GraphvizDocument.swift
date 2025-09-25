@@ -9,11 +9,8 @@ import UniformTypeIdentifiers
 import SwiftUI
 
 extension UTType {
-    static var dot: UTType {
-        UTType(importedAs: "com.att.graphviz.graph.dot")
-    }
     static var gv: UTType {
-        UTType(exportedAs: "com.att.graphviz.graph.gv")
+        UTType(exportedAs: "com.att.graphviz.graph")
     }
     static var canon: UTType {
         UTType(exportedAs: "com.att.graphviz.graph.canon")
@@ -22,8 +19,8 @@ extension UTType {
 
 /// GraphvizDocument contains the contents of the file.
 @Observable final class GraphvizDocument: ReferenceFileDocument {
-    static let readableContentTypes: [UTType] = [.gv, .dot, .canon]
-    static let writableContentTypes: [UTType] = [.gv, .dot, .canon]
+    static let readableContentTypes: [UTType] = [.gv, .canon]
+    static let writableContentTypes: [UTType] = [.gv, .canon]
     typealias Snapshot = Data
     
     let name: String

@@ -25,7 +25,7 @@ struct ViewByType: View {
                     print("text changed")
                     document.graph.render(text: newValue)
                 }
-        case .canon, .gv, .dot, .json:
+        case .canon, .gv, .json:
             if let text = String(data: document.graph.data, encoding: .utf8) {
                 ScrollView {
                     Text(text)
@@ -33,8 +33,9 @@ struct ViewByType: View {
                         .font(.system(size: textSize*zoomScale))
                 }
             } else {
-                Text("Render of \(document.graph.viewType) failed")
-                    .font(Font.title)
+                Text("Render of \(document.graph.viewType) failed\n\(document.graph.logMessage.message)")
+                    .font(Font.title2)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
         default:
             if let image = NSImage(data: document.graph.data) {
@@ -54,8 +55,9 @@ struct ViewByType: View {
                     viewScale = min(viewSize.width/image.size.width, viewSize.height/image.size.height)
                 }
             } else {
-                Text("Render of \(document.graph.viewType) failed")
-                    .font(Font.title)
+                Text("Render of \(document.graph.viewType) failed\n\(document.graph.logMessage.message)")
+                    .font(Font.title2)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
         }
     }
