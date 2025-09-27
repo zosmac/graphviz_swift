@@ -58,7 +58,8 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		587485B92E87793C00490930 /* Readme */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Readme;
+			name = Readme;
+			path = ../Readme;
 			sourceTree = "<group>";
 		};
 		58E5A58C2DCF89F000303648 /* GraphvizSwift */ = {
