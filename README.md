@@ -12,7 +12,7 @@
 
 ## First Steps
 
-*macOS* Apps are built with [Xcode](https://developer.apple.com/xcode/), which you may download from the Apple Developer web site or from the Mac App Store. *Xcode* also installs the Command Line Tools (e.g. `make`) for building *Graphviz*.
+*macOS* Apps are built with [Xcode](https://developer.apple.com/xcode/), and you may download it from there, from the [Mac App Store](https://apps.apple.com/app/xcode/id497799835?mt=12/), or from [Apple Developer Applications](https://developer.apple.com/download/applications/). *Xcode* also installs the Command Line Tools (e.g. `make`) for building *Graphviz*.
 
 ## Building *GraphvizSwift*
 
