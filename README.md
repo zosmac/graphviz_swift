@@ -39,27 +39,31 @@ Enter the password for your macOS system account when prompted, and the app will
 
 Once installed, you can find *GraphvizSwift* in the `/Applications` folder or through the App Launcher. Open the app, which will first present a document document navigator:
 
-![GraphvizSwiftOpen](readme/GraphvizSwiftOpen.png)
+![GraphvizSwiftOpen](Readme/GraphvizSwiftOpen.png)
 
 Graphviz installs a number of example DOT files (extension is .gv, as .dot was already registered for Microsoft DOcument Template files). Select from this list or navigate to other folders with your `.gv` files. Upon selection, *GraphvizSwift* presents a document view of the file:
 
-![GraphvizSwiftView](readme/GraphvizSwiftView.png)
+![GraphvizSwiftView](Readme/GraphvizSwiftView.png)
 
 The toolbar has a format selection popup menu that specifies the current image format. The default is PDF, which you can change in Settings:
 
-![GraphvizSwiftSettings](assets/GraphvizSwiftSettings.png)
+![GraphvizSwiftSettings](Readme/GraphvizSwiftSettings.png)
 
 With the popup you may select other rendering formats; the adjacent save button saves a file in that format. Next you will see several zoom options to change the size of the image. The message button, if highlighted in red, displays any error messages from rendering the graph:
 
-![GraphvizSwiftMessage](assets/GraphvizSwiftMessage.png)
+![GraphvizSwiftMessage](Readme/GraphvizSwiftMessage.png)
 
 The final button displays a sidebar for updating global graph, node, or edge attributes of the graph.
 
-![GraphvizSwiftAttrs](assets/GraphvizSwiftAttrs.png)
+![GraphvizSwiftAttrs](Readme/GraphvizSwiftAttrs.png)
+
+From the View menu, you can open Attributes Help for guidance:
+
+![GraphvizSwiftAttrsDoc](Readme/GraphvizSwiftAttrsDoc.png)
 
 You may also edit the file directly to update global attributes and to edit attributes for specific nodes, edges, or graph clusters. To enable edit mode, select GV from the format popup:
 
-![GraphvizSwiftEdit](assets/GraphvizSwiftEdit.png)
+![GraphvizSwiftEdit](Readme/GraphvizSwiftEdit.png)
 
 
 
