@@ -1,7 +1,5 @@
 # Welcome to *GraphvizSwift*, the *Swift* language based macOS Graphviz Application.
 
-![gomon](assets/gopher.png)
-
 - [Overview](#overview)
 - [First Steps](#firststeps)
 - [Building *GraphvizSwift*](#building-graphviz-swift)
@@ -41,11 +39,11 @@ Enter the password for your macOS system account when prompted, and the app will
 
 Once installed, you can find *GraphvizSwift* in the `/Applications` folder or through the App Launcher. Open the app, which will first present a document document navigator:
 
-![GraphvizSwiftOpen](assets/GraphvizSwiftOpen.png)
+![GraphvizSwiftOpen](readme/GraphvizSwiftOpen.png)
 
 Graphviz installs a number of example DOT files (extension is .gv, as .dot was already registered for Microsoft DOcument Template files). Select from this list or navigate to other folders with your `.gv` files. Upon selection, *GraphvizSwift* presents a document view of the file:
 
-![GraphvizSwiftView](assets/GraphvizSwiftView.png)
+![GraphvizSwiftView](readme/GraphvizSwiftView.png)
 
 The toolbar has a format selection popup menu that specifies the current image format. The default is PDF, which you can change in Settings:
 

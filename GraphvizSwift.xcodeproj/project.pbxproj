@@ -11,6 +11,7 @@
 		580430EC2E832D3E0094234F /* libcgraph.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 580430E52E832C340094234F /* libcgraph.7.dylib */; };
 		580430ED2E832D3E0094234F /* libgvc.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 580430E72E832C340094234F /* libgvc.7.dylib */; };
 		580552A92E81E97400C455E0 /* attributes.xml in Resources */ = {isa = PBXBuildFile; fileRef = 580552A82E81E97400C455E0 /* attributes.xml */; };
+		58561A022E87331100814D06 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 58561A012E87331100814D06 /* README.md */; };
 		589669E42E385216001DA9A0 /* graphviz.help in Resources */ = {isa = PBXBuildFile; fileRef = 589669E32E385216001DA9A0 /* graphviz.help */; };
 		58AA16362DFD956200C4345A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 58AA16282DFD956200C4345A /* Assets.xcassets */; };
 		58AA16382DFD956200C4345A /* GraphGv.icns in Resources */ = {isa = PBXBuildFile; fileRef = 58AA162D2DFD956200C4345A /* GraphGv.icns */; };
@@ -40,6 +41,7 @@
 		580430E62E832C340094234F /* libcdt.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcdt.6.dylib; path = build/PREFIX/lib/libcdt.6.dylib; sourceTree = "<group>"; };
 		580430E72E832C340094234F /* libgvc.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgvc.7.dylib; path = build/PREFIX/lib/libgvc.7.dylib; sourceTree = "<group>"; };
 		580552A82E81E97400C455E0 /* attributes.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = attributes.xml; path = /Applications/Graphviz.app/Contents/Frameworks/share/doc/graphviz/schema/attributes.xml; sourceTree = "<absolute>"; };
+		58561A012E87331100814D06 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		589669E32E385216001DA9A0 /* graphviz.help */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = graphviz.help; sourceTree = "<group>"; };
 		58AA16282DFD956200C4345A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		58AA162D2DFD956200C4345A /* GraphGv.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = GraphGv.icns; sourceTree = "<group>"; };
@@ -54,6 +56,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		587485B92E87793C00490930 /* Readme */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Readme;
+			sourceTree = "<group>";
+		};
 		58E5A58C2DCF89F000303648 /* GraphvizSwift */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = GraphvizSwift;
@@ -102,6 +109,8 @@
 		5885F76C2DDA9E1500CA803D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				587485B92E87793C00490930 /* Readme */,
+				58561A012E87331100814D06 /* README.md */,
 				58AA16282DFD956200C4345A /* Assets.xcassets */,
 				580552A82E81E97400C455E0 /* attributes.xml */,
 				58C1F7A12E7E220800FC6690 /* Component.plist */,
@@ -163,6 +172,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				587485B92E87793C00490930 /* Readme */,
 				58E5A58C2DCF89F000303648 /* GraphvizSwift */,
 			);
 			name = GraphvizSwift;
@@ -271,6 +281,7 @@
 				58AA16362DFD956200C4345A /* Assets.xcassets in Resources */,
 				58C1F7A22E7E220800FC6690 /* Component.plist in Resources */,
 				589669E42E385216001DA9A0 /* graphviz.help in Resources */,
+				58561A022E87331100814D06 /* README.md in Resources */,
 				580552A92E81E97400C455E0 /* attributes.xml in Resources */,
 				58AA16382DFD956200C4345A /* GraphGv.icns in Resources */,
 				58AA16392DFD956200C4345A /* Graphviz.icns in Resources */,
