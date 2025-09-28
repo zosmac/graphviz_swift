@@ -2,21 +2,23 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.graphics-design</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeIconFile</key>
+			<string>GraphGv.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>GVDocumentTypeGraph</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>com.att.graphviz.graph</string>
 			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>GraphGv.icns</string>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
@@ -40,16 +42,16 @@
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
-			<key>UTTypeIdentifier</key>
-			<string>com.att.graphviz.graph</string>
-			<key>UTTypeDescription</key>
-			<string>GVDocumentTypeGraph</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.text</string>
 			</array>
+			<key>UTTypeDescription</key>
+			<string>GVDocumentTypeGraph</string>
 			<key>UTTypeIconFile</key>
 			<string>GraphGv.icns</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.att.graphviz.graph</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
@@ -63,17 +65,17 @@
 			</dict>
 		</dict>
 		<dict>
-			<key>UTTypeIdentifier</key>
-			<string>com.att.graphviz.graph.canon</string>
-			<key>UTTypeDescription</key>
-			<string>GVDocumentTypeGraph</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.text</string>
 				<string>com.att.graphviz.graph</string>
 			</array>
+			<key>UTTypeDescription</key>
+			<string>GVDocumentTypeGraph</string>
 			<key>UTTypeIconFile</key>
 			<string>GraphGv.icns</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.att.graphviz.graph.canon</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>

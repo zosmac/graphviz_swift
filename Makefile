@@ -30,26 +30,26 @@ graphviz: $(PREFIX)/bin/dot
 pkg: graphvizswift-$(UNAME_M).pkg graphviz
 
 graphvizswift-$(UNAME_M).pkg: Resources/Component.plist $(BUILD_DIR)/Release/$(APP_NAME).app $(BUILD_DIR)/Scripts/postinstall
-	@echo =============================
+	@echo "\n============================="
 	@echo Build macOS Installer Package
-	@echo =============================
+	@echo "=============================\n"
 	rm -rf $(BUILD_DIR)/Release/$(APP_NAME).app.dSYM
 	rm -rf $(BUILD_DIR)/Release/$(APP_NAME).swiftmodule
 	cp -R $(PREFIX)/ $(BUILD_DIR)/Release/$(APP_DIR)
 	pkgbuild --root $(BUILD_DIR)/Release --install-location /Applications --scripts $(BUILD_DIR)/Scripts --identifier org.graphviz.app.swift --component-plist $< $@
 
 $(BUILD_DIR)/Release/$(APP_NAME).app: $(APP_NAME)/*.swift $(PREFIX)/bin/dot
-	@echo ===============
+	@echo "\n==============="
 	@echo Build macOS App
-	@echo ===============
-	xcodebuild -project $(APP_NAME).xcodeproj -configuration Release VALID_ARCHS=$(UNAME_M) MACOSX_DEPLOYMENT_TARGET=15 ALWAYS_SEARCH_USER_PATHS=NO LIBRARY_SEARCH_PATHS=$(PREFIX)/lib LD_RUNPATH_SEARCH_PATHS=$(RPATH)
+	@echo "===============\n"
+	xcodebuild -project $(APP_NAME).xcodeproj -configuration Release ARCHS=$(UNAME_M) LIBRARY_SEARCH_PATHS=$(PREFIX)/lib LD_RUNPATH_SEARCH_PATHS=$(RPATH)
 	cd $@/Contents/MacOS; dyld_info -linked_dylibs $(APP_NAME) | sed -n -E "s|($(PREFIX)/lib)(.*)|\1\2 @rpath\2 $(APP_NAME)|p" | xargs -t -L1 install_name_tool -change
 	codesign -s "-" -fv $@/Contents/MacOS/$(APP_NAME)
 
 $(BUILD_DIR)/Scripts/postinstall:
-	@echo ============================
+	@echo "\n============================"
 	@echo Generate Post-Install Script
-	@echo ============================
+	@echo "============================\n"
 	mkdir -p $(@D)
 	echo '#!/bin/sh' >$@
 	echo 'logger -is -t "Graphviz Install" "register dot plugins"' >>$@
@@ -58,9 +58,9 @@ $(BUILD_DIR)/Scripts/postinstall:
 	chmod 755 $@
 
 $(PREFIX)/bin/dot: $(GV_DIR)/cmd/dot/.libs/dot
-	@echo ============================
+	@echo "\n============================"
 	@echo Stage Graphviz for Packaging
-	@echo ============================
+	@echo "============================\n"
 	make -C $(GV_DIR) install
 	rm -rf $(PREFIX)/lib/*.la
 	rm -rf $(PREFIX)/lib/graphviz/*.la
@@ -69,29 +69,29 @@ $(PREFIX)/bin/dot: $(GV_DIR)/cmd/dot/.libs/dot
 	cd $(PREFIX)/lib/graphviz; find . -type f -maxdepth 1 | while read a;do dyld_info -linked_dylibs $$a | sed -n -E "s|($(PREFIX)/lib)(.*)|\1\2 @loader_path/..\2 $$a|p";done | xargs -t -L1 install_name_tool -change
 
 $(GV_DIR)/cmd/dot/.libs/dot: $(GV_DIR)/Makefile
-	@echo===============
+	@echo "\n=============="
 	@echo Build Graphviz
-	@echo ==============
+	@echo "==============\n"
 	make -C $(GV_DIR)
 
 $(GV_DIR)/Makefile: $(GV_DIR)/configure
-	@echo ==================
+	@echo "\n=================="
 	@echo Configure Graphviz
-	@echo ==================
+	@echo "==================\n"
 	cd $(GV_DIR) && ./configure --prefix=$(PREFIX) --with-quartz CFLAGS="-Os $(ARCH)" CXXFLAGS="-Os $(ARCH)" OBJCFLAGS="-Os $(ARCH)" OBJCXXFLAGS="-Os $(ARCH)" LDFLAGS="$(ARCH) -Wl,-dead_strip"
 
 $(GV_DIR)/configure:
-	@echo =================
+	@echo "\n================="
 	@echo Download Graphviz
-	@echo =================
+	@echo "=================\n"
 	mkdir -p $(BUILD_DIR)
 	curl --output-dir $(BUILD_DIR) -O -L $(GV_URL)
 	tar xzf $(BUILD_DIR)/$(notdir $(GV_URL)) -C $(BUILD_DIR)
 
 .PHONY: clean
 clean:
-	@echo =====
+	@echo "\n====="
 	@echo Clean
-	@echo =====
-	rm -rf $(BUILD_DIR) graphvizswift-arm64.pkg
+	@echo "=====\n"
+	rm -rf $(BUILD_DIR) graphvizswift-$(UNAME_M).pkg
 
