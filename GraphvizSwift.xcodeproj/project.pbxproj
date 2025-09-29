@@ -40,7 +40,7 @@
 		580430E52E832C340094234F /* libcgraph.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcgraph.7.dylib; path = build/PREFIX/lib/libcgraph.7.dylib; sourceTree = "<group>"; };
 		580430E62E832C340094234F /* libcdt.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcdt.6.dylib; path = build/PREFIX/lib/libcdt.6.dylib; sourceTree = "<group>"; };
 		580430E72E832C340094234F /* libgvc.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgvc.7.dylib; path = build/PREFIX/lib/libgvc.7.dylib; sourceTree = "<group>"; };
-		580552A82E81E97400C455E0 /* attributes.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = attributes.xml; path = /Applications/Graphviz.app/Contents/Frameworks/share/doc/graphviz/schema/attributes.xml; sourceTree = "<absolute>"; };
+		580552A82E81E97400C455E0 /* attributes.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = attributes.xml; path = /Users/keefe/Developer/graphviz_swift/build/PREFIX/share/doc/graphviz/schema/attributes.xml; sourceTree = "<absolute>"; };
 		58561A012E87331100814D06 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		589669E32E385216001DA9A0 /* graphviz.help */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = graphviz.help; sourceTree = "<group>"; };
 		58AA16282DFD956200C4345A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
