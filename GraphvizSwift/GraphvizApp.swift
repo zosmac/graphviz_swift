@@ -7,6 +7,7 @@
 
 import UniformTypeIdentifiers
 import SwiftUI
+//import WebKit
 
 let GraphvizErrorDomain = "GraphvizErrorDomain"
 enum GraphvizError: Int {
@@ -39,15 +40,22 @@ enum GraphvizError: Int {
                 Button("Graphviz Help") {
                     print("Help requested...")
                     if let url = Bundle.main.url(forResource: "graphviz", withExtension: "help") {
+                        print(url)
                         NSWorkspace.shared.open(url)
                     }
                 }
             }
         }
-        .defaultSize(width: 900, height: 600)
+        .defaultSize(width: 800, height: 600)
         .defaultPosition(.top)
 
         UtilityWindow("Attributes Documentation", id: "AttributesDocView") {
+            //            WebView( {
+            //                let webPage = WebPage()
+            //                webPage.load(html: parsedAttributes.documentation, baseURL: URL(filePath: ""))
+            //                return webPage
+            //            }()
+            //            )
             AttributesDocView()
                 .focusedSceneValue(\.attributesKind, attributesKind)
                 .focusedSceneValue(\.attributesRow, attributesRow)

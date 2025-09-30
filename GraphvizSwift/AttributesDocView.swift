@@ -18,11 +18,13 @@ extension FocusedValues {
 }
 
 /// AttributesDocView displays the documentation for attributes from attributes.xml.
-struct AttributesDocView: NSViewRepresentable {
+struct AttributesDocView: NSViewControllerRepresentable {
     @FocusedBinding(\.attributesKind) private var kind
     @FocusedBinding(\.attributesRow) private var row
-    
-    class Coordinator: NSObject, WKNavigationDelegate {
+
+    typealias NSViewControllerType = Coordinator
+
+    class Coordinator: NSViewController, WKNavigationDelegate {
         func webView(
             _ webView: WKWebView,
             decidePolicyFor navigationAction: WKNavigationAction,
@@ -31,19 +33,20 @@ struct AttributesDocView: NSViewRepresentable {
             decisionHandler(navigationAction.request.url?.absoluteString.hasPrefix("file:///") ?? false ? .allow : .cancel) // prevent navigation away from doc page
         }
     }
-    
+
     func makeCoordinator() -> Coordinator {
         return Coordinator()
     }
-    
-    func makeNSView(context: Context) -> WKWebView {
+
+    func makeNSViewController(context: Context) -> NSViewControllerType {
         let docView = WKWebView()
         docView.navigationDelegate = context.coordinator
         docView.loadHTMLString(parsedAttributes.documentation, baseURL: URL(filePath: "")) // aka: "file:///"
-        return docView
+        context.coordinator.view = docView
+        return context.coordinator
     }
     
-    func updateNSView(_ nsView: WKWebView, context: Context) {
+    func updateNSViewController(_ nsViewController: NSViewControllerType, context: Context) {
         var href = "#"
         if let kind,
            let row {
@@ -52,11 +55,11 @@ struct AttributesDocView: NSViewRepresentable {
                 href += attributes[index].name
             }
         }
-        nsView.evaluateJavaScript("window.location.hash='\(href)'")
+        (nsViewController.view as! WKWebView).evaluateJavaScript("window.location.hash='\(href)'")
     }
-    
-    static func dismantleNSView(_ nsView: WKWebView, coordinator: Coordinator) {
-        print("dismantling AttributeDocView", nsView)
-        nsView.prepareForReuse()
+
+    static func dismantleNSViewController(_ nsViewController: NSViewControllerType, coordinator: Coordinator) {
+        print("dismantling AttributeDocView", nsViewController)
+        nsViewController.view.prepareForReuse()
     }
 }
