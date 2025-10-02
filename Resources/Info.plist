@@ -21,10 +21,6 @@
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
-	<key>CFBundleHelpBookFolder</key>
-	<string>graphviz.help</string>
-	<key>CFBundleHelpBookName</key>
-	<string>Graphviz Help</string>
 	<key>CFBundleIconFile</key>
 	<string>Graphviz</string>
 	<key>CFBundleIdentifier</key>

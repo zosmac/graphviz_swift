@@ -37,10 +37,8 @@ enum GraphvizError: Int {
                 SaveViewButton(viewType: (saveViewType ?? viewType))
             }
             CommandGroup(replacing: .help) {
-                Button("Graphviz Help") {
-                    print("Help requested...")
-                    if let url = Bundle.main.url(forResource: "graphviz", withExtension: "help") {
-                        print(url)
+                Button("GraphvizSwift Help") {
+                    if let url = Bundle.main.url(forResource: "Help", withExtension: "html") {
                         NSWorkspace.shared.open(url)
                     }
                 }

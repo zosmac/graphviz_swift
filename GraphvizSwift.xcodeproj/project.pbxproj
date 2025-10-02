@@ -12,11 +12,11 @@
 		580430ED2E832D3E0094234F /* libgvc.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 580430E72E832C340094234F /* libgvc.7.dylib */; };
 		580552A92E81E97400C455E0 /* attributes.xml in Resources */ = {isa = PBXBuildFile; fileRef = 580552A82E81E97400C455E0 /* attributes.xml */; };
 		58561A022E87331100814D06 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 58561A012E87331100814D06 /* README.md */; };
-		589669E42E385216001DA9A0 /* graphviz.help in Resources */ = {isa = PBXBuildFile; fileRef = 589669E32E385216001DA9A0 /* graphviz.help */; };
 		58AA16362DFD956200C4345A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 58AA16282DFD956200C4345A /* Assets.xcassets */; };
 		58AA16382DFD956200C4345A /* GraphGv.icns in Resources */ = {isa = PBXBuildFile; fileRef = 58AA162D2DFD956200C4345A /* GraphGv.icns */; };
 		58AA16392DFD956200C4345A /* Graphviz.icns in Resources */ = {isa = PBXBuildFile; fileRef = 58AA162F2DFD956200C4345A /* Graphviz.icns */; };
 		58C1F7A22E7E220800FC6690 /* Component.plist in Resources */ = {isa = PBXBuildFile; fileRef = 58C1F7A12E7E220800FC6690 /* Component.plist */; };
+		58EF96272E8DEBBC0077C399 /* Help.html in Resources */ = {isa = PBXBuildFile; fileRef = 58EF96262E8DEBBC0077C399 /* Help.html */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,7 +42,6 @@
 		580430E72E832C340094234F /* libgvc.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgvc.7.dylib; path = build/PREFIX/lib/libgvc.7.dylib; sourceTree = "<group>"; };
 		580552A82E81E97400C455E0 /* attributes.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = attributes.xml; path = /Users/keefe/Developer/graphviz_swift/build/PREFIX/share/doc/graphviz/schema/attributes.xml; sourceTree = "<absolute>"; };
 		58561A012E87331100814D06 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
-		589669E32E385216001DA9A0 /* graphviz.help */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = graphviz.help; sourceTree = "<group>"; };
 		58AA16282DFD956200C4345A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		58AA162D2DFD956200C4345A /* GraphGv.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = GraphGv.icns; sourceTree = "<group>"; };
 		58AA162F2DFD956200C4345A /* Graphviz.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Graphviz.icns; sourceTree = "<group>"; };
@@ -53,6 +52,7 @@
 		58E5A58A2DCF89F000303648 /* GraphvizSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GraphvizSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		58E5A59B2DCF89F100303648 /* GraphvizSwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphvizSwiftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		58E5A5A52DCF89F100303648 /* GraphvizSwiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphvizSwiftUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		58EF96262E8DEBBC0077C399 /* Help.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = Help.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -110,17 +110,17 @@
 		5885F76C2DDA9E1500CA803D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				587485B92E87793C00490930 /* Readme */,
-				58561A012E87331100814D06 /* README.md */,
 				58AA16282DFD956200C4345A /* Assets.xcassets */,
 				580552A82E81E97400C455E0 /* attributes.xml */,
 				58C1F7A12E7E220800FC6690 /* Component.plist */,
 				58AA162D2DFD956200C4345A /* GraphGv.icns */,
 				58AA162F2DFD956200C4345A /* Graphviz.icns */,
 				58AA16302DFD956200C4345A /* Graphviz-Bridging-Header.h */,
-				589669E32E385216001DA9A0 /* graphviz.help */,
+				58EF96262E8DEBBC0077C399 /* Help.html */,
 				58AA16342DFD956200C4345A /* Info.plist */,
 				58C1F79F2E7DF04500FC6690 /* Makefile */,
+				587485B92E87793C00490930 /* Readme */,
+				58561A012E87331100814D06 /* README.md */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -281,11 +281,11 @@
 			files = (
 				58AA16362DFD956200C4345A /* Assets.xcassets in Resources */,
 				58C1F7A22E7E220800FC6690 /* Component.plist in Resources */,
-				589669E42E385216001DA9A0 /* graphviz.help in Resources */,
 				58561A022E87331100814D06 /* README.md in Resources */,
 				580552A92E81E97400C455E0 /* attributes.xml in Resources */,
 				58AA16382DFD956200C4345A /* GraphGv.icns in Resources */,
 				58AA16392DFD956200C4345A /* Graphviz.icns in Resources */,
+				58EF96272E8DEBBC0077C399 /* Help.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -350,7 +350,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "";
@@ -394,7 +394,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "";

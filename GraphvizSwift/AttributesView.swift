@@ -64,13 +64,13 @@ struct AttributesView: View {
                     }
                     .onChange(of: kind) {
                         if let index = attributes.firstIndex(where: { $0.id == row }) {
-                            proxy.scrollTo(attributes[index].id, anchor: .top)
+                            proxy.scrollTo(attributes[index].id, anchor: .center)
                         } else {
                             proxy.scrollTo(attributes[0].id, anchor: .top)
                         }
                     }
                     .onChange(of: row) {
-                        proxy.scrollTo($1, anchor: .top)
+                        proxy.scrollTo($1, anchor: .center)
                     }
                     .focusedSceneValue(\.attributesRow, $row)
                 }
