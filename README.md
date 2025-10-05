@@ -10,9 +10,11 @@
 
 *GraphvizSwift* is a [macOS](https://www.apple.com/os/macos/) application that reads [Graphviz](https://graphviz.org) [DOT Language](https://graphviz.org/doc/info/lang.html) files for display. DOT defines the nodes and edges of a network graph, which Graphviz interprets to draw a network graph diagram. On macOS, Graphviz can use [Quartz](https://developer.apple.com/documentation/quartz) to render the diagrams into the following image formats: BMP, GIF, JPEG, PDF, PNG, SVG, and TIFF.
 
+Note that DOT language files by convention have the `.gv` extension. The `.dot` extension 
+
 ## First Steps
 
-*macOS* Apps are built with [Xcode](https://developer.apple.com/xcode/), and you may download it from there, from the [Mac App Store](https://apps.apple.com/us/app/xcode/id497799835/), or from [Apple Developer Applications](https://developer.apple.com/download/applications/). *Xcode* also installs the Command Line Tools (e.g. `make`) for building *Graphviz*.
+*macOS* Apps are built with [Xcode](https://developer.apple.com/xcode/), and you may download it from there, from the [Mac App Store](https://apps.apple.com/us/app/xcode/id497799835/), or from [Apple Developer Applications](https://developer.apple.com/download/applications/). *Xcode* also installs the Command Line Tools (e.g. `git`, `make`, `xcodebuild`) for building *Graphviz* and the *GraphvizSwift* app.
 
 ## Building *GraphvizSwift*
 
