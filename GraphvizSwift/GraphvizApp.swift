@@ -62,7 +62,7 @@ enum GraphvizError: Int {
         .defaultSize(width: 350, height: 400)
 
         Settings {
-            PreferencesView()
+            SettingsView()
         }
         .defaultPosition(.topLeading)
     }

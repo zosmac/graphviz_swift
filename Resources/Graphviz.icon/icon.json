@@ -23,12 +23,24 @@
           }
         },
         {
+          "blend-mode" : "normal",
+          "fill" : "automatic",
           "hidden" : false,
           "image-name" : "graphpaper.png",
           "name" : "graphpaper",
-          "opacity" : 0.9,
+          "opacity" : 0.9
+        },
+        {
+          "blend-mode" : "normal",
+          "fill" : {
+            "automatic-gradient" : "extended-srgb:0.00000,0.53333,1.00000,1.00000"
+          },
+          "hidden" : false,
+          "image-name" : "graphpaper.png",
+          "name" : "graphpaper",
+          "opacity" : 1,
           "position" : {
-            "scale" : 1,
+            "scale" : 1.1,
             "translation-in-points" : [
               0,
               0
