@@ -19,11 +19,7 @@ struct SettingsView: View {
     @AppStorage("textSize") var textSize = defaultTextSize
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Image(nsImage: NSApp.applicationIconImage)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 64, height: 64) // Adjust size as needed
+        VStack(alignment: .leading, spacing: 10) {
             Picker("View Type", selection: $viewType) {
                 ForEach(viewableContentTypes, id: \.self) {
                     Text($0.uppercased()).tag($0)
@@ -37,7 +33,10 @@ struct SettingsView: View {
                 Text("32")
             }
         }
-        .frame(minWidth: 250, maxWidth: 250, minHeight: 150, maxHeight: 150)
-        .padding(EdgeInsets(top: 0, leading: 20, bottom: 40, trailing: 30))
+        .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 30))
+        Image(nsImage: NSApp.applicationIconImage)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 64, height: 64)
     }
 }

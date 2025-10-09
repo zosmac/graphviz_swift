@@ -63,6 +63,7 @@ enum GraphvizError: Int {
 
         Settings {
             SettingsView()
+                .frame(minWidth: 280, maxWidth: 280, minHeight: 150, maxHeight: 150)
         }
         .defaultPosition(.topLeading)
     }
