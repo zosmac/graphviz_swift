@@ -39,7 +39,9 @@ Enter the password for your macOS system account when prompted, and the app will
 
 ## Running *GraphvizSwift*
 
-Once installed, you can find *GraphvizSwift* in the `/Applications` folder or through the App Launcher. Open the app, which will first present a document document navigator:
+Once installed, you can find *GraphvizSwift* in the `/Applications` folder or through the App Launcher. Open the app, which will first present an open document navigator view. Graphviz includes a sample folder which is included in the GraphvizSwift app. In the document navigator, press the key combination cmd&#8209;shift&#8209;G. This opens a sheet to enter a Unix path. The sample folder is `/Applications/GraphvizSwift.app/Contents/Frameworks/share/graphviz/graphs/directed`
+
+![GraphvizSwiftOpen](Readme/GraphvizSwiftCmdShiftG.png)
 
 ![GraphvizSwiftOpen](Readme/GraphvizSwiftOpen.png)
 
