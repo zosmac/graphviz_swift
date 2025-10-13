@@ -11,7 +11,10 @@ import Foundation
 let viewableContentTypes: [String] = {
     var formats = [String]()
     var count: Int32 = 0
-    guard let list = gvPluginList(Graph.context, "device", &count) else { return [] }
+    let context = gvContext()
+    defer { gvFreeContext(context) }
+
+    guard let list = gvPluginList(context, "device", &count) else { return [] }
     var set = Set<String>()
     for i in 0..<Int(count) {
         if let device = list[i] {

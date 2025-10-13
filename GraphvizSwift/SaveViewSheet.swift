@@ -15,19 +15,16 @@ extension FocusedValues {
 
 struct SaveViewButton: View {
     @FocusedBinding(\.saveViewPresented) private var saveViewPresented
-    @FocusedBinding(\.saveViewType) private var saveViewType
 
     var viewType: String
     
     var body: some View {
         Button {
-            saveViewType = viewType
             saveViewPresented = true
         } label: {
             Label("Save \(viewType.uppercased())", systemImage: "square.and.arrow.down.on.square")
         }
         .keyboardShortcut("S", modifiers: [.option, .command])
-        .disabled(saveViewType == nil)
     }
 }
 
@@ -35,7 +32,10 @@ struct SaveViewSheet: View {
     @Environment(\.dismiss) private var dismiss
     var url: URL?
     var graph: Graph
-    
+
+    @State private var saveFailed: Bool = false
+    @State private var saveError: Error? = nil
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             if let url = url?.deletingPathExtension().appendingPathExtension(graph.viewType) {
@@ -54,11 +54,22 @@ struct SaveViewSheet: View {
                         do {
                             try graph.data.write(to: url)
                         } catch {
-                            print("Save failed \(error)")
+                            saveFailed = true
+                            saveError = error
                         }
-                        dismiss()
+                        if !saveFailed {
+                            dismiss()
+                        }
                     }
                     .keyboardShortcut(.defaultAction)
+                }
+                .alert("Save failed", isPresented: $saveFailed) {
+                    Button("Dismiss") {
+                        saveFailed = false
+                        dismiss()
+                    }
+                } message: {
+                    Text(saveError?.localizedDescription ?? "Unknown error occurred.")
                 }
             } else {
                 Text("Unnamed file requires a name to save.")

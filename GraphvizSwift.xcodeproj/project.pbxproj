@@ -14,6 +14,7 @@
 		5854A8FB2E93EFC9009F1CC1 /* GraphGv.icns in Resources */ = {isa = PBXBuildFile; fileRef = 5854A8FA2E93EFC9009F1CC1 /* GraphGv.icns */; };
 		5854A8FD2E93F05B009F1CC1 /* Graphviz.icns in Resources */ = {isa = PBXBuildFile; fileRef = 5854A8FC2E93F05B009F1CC1 /* Graphviz.icns */; };
 		58561A022E87331100814D06 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 58561A012E87331100814D06 /* README.md */; };
+		5858DC702E9AAC2F0073F393 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5858DC6F2E9AAC2F0073F393 /* Assets.xcassets */; };
 		58C1F7A22E7E220800FC6690 /* Component.plist in Resources */ = {isa = PBXBuildFile; fileRef = 58C1F7A12E7E220800FC6690 /* Component.plist */; };
 		58EF96272E8DEBBC0077C399 /* Help.html in Resources */ = {isa = PBXBuildFile; fileRef = 58EF96262E8DEBBC0077C399 /* Help.html */; };
 		58EF96292E8F056B0077C399 /* libcgraph.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EF96282E8F056B0077C399 /* libcgraph.8.dylib */; };
@@ -44,6 +45,7 @@
 		5854A8FA2E93EFC9009F1CC1 /* GraphGv.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = GraphGv.icns; sourceTree = "<group>"; };
 		5854A8FC2E93F05B009F1CC1 /* Graphviz.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Graphviz.icns; sourceTree = "<group>"; };
 		58561A012E87331100814D06 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		5858DC6F2E9AAC2F0073F393 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		58AA16302DFD956200C4345A /* Graphviz-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Graphviz-Bridging-Header.h"; sourceTree = "<group>"; };
 		58AA16342DFD956200C4345A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		58C1F79F2E7DF04500FC6690 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; name = Makefile; path = ../Makefile; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 		5885F76C2DDA9E1500CA803D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				5858DC6F2E9AAC2F0073F393 /* Assets.xcassets */,
 				580552A82E81E97400C455E0 /* attributes.xml */,
 				58C1F7A12E7E220800FC6690 /* Component.plist */,
 				5854A8FA2E93EFC9009F1CC1 /* GraphGv.icns */,
@@ -284,6 +287,7 @@
 				580552A92E81E97400C455E0 /* attributes.xml in Resources */,
 				58EF96272E8DEBBC0077C399 /* Help.html in Resources */,
 				5854A8FD2E93F05B009F1CC1 /* Graphviz.icns in Resources */,
+				5858DC702E9AAC2F0073F393 /* Assets.xcassets in Resources */,
 				5854A8FB2E93EFC9009F1CC1 /* GraphGv.icns in Resources */,
 				581859AC2E929F9200741031 /* Graphviz.icon in Resources */,
 			);

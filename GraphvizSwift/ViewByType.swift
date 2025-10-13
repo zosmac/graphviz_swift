@@ -12,33 +12,30 @@ struct ViewByType: View {
     @AppStorage("textSize") var textSize = defaultTextSize
     
     @Bindable var document: GraphvizDocument
+    @Bindable var graph: Graph
     let zoomScale: CGFloat
     @Binding var viewScale: CGFloat
 
     var body: some View {
-        switch UTType(filenameExtension: document.graph.viewType)! {
+        switch UTType(filenameExtension: graph.viewType)! {
         case document.docType:
             TextEditor(text: $document.text)
                 .autocorrectionDisabled()
                 .font(.system(size: textSize*zoomScale, design: .monospaced))
-                .onChange(of: document.text) { oldValue, newValue in
-                    print("text changed")
-                    document.graph.render(text: newValue)
-                }
         case .canon, .gv, .json:
-            if let text = String(data: document.graph.data, encoding: .utf8) {
+            if let text = String(data: graph.data, encoding: .utf8) {
                 ScrollView {
                     Text(text)
                         .multilineTextAlignment(.leading)
                         .font(.system(size: textSize*zoomScale))
                 }
             } else {
-                Text("Render of \(document.graph.viewType) failed\n\(document.graph.logMessage.message)")
+                Text("Render of \(graph.viewType) failed\n\(graph.logMessage.message)")
                     .font(Font.title2)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
         default:
-            if let image = NSImage(data: document.graph.data) {
+            if let image = NSImage(data: graph.data) {
                 GeometryReader { geometryProxy in
                     ScrollView([.vertical, .horizontal]) {
                         Image(nsImage: image)
@@ -55,7 +52,7 @@ struct ViewByType: View {
                     viewScale = min(viewSize.width/image.size.width, viewSize.height/image.size.height)
                 }
             } else {
-                Text("Render of \(document.graph.viewType) failed\n\(document.graph.logMessage.message)")
+                Text("Render of \(graph.viewType) failed\n\(graph.logMessage.message)")
                     .font(Font.title2)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }

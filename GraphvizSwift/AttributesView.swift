@@ -10,25 +10,20 @@ import SwiftUI
 // TODO: set up Kinds as an enum
 
 struct Kinds: View {
-    @Bindable var document: GraphvizDocument
     @Binding var kind: Int?
-    @Binding var attributes: [Attribute]?
-    
+
     var body: some View {
         HStack {
             Button("Graph", systemImage: "rectangle.2.swap") {
                 kind = AGRAPH
-                attributes = document.graph.attributes?.kinds[kind!]
             }
             .foregroundStyle(kind == AGRAPH ? Color.accentColor : .primary)
             Button("Node", systemImage: "oval") {
                 kind = AGNODE
-                attributes = document.graph.attributes?.kinds[kind!]
             }
             .foregroundStyle(kind == AGNODE ? Color.accentColor : .primary)
             Button("Edge", systemImage: "stroke.line.diagonal") {
                 kind = AGEDGE
-                attributes = document.graph.attributes?.kinds[kind!]
             }
             .foregroundStyle(kind == AGEDGE ? Color.accentColor : .primary)
         }
@@ -40,7 +35,8 @@ struct AttributesView: View {
     @FocusedBinding(\.attributesKind) private var attributesKind
     @FocusedBinding(\.attributesRow) private var attributesRow
     
-    @Bindable var document: GraphvizDocument
+    @Bindable var graph: Graph
+    @Binding var settings: [[String: String]]
     @State private var kind: Int?
     @State private var attributes: [Attribute]?
     @State private var row: Attribute.ID?
@@ -48,17 +44,18 @@ struct AttributesView: View {
     
     var body: some View {
         VStack(spacing: 10) {
-            Kinds(document: document, kind: $kind, attributes: $attributes)
+            Kinds(kind: $kind)
                 .focusedSceneValue(\.attributesKind, $kind)
-            if let attributes {
+            if let kind,
+               let attributes = graph.attributes?.kinds[kind] {
                 ScrollViewReader { proxy in
                     Table(attributes, selection: $row) {
                         TableColumn("Attribute", value: \.name)
                         TableColumn("Value") { attribute in
                             if attribute.options == nil {
-                                ValueView(document: document, kind: kind, attribute: attribute, label: attribute.defaultValue ?? "", value: attribute.value) //, isDisabled: !attribute.value.isEmpty)
+                                ValueView(settings: $settings, kind: kind, attribute: attribute, label: attribute.defaultValue ?? "", value: attribute.value) //, isDisabled: !attribute.value.isEmpty)
                             } else {
-                                OptionView(document: document, kind: kind, attribute: attribute, value: attribute.value)
+                                OptionView(settings: $settings, kind: kind, attribute: attribute, value: attribute.value)
                             }
                         }
                     }
@@ -83,7 +80,7 @@ struct AttributesView: View {
 
 /// ValueView defines a text field for entering an attribute value.
 struct ValueView: View {
-    @Bindable var document: GraphvizDocument
+    @Binding var settings: [[String: String]]
     let kind: Int?
     let attribute: Attribute
     let label: String
@@ -94,14 +91,16 @@ struct ValueView: View {
         TextField(label, text: $value)
         //            .disabled(isDisabled)
             .onSubmit {
-                document.graph.changeAttribute(kind: kind, name: attribute.name, value: value)
+                if let kind {
+                    settings[kind][attribute.name] = value
+                }
             }
     }
 }
 
 /// OptionView defines a picker for selecting an attribute value from a list of options.
 struct OptionView: View {
-    @Bindable var document: GraphvizDocument
+    @Binding var settings: [[String: String]]
     let kind: Int?
     let attribute: Attribute
     @State var value: String
@@ -114,7 +113,9 @@ struct OptionView: View {
         }
         .labelsHidden()
         .onChange(of: value) {
-            document.graph.changeAttribute(kind: kind, name: attribute.name, value: value)
+            if let kind {
+                settings[kind][attribute.name] = value
+            }
         }
     }
 }

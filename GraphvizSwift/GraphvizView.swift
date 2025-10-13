@@ -16,6 +16,8 @@ struct GraphvizView: View {
     @Bindable var document: GraphvizDocument
     let url: URL?
 
+    @State private var viewType = UserDefaults.standard.string(forKey: "viewType") ?? defaultViewType
+    @State private var settings = Array(repeating: [String: String](), count: 3)
     @State private var zoomScale: CGFloat = 1.0
     @State private var viewScale: CGFloat = 1.0
     @State private var saveViewPresented: Bool = false
@@ -23,15 +25,17 @@ struct GraphvizView: View {
     @State private var messagePresented: Bool = false
     
     var body: some View {
-        ViewByType(document: document, zoomScale: zoomScale, viewScale: $viewScale)
+        @Bindable var graph = Graph(text: document.text, viewType: viewType, settings: settings)
+
+        ViewByType(document: document, graph: graph, zoomScale: zoomScale, viewScale: $viewScale)
         .inspector(isPresented: $inspectorPresented) {
-            AttributesView(document: document) // , kind: $kind, row: $row)
+            AttributesView(graph: graph, settings: $settings)
                 .inspectorColumnWidth(min: 200, ideal: 300, max: 400)
         }
         .focusedSceneValue(\.saveViewPresented, $saveViewPresented)
-        .focusedSceneValue(\.saveViewType, $document.graph.viewType)
+        .focusedSceneValue(\.saveViewType, $viewType)
         .sheet(isPresented: $saveViewPresented) {
-            SaveViewSheet(url: url, graph: document.graph)
+            SaveViewSheet(url: url, graph: graph)
         }
         .onAppear {
             if attributesDocViewLaunch.firstTime {
@@ -43,17 +47,13 @@ struct GraphvizView: View {
         .toolbar(id: "GraphvizViewToolbar") {
             ToolbarItem(id: "View Type") {
                 ControlGroup("View Type") {
-                    Picker("View Type", selection: $document.graph.viewType) {
+                    Picker("View Type", selection: $viewType) {
                         ForEach(viewableContentTypes, id: \.self) {
                             Text($0.uppercased()).tag($0)
                         }
                     }
                     .frame(width: 80)
-                    .onChange(of: document.graph.viewType) {
-                        document.graph.render(text: document.text)
-                    }
-                    SaveViewButton(viewType: document.graph.viewType)
-                        .focusedSceneValue(\.saveViewType, $document.graph.viewType)
+                    SaveViewButton(viewType: viewType)
                 }
             }
             ToolbarItem(id: "Zoom") {
@@ -74,12 +74,12 @@ struct GraphvizView: View {
             }
             ToolbarItem(id: "Message") {
                 Button("Message", systemImage: "exclamationmark.message") {
-                    messagePresented = document.graph.logMessage.message.isEmpty ? false : !messagePresented
+                    messagePresented = graph.logMessage.message.isEmpty ? false : !messagePresented
                 }
-                .foregroundStyle(document.graph.logMessage.message.isEmpty ? .secondary : Color.red)
+                .foregroundStyle(graph.logMessage.message.isEmpty ? .secondary : Color.red)
                 .popover(isPresented: $messagePresented, arrowEdge: .trailing) {
                     ScrollView {
-                        Text(document.graph.logMessage.message)
+                        Text(graph.logMessage.message)
                             .foregroundStyle(Color.accentColor)
                     }
                     .frame(minWidth: 200)
