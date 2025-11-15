@@ -10,17 +10,17 @@ import SwiftUI
 
 /// Graph bridges a Graphviz document to its views.
 @Observable final class Graph {
-//    nonisolated(unsafe) static let context = gvContext()
-
-    var viewType: String
-    var data = Data()
+    var text: String
     var attributes: Attributes!
     let logMessage = LogMessage()
 
-    init(text: String, viewType: String, settings: [[String: String]]) {
+    init(text: String) {
+        self.text = text
+    }
+
+    func render(viewType: String, settings: [[String: String]]) -> Data {
         let handler = GraphvizLogHandler(logMessage: logMessage)
-        self.viewType = viewType
-        self.data = handler.capture {
+        return handler.capture {
             print("RENDER for \(viewType)")
             guard let graph = agmemread(text + "\n") else { return Data() }
             defer { agclose(graph) }

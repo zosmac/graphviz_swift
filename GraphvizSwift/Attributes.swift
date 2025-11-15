@@ -7,8 +7,7 @@
 
 import Foundation
 
-nonisolated(unsafe) let parsedAttributes = ParsedAttributes()
-
+let parsedAttributes = ParsedAttributes()
 /// Attribute reflects a graph, node, or edge property after the graph's setting applied.
 struct Attribute: Identifiable, Equatable, Hashable {
     let id: UUID

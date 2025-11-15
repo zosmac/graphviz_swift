@@ -9,7 +9,7 @@ import os
 import SwiftUI
 
 /// LogMessage holds the log message from graphviz log. This type is a member of an instance of observable class Graph so that the post of the message is detected by a Text view.
-@Observable final class LogMessage: @unchecked Sendable {
+@Observable nonisolated final class LogMessage: @unchecked Sendable {
     var message: String = ""
 }
 

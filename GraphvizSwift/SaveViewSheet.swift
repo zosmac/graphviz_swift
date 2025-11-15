@@ -32,13 +32,15 @@ struct SaveViewSheet: View {
     @Environment(\.dismiss) private var dismiss
     var url: URL?
     var graph: Graph
+    let viewType: String
+    let settings: [[String: String]]
 
     @State private var saveFailed: Bool = false
     @State private var saveError: Error? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            if let url = url?.deletingPathExtension().appendingPathExtension(graph.viewType) {
+            if let url = url?.deletingPathExtension().appendingPathExtension(viewType) {
                 Text("Save File:")
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(Color.accentColor)
@@ -50,9 +52,9 @@ struct SaveViewSheet: View {
                         dismiss()
                     }
                     Button("Save") {
-                        print("save \(url.path) of viewType: \(graph.viewType)")
+                        print("save \(url.path) of viewType: \(viewType)")
                         do {
-                            try graph.data.write(to: url)
+                            try graph.render(viewType: viewType, settings: settings).write(to: url)
                         } catch {
                             saveFailed = true
                             saveError = error

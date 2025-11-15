@@ -15,6 +15,8 @@ struct GraphvizView: View {
     
     @Bindable var document: GraphvizDocument
     let url: URL?
+    @Binding var position: ScrollPosition
+    @Bindable var attributesDocPage: AttributesDocPage
 
     @State private var viewType = UserDefaults.standard.string(forKey: "viewType") ?? defaultViewType
     @State private var settings = Array(repeating: [String: String](), count: 3)
@@ -23,19 +25,19 @@ struct GraphvizView: View {
     @State private var saveViewPresented: Bool = false
     @State private var inspectorPresented: Bool = false
     @State private var messagePresented: Bool = false
-    
-    var body: some View {
-        @Bindable var graph = Graph(text: document.text, viewType: viewType, settings: settings)
 
-        ViewByType(document: document, graph: graph, zoomScale: zoomScale, viewScale: $viewScale)
+    var body: some View {
+        @Bindable var graph = Graph(text: document.text)
+
+        ViewByType(document: document, url: url, viewType: viewType, rendering: graph.render(viewType: viewType, settings: settings), zoomScale: zoomScale, viewScale: $viewScale)
         .inspector(isPresented: $inspectorPresented) {
-            AttributesView(graph: graph, settings: $settings)
+            AttributesView(graph: graph, settings: $settings, position: $position, attributesDocPage: attributesDocPage)
                 .inspectorColumnWidth(min: 200, ideal: 300, max: 400)
         }
         .focusedSceneValue(\.saveViewPresented, $saveViewPresented)
         .focusedSceneValue(\.saveViewType, $viewType)
         .sheet(isPresented: $saveViewPresented) {
-            SaveViewSheet(url: url, graph: graph)
+            SaveViewSheet(url: url, graph: graph, viewType: viewType, settings: settings)
         }
         .onAppear {
             if attributesDocViewLaunch.firstTime {

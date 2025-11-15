@@ -9,7 +9,7 @@ import os
 import SwiftUI
 
 /// LogObservee provides a place for log messages to be sent for display in the inspector view. This type is observable so that the posting of the message is detectcd by the Text view in InspectorView.
-@Observable final class LogObservee: @unchecked Sendable {
+@Observable nonisolated final class LogObservee: @unchecked Sendable {
     var name: Notification.Name
     var message: String = ""
     init(name: Notification.Name) {
@@ -18,7 +18,7 @@ import SwiftUI
 }
 
 /// LogObserver awaits log message notifications from graphviz render operations.
-final class LogObserver {
+nonisolated final class LogObserver {
     private let name: NSNotification.Name
     let observer: Any
     let observee: LogObservee
@@ -62,9 +62,11 @@ final class LogObserver {
 }
 
 /// logInterceptor prevents lazy loading of the global shared LogInterceptor.
+nonisolated
 let logInterceptor = LogInterceptor.shared
 
 /// LogInterceptor defines a pipe for capturing log messages sent to stderr.
+nonisolated
 struct LogInterceptor {
     static let shared = LogInterceptor()
     static let logLock = OSAllocatedUnfairLock()

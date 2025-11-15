@@ -7,7 +7,7 @@
 
 import UniformTypeIdentifiers
 import SwiftUI
-//import WebKit
+import WebKit
 
 let GraphvizErrorDomain = "GraphvizErrorDomain"
 enum GraphvizError: Int {
@@ -24,10 +24,12 @@ enum GraphvizError: Int {
     @FocusedBinding(\.saveViewType) private var saveViewType
 
     @State private var attributesDocViewLaunch = AttributesDocViewLaunch()
+    @State private var attributesDocPage = AttributesDocPage()
+    @State private var position = ScrollPosition()
 
     var body: some Scene {
         DocumentGroup(newDocument: { GraphvizDocument() }) {
-            GraphvizView(document: $0.document, url: $0.fileURL)
+            GraphvizView(document: $0.document, url: $0.fileURL, position: $position, attributesDocPage: attributesDocPage)
                 .environment(attributesDocViewLaunch)
         }
         .commands {
@@ -48,15 +50,14 @@ enum GraphvizError: Int {
         .defaultPosition(.top)
 
         UtilityWindow("Attributes Documentation", id: "AttributesDocView") {
-            //            WebView( {
-            //                let webPage = WebPage()
-            //                webPage.load(html: parsedAttributes.documentation, baseURL: URL(filePath: ""))
-            //                return webPage
-            //            }()
-            //            )
-            AttributesDocView()
-                .focusedSceneValue(\.attributesKind, attributesKind)
-                .focusedSceneValue(\.attributesRow, attributesRow)
+            //            AttributesDocView()
+            //                .focusedSceneValue(\.attributesKind, attributesKind)
+            //                .focusedSceneValue(\.attributesRow, attributesRow)
+            WebView(attributesDocPage.page)
+                .webViewScrollPosition($position)
+            //                .webViewOnScrollGeometryChange(for: CGFloat.self, of: \.contentOffset.y) { _, newValue in
+            //                    position = ScrollPosition(y: newValue)
+            //                }
         }
         .defaultPosition(.trailing)
         .defaultSize(width: 350, height: 400)
