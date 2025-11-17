@@ -31,34 +31,18 @@ struct ViewByType: View {
                 .onChange(of: document.text) {
                     print("text changed")
                 }
-//                    if let url {
-//                        do {
-//                            try Data(text.utf8).write(to: url)
-//                        } catch {
-//                            saveFailed = true
-//                            saveError = error
-//                        }
-//                    }
-//                }
-//                .alert("Save failed", isPresented: $saveFailed) {
-//                    Button("Dismiss") {
-//                        saveFailed = false
-//                        dismiss()
-//                    }
-//                } message: {
-//                    Text(saveError?.localizedDescription ?? "Unknown error occurred.")
-//                }
         case .canon, .gv, .json:
             if let text = String(data: rendering, encoding: .utf8) {
                 ScrollView {
                     Text(text)
                         .multilineTextAlignment(.leading)
                         .font(.system(size: textSize*zoomScale))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 }
-//            } else {
-//                Text("Render of \(viewType) failed\n\(graph.logMessage.message)")
-//                    .font(Font.title2)
-//                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            } else {
+                Text("Render failed: select Messages Button to view error.")
+                    .font(Font.title2)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
         default:
             if let image = NSImage(data: rendering) {
@@ -77,10 +61,10 @@ struct ViewByType: View {
                 action: { viewSize in
                     viewScale = min(viewSize.width/image.size.width, viewSize.height/image.size.height)
                 }
-//            } else {
-//                Text("Render of \(viewType) failed\n\(graph.logMessage.message)")
-//                    .font(Font.title2)
-//                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            } else {
+                Text("Render failed: select Messages Button to view error.")
+                    .font(Font.title2)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
         }
     }
