@@ -38,7 +38,6 @@ struct GraphvizView: View {
             }
             .onChange(of: viewType) {
                 zoomScale = 1.0
-                viewScale = 1.0
             }
             .inspector(isPresented: $inspectorPresented) {
                 AttributesView(graph: graph, settings: $settings, position: $position, attributesDocPage: attributesDocPage)
