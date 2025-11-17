@@ -38,7 +38,6 @@ struct AttributesView: View {
     @Binding var position: ScrollPosition
     @Bindable var attributesDocPage: AttributesDocPage
     @State private var kind: Int?
-    @State private var attributes: [Attribute]?
     @State private var row: Attribute.ID?
     @State private var scrollRow = ScrollPosition(idType: Attribute.ID.self)
 
