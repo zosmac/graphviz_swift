@@ -123,6 +123,20 @@ final class ParsedAttributes {
             print("parse failed \(parser.parserError?.localizedDescription ?? "")")
         }
         var documentation = """
+<script>
+function position(elem) {
+    var rect = elem.getBoundingClientRect(),
+    scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    return rect.top + scrollTop
+}
+function positions() {
+    const anchors = document.querySelectorAll('a');
+    return [...anchors].map(anchor => ({
+        name: anchor.name,
+        position: position(anchor)
+    }));
+}
+</script>
 <style>
   p {font-family:sans-serif;font-size:10pt}
 </style>

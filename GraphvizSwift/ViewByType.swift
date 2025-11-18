@@ -13,7 +13,6 @@ struct ViewByType: View {
     @Environment(\.dismiss) private var dismiss
 
     @Bindable var document: GraphvizDocument
-    let url: URL?
     let viewType: String
     let rendering: Data
     let zoomScale: CGFloat

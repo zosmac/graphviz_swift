@@ -20,16 +20,7 @@ import WebKit
                     try? await Task.sleep(for: .milliseconds(100))
                 }
                 let result = try await page.callJavaScript("""
-            function position(elem) {
-                var rect = elem.getBoundingClientRect(),
-                scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                return rect.top + scrollTop
-            }
-            const anchors = document.querySelectorAll('a');
-            return [...anchors].map(anchor => ({
-              name: anchor.name,
-              position: position(anchor)
-            }));
+            return positions();
             """) as? [[String: Any]]
                 for position in result! {
                     guard let y = position["position"] as? CGFloat else { continue }

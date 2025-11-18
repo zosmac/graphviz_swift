@@ -29,7 +29,7 @@ struct GraphvizView: View {
     var body: some View {
         @Bindable var graph = Graph(text: document.text)
 
-        ViewByType(document: document, url: url, viewType: viewType, rendering: graph.render(viewType: viewType, settings: settings), zoomScale: zoomScale, viewScale: $viewScale)
+        ViewByType(document: document, viewType: viewType, rendering: graph.render(viewType: viewType, settings: settings), zoomScale: zoomScale, viewScale: $viewScale)
             .onAppear {
                 if attributesDocViewLaunch.firstTime {
                     openWindow(id: "AttributesDocView")
