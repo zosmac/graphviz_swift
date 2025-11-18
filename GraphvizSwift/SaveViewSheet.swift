@@ -30,6 +30,7 @@ struct SaveViewButton: View {
 
 struct SaveViewSheet: View {
     @Environment(\.dismiss) private var dismiss
+
     var url: URL?
     var graph: Graph
     let viewType: String

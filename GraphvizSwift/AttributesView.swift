@@ -31,13 +31,13 @@ struct Kinds: View {
 // AttributesView shows the values of graph, node, and edge attributes of a graph.
 struct AttributesView: View {
     @Environment(AttributesDocPage.self) var attributesDocPage
-
     @FocusedBinding(\.attributesKind) private var attributesKind
     @FocusedBinding(\.attributesRow) private var attributesRow
 
     @Bindable var graph: Graph
     @Binding var settings: [[String: String]]
     @Binding var docPagePosition: ScrollPosition
+
     @State private var kind: Int?
     @State private var row: Attribute.ID?
     @State private var scrollRow = ScrollPosition(idType: Attribute.ID.self)

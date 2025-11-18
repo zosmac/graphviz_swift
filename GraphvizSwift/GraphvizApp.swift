@@ -18,7 +18,6 @@ enum GraphvizError: Int {
 /// GraphvizApp creates the graphviz document views and attributes documentation window.
 @main struct GraphvizApp: App {
     @AppStorage("viewType") var viewType = defaultViewType
-
     @FocusedValue(\.attributesKind) private var attributesKind
     @FocusedValue(\.attributesRow) private var attributesRow
     @FocusedBinding(\.saveViewType) private var saveViewType
@@ -51,11 +50,11 @@ enum GraphvizError: Int {
         .defaultPosition(.top)
 
         UtilityWindow("Attributes Documentation", id: "AttributesDocView") {
-            //            AttributesDocView()
-            //                .focusedSceneValue(\.attributesKind, attributesKind)
-            //                .focusedSceneValue(\.attributesRow, attributesRow)
             WebView(attributesDocPage.page)
                 .webViewScrollPosition($docPagePosition)
+//            AttributesDocView()
+//                .focusedSceneValue(\.attributesKind, attributesKind)
+//                .focusedSceneValue(\.attributesRow, attributesRow)
         }
         .defaultPosition(.trailing)
         .defaultSize(width: 350, height: 400)
