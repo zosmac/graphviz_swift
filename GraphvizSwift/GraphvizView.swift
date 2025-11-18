@@ -12,11 +12,11 @@ import SwiftUI
 struct GraphvizView: View {
     @Environment(\.openWindow) var openWindow
     @Environment(AttributesDocViewLaunch.self) var attributesDocViewLaunch
+    @Environment(AttributesDocPage.self) var attributesDocPage
 
     @Bindable var document: GraphvizDocument
     let url: URL?
-    @Binding var position: ScrollPosition
-    @Bindable var attributesDocPage: AttributesDocPage
+    @Binding var docPagePosition: ScrollPosition
 
     @State private var viewType = UserDefaults.standard.string(forKey: "viewType") ?? defaultViewType
     @State private var settings = Array(repeating: [String: String](), count: 3)
@@ -40,7 +40,7 @@ struct GraphvizView: View {
                 zoomScale = 1.0
             }
             .inspector(isPresented: $inspectorPresented) {
-                AttributesView(graph: graph, settings: $settings, position: $position, attributesDocPage: attributesDocPage)
+                AttributesView(graph: graph, settings: $settings, docPagePosition: $docPagePosition)
                     .inspectorColumnWidth(min: 200, ideal: 300, max: 400)
             }
             .focusedSceneValue(\.saveViewPresented, $saveViewPresented)

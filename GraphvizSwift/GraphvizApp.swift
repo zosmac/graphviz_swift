@@ -25,12 +25,13 @@ enum GraphvizError: Int {
 
     @State private var attributesDocViewLaunch = AttributesDocViewLaunch()
     @State private var attributesDocPage = AttributesDocPage()
-    @State private var position = ScrollPosition()
+    @State private var docPagePosition = ScrollPosition()
 
     var body: some Scene {
         DocumentGroup(newDocument: { GraphvizDocument() }) {
-            GraphvizView(document: $0.document, url: $0.fileURL, position: $position, attributesDocPage: attributesDocPage)
+            GraphvizView(document: $0.document, url: $0.fileURL, docPagePosition: $docPagePosition)
                 .environment(attributesDocViewLaunch)
+                .environment(attributesDocPage)
         }
         .commands {
             ToolbarCommands()
@@ -54,10 +55,7 @@ enum GraphvizError: Int {
             //                .focusedSceneValue(\.attributesKind, attributesKind)
             //                .focusedSceneValue(\.attributesRow, attributesRow)
             WebView(attributesDocPage.page)
-                .webViewScrollPosition($position)
-            //                .webViewOnScrollGeometryChange(for: CGFloat.self, of: \.contentOffset.y) { _, newValue in
-            //                    position = ScrollPosition(y: newValue)
-            //                }
+                .webViewScrollPosition($docPagePosition)
         }
         .defaultPosition(.trailing)
         .defaultSize(width: 350, height: 400)

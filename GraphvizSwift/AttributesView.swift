@@ -30,13 +30,14 @@ struct Kinds: View {
 
 // AttributesView shows the values of graph, node, and edge attributes of a graph.
 struct AttributesView: View {
+    @Environment(AttributesDocPage.self) var attributesDocPage
+
     @FocusedBinding(\.attributesKind) private var attributesKind
     @FocusedBinding(\.attributesRow) private var attributesRow
 
     @Bindable var graph: Graph
     @Binding var settings: [[String: String]]
-    @Binding var position: ScrollPosition
-    @Bindable var attributesDocPage: AttributesDocPage
+    @Binding var docPagePosition: ScrollPosition
     @State private var kind: Int?
     @State private var row: Attribute.ID?
     @State private var scrollRow = ScrollPosition(idType: Attribute.ID.self)
@@ -64,18 +65,16 @@ struct AttributesView: View {
                         } else {
                             proxy.scrollTo(attributes[0].id, anchor: .top)
                         }
-                        position = scrollPosition(kind: $1, row: row)
-                        print(kind, position)
+                        docPagePosition = scrollPosition(kind: $1, row: row)
                     }
                     .onChange(of: row) {
                         proxy.scrollTo($1, anchor: .center)
-                        position = scrollPosition(kind: kind, row: $1)
-                        print(row!, position.y!)
+                        docPagePosition = scrollPosition(kind: kind, row: $1)
                     }
                     .focusedSceneValue(\.attributesRow, $row)
                 }
             } else {
-                Spacer() // pushes Kinds up to top
+                Spacer() // pushes Kinds buttons up to top
             }
         }
     }
