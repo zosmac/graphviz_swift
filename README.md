@@ -10,7 +10,7 @@
 
 *GraphvizSwift* is a [macOS](https://www.apple.com/os/macos/) application that reads [Graphviz](https://graphviz.org) [DOT Language](https://graphviz.org/doc/info/lang.html) files for display. DOT defines the nodes and edges of a network graph, which Graphviz interprets to draw a network graph diagram. On macOS, Graphviz can use [Quartz](https://developer.apple.com/documentation/quartz) to render the diagrams into the following image formats: BMP, GIF, JPEG, PDF, PNG, SVG, and TIFF.
 
-Note that DOT language files by convention have the `.gv` extension. The `.dot` extension 
+Note that DOT language files by convention have the `.gv` extension. The `.dot` extension is registered for Microsoft DOcument Template files (Universal Type Identifier com.microsoft.word.dot).
 
 ## First Steps
 
@@ -45,7 +45,7 @@ Once installed, you can find *GraphvizSwift* in the `/Applications` folder or th
 
 ![GraphvizSwiftOpen](Readme/GraphvizSwiftOpen.png)
 
-Graphviz installs a number of example DOT files (extension is .gv, as .dot was already registered for Microsoft DOcument Template files). Select from this list or navigate to other folders with your `.gv` files. Upon selection, *GraphvizSwift* presents a document view of the file:
+Graphviz installs a number of example DOT files (extension is .gv). Select from this list or navigate to other folders with your `.gv` files. Upon selection, *GraphvizSwift* presents a document view of the file:
 
 ![GraphvizSwiftView](Readme/GraphvizSwiftView.png)
 
