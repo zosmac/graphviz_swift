@@ -51,7 +51,7 @@ Graphviz installs a number of example DOT files (extension is .gv). Select from 
 
 The toolbar has a format selection popup menu that specifies the current image format. The default is PDF, which you can change in Settings:
 
-![GraphvizSwiftSettings](Readme/GraphvizSwiftSettings.png)
+![GraphvizSwiftSettings](Readme/GraphvizSwiftSettings.png | width="384")
 
 With the popup you may select other rendering formats; the adjacent save button saves a file in that format. Next you will see several zoom options to change the size of the image. The message button, if highlighted in red, displays any error messages from rendering the graph:
 
