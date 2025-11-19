@@ -1,10 +1,10 @@
 # Welcome to *GraphvizSwift*, the *Swift* language based macOS Graphviz Application.
 
 - [Overview](#overview)
-- [First Steps](#firststeps)
-- [Building *GraphvizSwift*](#building-graphviz-swift)
-- [Installing *GraphvizSwift*](#installing-graphviz-swift)
-- [Running *GraphvizSwift*](#running-graphviz-swift)
+- [Installing *GraphvizSwift*](#installing-graphvizswift)
+  - [Download the *GraphvizSwift* Package Installer](#download-the-graphvizswift-package-installer)
+  - [Clone and Build the *GraphvizSwift* Package Installer](#clone-and-build-the-graphvizswift-package-installer)
+- [Running *GraphvizSwift*](#running-graphvizswift)
 
 ## Overview
 *GraphvizSwift* is a [macOS](https://www.apple.com/os/macos/) application that reads [Graphviz](https://graphviz.org) [DOT Language](https://graphviz.org/doc/info/lang.html) files for display. DOT defines the nodes and edges of a network graph, which Graphviz interprets to draw a network graph diagram. On macOS, Graphviz can use [Quartz](https://developer.apple.com/documentation/quartz) to render the diagrams into the following image formats: BMP, GIF, JPEG, PDF, PNG, SVG, and TIFF.
@@ -18,10 +18,8 @@ Note that to display Graphviz Attributes documentation, *GraphvizSwift* uses Web
 
 ### Download the *GraphvizSwift* Package Installer
 You can install GraphvizSwift directly onto your Mac by downloading the package installer from [its repository](https://github.com/zosmac/graphviz_swift). Select `graphvizswift-arm64.pkg` and then download the raw file.
-
 ![GraphvizSwiftDownload](Readme/GraphvizSwiftDownload.png)
-
-Similarly, download `graphvizswift-arm64.pkg.sha512`. The, verify the package installer:
+Similarly, download `graphvizswift-arm64.pkg.sha512`. Then, verify the package installer:
 ```zsh
 cd ~/Downloads
 sha512sum -c graphvizswift-arm64.pkg.sha512
@@ -35,7 +33,6 @@ xattr -d com.apple.quarantine graphvizswift-arm64.pkg
 
 #### Install *Xcode*
 To build the GraphvizSwift App, first download and install [Xcode](https://developer.apple.com/xcode/). *Xcode* provides the Command Line Tools (e.g. `git`, `make`) for building *Graphviz*, `xcodebuild` for building the *GraphvizSwift* App, and an IDE to enable the app's development and testing.
-
 ![GraphvizSwiftXcode](Readme/GraphvizSwiftXcode.png)
 
 #### Clone the GraphvizSwift Repository
@@ -59,31 +56,17 @@ Enter the password for your macOS system account when prompted, and the app will
 
 ## Running *GraphvizSwift*
 Once installed, you can find *GraphvizSwift* in the `/Applications` folder or through the App Launcher. Open the app, which will first present an open document navigator view. Graphviz includes a sample folder which is included in the GraphvizSwift app. In the document navigator, press the key combination cmd&#8209;shift&#8209;G. This opens a sheet to enter a Unix path. The sample folder is `/Applications/GraphvizSwift.app/Contents/Frameworks/share/graphviz/graphs/directed`
-
 ![GraphvizSwiftOpen](Readme/GraphvizSwiftCmdShiftG.png)
-
 ![GraphvizSwiftOpen](Readme/GraphvizSwiftOpen.png)
-
 Graphviz installs a number of example DOT files (extension is .gv). Select from this list or navigate to other folders with your `.gv` files. Upon selection, *GraphvizSwift* presents a document view of the file:
-
 ![GraphvizSwiftView](Readme/GraphvizSwiftView.png)
-
 The toolbar has a format selection popup menu that specifies the current image format. The default is PDF, which you can change in Settings:
-
 ![GraphvizSwiftSettings](Readme/GraphvizSwiftSettings.png)
-
 With the popup you may select other rendering formats. The adjacent save button saves the file in that format. Next you will see several zoom options to change the size of the image. The message button, if highlighted in red, displays any error messages from rendering the graph:
-
 ![GraphvizSwiftMessage](Readme/GraphvizSwiftMessage.png)
-
 The final button displays a sidebar for updating global graph, node, or edge attributes of the graph.
-
 ![GraphvizSwiftAttrs](Readme/GraphvizSwiftAttrs.png)
-
 From the View menu, you can open Attributes Help for guidance:
-
 ![GraphvizSwiftAttrsDoc](Readme/GraphvizSwiftAttrsDoc.png)
-
 You may also edit the file directly to update global attributes and to edit attributes for specific nodes, edges, or graph clusters. To enable edit mode, select GV from the format popup:
-
 ![GraphvizSwiftEdit](Readme/GraphvizSwiftEdit.png)
