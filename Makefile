@@ -12,13 +12,13 @@ UNAME_M:=$(shell uname -m)
 ARCH=-arch $(UNAME_M)
 
 #
-# GraphvizSwift App installer package
+# GraphvizSwift App Package Installer
 #
 # The Component.plist file specifies BundleIsRelocatable = false to force
 # the app bundle into /Applications. Otherwise, the macOS installer, finding
 # the Release build of the app already registered and acceptable, DOES NOT
 # install the app into /Applications, and EVEN WORSE sets the Release build
-# app's user/group to root/wheel, requiring sudo to remove the Release build!
+# content's user/group to root/wheel, requiring the use of sudo to remove it!
 #
 
 graphviz: $(PREFIX)/bin/dot
@@ -27,7 +27,7 @@ pkg: graphvizswift-$(UNAME_M).pkg graphviz
 
 graphvizswift-$(UNAME_M).pkg: Resources/Component.plist $(BUILD_DIR)/Release/$(APP_NAME).app $(BUILD_DIR)/Scripts/postinstall
 	@echo "\n============================="
-	@echo Build macOS Installer Package
+	@echo Build macOS Package Installer
 	@echo "=============================\n"
 	rm -rf $(BUILD_DIR)/Release/$(APP_NAME).app.dSYM
 	rm -rf $(BUILD_DIR)/Release/$(APP_NAME).swiftmodule
