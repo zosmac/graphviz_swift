@@ -57,17 +57,19 @@ open graphvizswift-arm64.pkg
 Enter the password for your macOS system account when prompted, and the app will be installed in /Applications/GraphvizSwift.app.
 
 ## Running *GraphvizSwift*
-Once installed, you can find *GraphvizSwift* in the `/Applications` folder or through the App Launcher. Open the app, which will first present an open document navigator view. Graphviz includes a sample folder which is included in the GraphvizSwift app. In the document navigator, press the key combination cmd&#8209;shift&#8209;G. This opens a sheet to enter a Unix path. The sample folder is `/Applications/GraphvizSwift.app/Contents/Frameworks/share/graphviz/graphs/directed`
-![GraphvizSwiftOpen](Readme/GraphvizSwiftCmdShiftG.png)
+Once installed, find GraphvizSwift in the `/Applications` folder or via the App Launcher. Open the app, which will first present an open document navigator view. Graphviz includes a sample folder which is deployed with the GraphvizSwift app. In the document navigator, press the key combination cmd&#8209;shift&#8209;G. This opens a sheet to enter a Unix path. The sample folder is `/Applications/GraphvizSwift.app/Contents/Frameworks/share/graphviz/graphs/directed`:
+![GraphvizSwiftCmdShiftG](Readme/GraphvizSwiftCmdShiftG.png)
+
+The Graphviz sample folder installs a number of example DOT files (extension is .gv):
 ![GraphvizSwiftOpen](Readme/GraphvizSwiftOpen.png)
 
-Graphviz installs a number of example DOT files (extension is .gv). Select from this list or navigate to other folders with your `.gv` files. Upon selection, *GraphvizSwift* presents a document view of the file:
+Select from this list or navigate to other folders with your `.gv` files. Upon selection, *GraphvizSwift* presents a document view of the file:
 ![GraphvizSwiftView](Readme/GraphvizSwiftView.png)
 
 The toolbar has a format selection popup menu that specifies the current image format. The default is PDF, which you can change in Settings:
 ![GraphvizSwiftSettings](Readme/GraphvizSwiftSettings.png)
 
-With the popup you may select other rendering formats. The adjacent save button saves the file in that format. Next you will see several zoom options to change the size of the image. The message button, if highlighted in red, displays any error messages from rendering the graph:
+With the popup you may select other rendering formats. The adjacent save button saves the file in that format. Next you will see several zoom options to change the size of the image. Then, the message button. If highlighted in red, select the button to display any error messages from rendering the graph:
 ![GraphvizSwiftMessage](Readme/GraphvizSwiftMessage.png)
 
 The final button displays a sidebar for updating global graph, node, or edge attributes of the graph.
