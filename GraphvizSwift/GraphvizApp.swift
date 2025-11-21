@@ -15,21 +15,26 @@ enum GraphvizError: Int {
     case FileParse
 }
 
+extension FocusedValues {
+    @Entry var docPagePosition: Binding<ScrollPosition>?
+    @Entry var saveViewPresented: Binding<Bool>?
+    @Entry var saveViewType: Binding<String>?
+}
+
 /// GraphvizApp creates the graphviz document views and attributes documentation window.
 @main struct GraphvizApp: App {
     @AppStorage("viewType") var viewType = defaultViewType
-    @FocusedValue(\.attributesKind) private var attributesKind
-    @FocusedValue(\.attributesRow) private var attributesRow
     @FocusedBinding(\.saveViewType) private var saveViewType
+    @FocusedValue(\.docPagePosition) private var docPagePosition
+//    @FocusedValue(\.attributesKind) private var attributesKind
+//    @FocusedValue(\.attributesRow) private var attributesRow
 
-    @State private var attributesDocViewLaunch = AttributesDocViewLaunch()
-    @State private var attributesDocPage = AttributesDocPage()
-    @State private var docPagePosition = ScrollPosition()
+    private let attributesDocPage = AttributesDocPage()
+    @State private var position = ScrollPosition()
 
     var body: some Scene {
         DocumentGroup(newDocument: { GraphvizDocument() }) {
-            GraphvizView(document: $0.document, url: $0.fileURL, docPagePosition: $docPagePosition)
-                .environment(attributesDocViewLaunch)
+            GraphvizView(document: $0.document, url: $0.fileURL)
                 .environment(attributesDocPage)
         }
         .commands {
@@ -47,11 +52,11 @@ enum GraphvizError: Int {
             }
         }
         .defaultSize(width: 800, height: 600)
-        .defaultPosition(.top)
+        .defaultPosition(UnitPoint(x: 0.25, y: 0.05))
 
         UtilityWindow("Attributes Documentation", id: "AttributesDocView") {
             WebView(attributesDocPage.page)
-                .webViewScrollPosition($docPagePosition)
+                .webViewScrollPosition((docPagePosition ?? $position))
 //            AttributesDocView()
 //                .focusedSceneValue(\.attributesKind, attributesKind)
 //                .focusedSceneValue(\.attributesRow, attributesRow)

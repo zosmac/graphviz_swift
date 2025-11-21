@@ -8,11 +8,6 @@
 import UniformTypeIdentifiers
 import SwiftUI
 
-extension FocusedValues {
-    @Entry var saveViewPresented: Binding<Bool>?
-    @Entry var saveViewType: Binding<String>?
-}
-
 struct SaveViewButton: View {
     @FocusedBinding(\.saveViewPresented) private var saveViewPresented
 
@@ -32,9 +27,8 @@ struct SaveViewSheet: View {
     @Environment(\.dismiss) private var dismiss
 
     var url: URL?
-    var graph: Graph
     let viewType: String
-    let settings: [[String: String]]
+    let rendering: Data
 
     @State private var saveFailed: Bool = false
     @State private var saveError: Error? = nil
@@ -55,7 +49,7 @@ struct SaveViewSheet: View {
                     Button("Save") {
                         print("save \(url.path) of viewType: \(viewType)")
                         do {
-                            try graph.render(viewType: viewType, settings: settings).write(to: url)
+                            try rendering.write(to: url)
                         } catch {
                             saveFailed = true
                             saveError = error

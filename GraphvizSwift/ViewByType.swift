@@ -14,7 +14,7 @@ struct ViewByType: View {
 
     @Bindable var document: GraphvizDocument
     let viewType: String
-    let rendering: Data
+    @Binding var rendering: Data
     let zoomScale: CGFloat
     @Binding var viewScale: CGFloat
 
@@ -40,8 +40,10 @@ struct ViewByType: View {
                 }
             } else {
                 Text("Render failed: select Messages Button to view error.")
-                    .font(Font.title2)
+                    .font(.system(size: textSize*zoomScale, weight: .semibold))
+                    .foregroundStyle(.red)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    .padding(10)
             }
         default:
             if let image = NSImage(data: rendering) {
@@ -62,8 +64,10 @@ struct ViewByType: View {
                 }
             } else {
                 Text("Render failed: select Messages Button to view error.")
-                    .font(Font.title2)
+                    .font(.system(size: textSize*zoomScale, weight: .semibold))
+                    .foregroundStyle(.red)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    .padding(10)
             }
         }
     }

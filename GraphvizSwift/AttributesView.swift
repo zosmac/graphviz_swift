@@ -31,23 +31,24 @@ struct Kinds: View {
 // AttributesView shows the values of graph, node, and edge attributes of a graph.
 struct AttributesView: View {
     @Environment(AttributesDocPage.self) var attributesDocPage
-    @FocusedBinding(\.attributesKind) private var attributesKind
-    @FocusedBinding(\.attributesRow) private var attributesRow
+//    @FocusedBinding(\.attributesKind) private var attributesKind
+//    @FocusedBinding(\.attributesRow) private var attributesRow
 
     @Bindable var graph: Graph
+    @Binding var attributes: Attributes?
     @Binding var settings: [[String: String]]
-    @Binding var docPagePosition: ScrollPosition
 
     @State private var kind: Int?
     @State private var row: Attribute.ID?
     @State private var scrollRow = ScrollPosition(idType: Attribute.ID.self)
+    @State private var position = ScrollPosition()
 
     var body: some View {
         VStack(spacing: 10) {
             Kinds(kind: $kind)
-                .focusedSceneValue(\.attributesKind, $kind)
+//                .focusedSceneValue(\.attributesKind, $kind)
             if let kind,
-               let attributes = graph.attributes?.kinds[kind] {
+               let attributes = attributes?.kinds[kind] {
                 ScrollViewReader { proxy in
                     Table(attributes, selection: $row) {
                         TableColumn("Attribute", value: \.name)
@@ -59,33 +60,30 @@ struct AttributesView: View {
                             }
                         }
                     }
-                    .onChange(of: kind) {
+                    .onChange(of: kind, initial: true) {
                         if let index = attributes.firstIndex(where: { $0.id == row }) {
                             proxy.scrollTo(attributes[index].id, anchor: .center)
                         } else {
                             proxy.scrollTo(attributes[0].id, anchor: .top)
                         }
-                        docPagePosition = scrollPosition(kind: $1, row: row)
-                    }
+                        position = scrollPosition(attributes: attributes, row: row)                    }
                     .onChange(of: row) {
                         proxy.scrollTo($1, anchor: .center)
-                        docPagePosition = scrollPosition(kind: kind, row: $1)
+                        position = scrollPosition(attributes: attributes, row: $1)
                     }
-                    .focusedSceneValue(\.attributesRow, $row)
+//                    .focusedSceneValue(\.attributesRow, $row)
+                    .focusedSceneValue(\.docPagePosition, $position) //scrollPosition(kind: kind, row: row))
                 }
             } else {
-                Spacer() // pushes Kinds buttons up to top
+                Spacer() // push Kinds buttons to top
             }
         }
     }
 
-    func scrollPosition(kind: Int?, row: Attribute.ID?) -> ScrollPosition {
-        if let kind {
-            let attributes = parsedAttributes.kinds[kind]
-            if let index = attributes.firstIndex(where: { $0.id == row }),
-               let position = attributesDocPage.positions[attributes[index].name] {
-                return position
-            }
+    func scrollPosition(attributes: [Attribute], row: Attribute.ID?) -> ScrollPosition {
+        if let index = attributes.firstIndex(where: { $0.id == row }),
+           let position = attributesDocPage.positions[attributes[index].name] {
+            return position
         }
         return ScrollPosition(y: 0.0)
     }
