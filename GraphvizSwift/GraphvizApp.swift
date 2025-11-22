@@ -33,8 +33,8 @@ extension FocusedValues {
     @State private var position = ScrollPosition()
 
     var body: some Scene {
-        DocumentGroup(newDocument: { GraphvizDocument() }) {
-            GraphvizView(document: $0.document, url: $0.fileURL)
+        DocumentGroup(newDocument: GraphvizDocument()) {
+            GraphvizView(document: $0.$document, url: $0.fileURL)
                 .environment(attributesDocPage)
         }
         .commands {
@@ -52,7 +52,7 @@ extension FocusedValues {
             }
         }
         .defaultSize(width: 800, height: 600)
-        .defaultPosition(UnitPoint(x: 0.25, y: 0.05))
+        .defaultPosition(UnitPoint(x: 0.3, y: 0.1))
 
         UtilityWindow("Attributes Documentation", id: "AttributesDocView") {
             WebView(attributesDocPage.page)
@@ -61,13 +61,13 @@ extension FocusedValues {
 //                .focusedSceneValue(\.attributesKind, attributesKind)
 //                .focusedSceneValue(\.attributesRow, attributesRow)
         }
-        .defaultPosition(.trailing)
         .defaultSize(width: 350, height: 400)
+        .defaultPosition(UnitPoint(x: 0.95, y: 0.5))
 
         Settings {
             SettingsView()
                 .frame(minWidth: 280, maxWidth: 280, minHeight: 150, maxHeight: 150)
         }
-        .defaultPosition(.topLeading)
+        .defaultPosition(UnitPoint(x: 0.05, y: 0.5))
     }
 }

@@ -13,7 +13,7 @@ struct GraphvizView: View {
     @Environment(\.openWindow) var openWindow
 //    @FocusedValue(\.docPagePosition) private var docPagePosition
 
-    @Bindable var document: GraphvizDocument
+    @Binding var document: GraphvizDocument
     let url: URL?
 
     @State private var viewType = UserDefaults.standard.string(forKey: "viewType") ?? defaultViewType
@@ -33,7 +33,7 @@ struct GraphvizView: View {
     var body: some View {
         @Bindable var graph = Graph(text: document.text)
 
-        ViewByType(document: document, viewType: viewType, rendering: $rendering, zoomScale: zoomScale, viewScale: $viewScale)
+        ViewByType(document: $document, viewType: viewType, rendering: $rendering, zoomScale: zoomScale, viewScale: $viewScale)
             .inspector(isPresented: $inspectorPresented) {
                 AttributesView(graph: graph, attributes: $attributes, settings: $settings)
                     .inspectorColumnWidth(min: 200, ideal: 300, max: 400)

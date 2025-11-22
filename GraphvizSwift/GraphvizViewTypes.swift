@@ -9,7 +9,6 @@ import UniformTypeIdentifiers
 import Foundation
 
 let viewableContentTypes: [String] = {
-    var formats = [String]()
     var count: Int32 = 0
     let context = gvContext()
     defer { gvFreeContext(context) }
@@ -31,6 +30,5 @@ let viewableContentTypes: [String] = {
     set = set.subtracting(["dot", "eps", "icns", "ico", "pict", "ps", "sgi"])
     // If the Dynamic UTTypes filtering removed, then several types work with text rendering. Add them to the UTType extension in GraphvizDocument and the switch case for text view types in ViewByType: .json0, .plain, .plain-ext, .svg_inline, .xdot
     //    set = set.subtracting(["cgimage", "cmap", "cmapx", "cmapx_np", "dot_json", "fig", "imap", "ismap", "pov", "ps2", "tk", "xdot_json"])
-    formats = Array(set)
-    return formats.sorted()
+    return Array(set).sorted()
 }()

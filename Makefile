@@ -32,7 +32,7 @@ graphvizswift-$(UNAME_M).pkg: Resources/Component.plist $(BUILD_DIR)/Release/$(A
 	rm -rf $(BUILD_DIR)/Release/$(APP_NAME).app.dSYM
 	rm -rf $(BUILD_DIR)/Release/$(APP_NAME).swiftmodule
 	cp -R $(PREFIX)/ $(BUILD_DIR)/Release/$(APP_DIR)
-	pkgbuild --root $(BUILD_DIR)/Release --install-location /Applications --scripts $(BUILD_DIR)/Scripts --identifier org.graphviz.app.swift --component-plist $< $@
+	pkgbuild --root $(BUILD_DIR)/Release --install-location /Applications --scripts $(BUILD_DIR)/Scripts --identifier com.att.graphviz.app.swift --component-plist $< $@
 	sha512sum $@ >$(@).sha512
 
 $(BUILD_DIR)/Release/$(APP_NAME).app: $(APP_NAME)/*.swift $(PREFIX)/bin/dot Resources/*

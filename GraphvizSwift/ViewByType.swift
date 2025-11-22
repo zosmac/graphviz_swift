@@ -12,7 +12,7 @@ struct ViewByType: View {
     @AppStorage("textSize") var textSize = defaultTextSize
     @Environment(\.dismiss) private var dismiss
 
-    @Bindable var document: GraphvizDocument
+    @Binding var document: GraphvizDocument
     let viewType: String
     @Binding var rendering: Data
     let zoomScale: CGFloat

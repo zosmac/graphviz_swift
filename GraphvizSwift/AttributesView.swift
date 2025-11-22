@@ -119,7 +119,7 @@ struct OptionView: View {
     var body: some View {
         Picker(attribute.name, selection: $value) {
             ForEach(attribute.options!, id: \.self) {
-                Text($0).tag($0)
+                Text($0)
             }
         }
         .labelsHidden()
