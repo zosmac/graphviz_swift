@@ -11,10 +11,8 @@ import SwiftUI
 /// GraphvizView displays the rendered graph and the attributes and file contents inspectors.
 struct GraphvizView: View {
     @Environment(\.openWindow) var openWindow
-//    @FocusedValue(\.docPagePosition) private var docPagePosition
 
     @Binding var document: GraphvizDocument
-    let url: URL?
 
     @State private var viewType = UserDefaults.standard.string(forKey: "viewType") ?? defaultViewType
     @State private var settings = Array(repeating: [String: String](), count: 3)
@@ -64,7 +62,7 @@ struct GraphvizView: View {
             .focusedSceneValue(\.saveViewPresented, $saveViewPresented)
             .focusedSceneValue(\.saveViewType, $viewType)
             .sheet(isPresented: $saveViewPresented) {
-                SaveViewSheet(url: url, viewType: viewType, rendering: rendering)
+                SaveViewSheet(viewType: viewType, rendering: rendering)
             }
             .toolbarBackground(Color.accentColor.opacity(0.3))
             .toolbar(id: "GraphvizViewToolbar") {

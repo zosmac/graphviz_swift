@@ -34,7 +34,7 @@ extension FocusedValues {
 
     var body: some Scene {
         DocumentGroup(newDocument: GraphvizDocument()) {
-            GraphvizView(document: $0.$document, url: $0.fileURL)
+            GraphvizView(document: $0.$document)
                 .environment(attributesDocPage)
         }
         .commands {
@@ -52,7 +52,7 @@ extension FocusedValues {
             }
         }
         .defaultSize(width: 800, height: 600)
-        .defaultPosition(UnitPoint(x: 0.3, y: 0.1))
+        .defaultPosition(UnitPoint(x: 0.4, y: 0.1))
 
         UtilityWindow("Attributes Documentation", id: "AttributesDocView") {
             WebView(attributesDocPage.page)
@@ -62,12 +62,12 @@ extension FocusedValues {
 //                .focusedSceneValue(\.attributesRow, attributesRow)
         }
         .defaultSize(width: 350, height: 400)
-        .defaultPosition(UnitPoint(x: 0.95, y: 0.5))
+        .defaultPosition(.topTrailing)
 
         Settings {
             SettingsView()
-                .frame(minWidth: 280, maxWidth: 280, minHeight: 150, maxHeight: 150)
         }
-        .defaultPosition(UnitPoint(x: 0.05, y: 0.5))
+        .defaultSize(width: 280, height: 180)
+        .defaultPosition(.topLeading)
     }
 }

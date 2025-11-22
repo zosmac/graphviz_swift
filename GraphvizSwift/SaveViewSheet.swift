@@ -25,8 +25,8 @@ struct SaveViewButton: View {
 
 struct SaveViewSheet: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.documentConfiguration) private var configuration: DocumentConfiguration?
 
-    var url: URL?
     let viewType: String
     let rendering: Data
 
@@ -35,7 +35,7 @@ struct SaveViewSheet: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            if let url = url?.deletingPathExtension().appendingPathExtension(viewType) {
+            if let url = configuration?.fileURL?.deletingPathExtension().appendingPathExtension(viewType) {
                 Text("Save File:")
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(Color.accentColor)
