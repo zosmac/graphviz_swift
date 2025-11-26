@@ -36,7 +36,7 @@ struct Attribute: Identifiable, Equatable, Hashable {
 /// ParsedAttribute defines a graph, node, or edge property parsed from attributes.xml.
 final class ParsedAttribute: Comparable {
     static func < (lhs: ParsedAttribute, rhs: ParsedAttribute) -> Bool { // Comparable
-        lhs.name < rhs.name
+        lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
     }
     static func == (lhs: ParsedAttribute, rhs: ParsedAttribute) -> Bool { // Equatable
         lhs.name == rhs.name
@@ -138,7 +138,9 @@ function positions() {
 }
 </script>
 <style>
-  p {font-family:sans-serif;font-size:10pt}
+  p,li,i,td {font-family:sans-serif;font-size:10pt}
+  code {font-family:Menlo,monospace;font-size:9pt}
+  tr:nth-child(odd) {background-color: #f2f2f2;}
 </style>
 <h3>Attributes Overview</h3>
 \(delegate.overviewDoc)
@@ -223,7 +225,6 @@ final class AttributesParser: NSObject, XMLParserDelegate {
     func parserDidEndDocument(
         _ parser: XMLParser
     ) {
-        simpleTypes["xsd:boolean"] = ["true", "false"] // treat boolean as enumerated type
     }
     
     // begin handling for element
@@ -234,6 +235,8 @@ final class AttributesParser: NSObject, XMLParserDelegate {
         qualifiedName qName: String?,
         attributes attributeDict: [String: String] = [:]
     ) {
+        print("startelement", elementName, attributeDict)
+
         if !elementName.hasPrefix("xsd:") && !inDocumentation {
             return
         }
@@ -249,6 +252,7 @@ final class AttributesParser: NSObject, XMLParserDelegate {
                 attributes[index].simpleType = attributeDict["type"] ?? attributes[index].simpleType
                 attributes[index].defaultValue = attributeDict["default"]
             } else if let name = attributeDict["ref"] {
+                print(name)
                 // defaultValue meanings:
                 // 1. if nil, this attribute is not for this KIND
                 // 2. if among a complexType(i.e. a KIND), set default to non-nil
@@ -326,6 +330,8 @@ final class AttributesParser: NSObject, XMLParserDelegate {
         namespaceURI: String?,
         qualifiedName qName: String?
     ) {
+        print("endelement", elementName)
+        
         switch elementName {
         case "xsd:attribute":
             inAttribute = nil // ended attribute name= element
