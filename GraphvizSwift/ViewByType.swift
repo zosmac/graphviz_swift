@@ -22,7 +22,6 @@ struct ViewByType: View {
     @State private var saveError: Error? = nil
 
     var body: some View {
-        let url = configuration?.fileURL
         switch UTType(filenameExtension: viewType)! {
         case document.docType:
             TextEditor(text: $document.text)
