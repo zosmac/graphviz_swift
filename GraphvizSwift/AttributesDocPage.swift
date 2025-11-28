@@ -22,9 +22,8 @@ import WebKit
                 let result = try await page.callJavaScript("return positions();") as? [[String: Any]]
                 for position in result! {
                     guard let y = position["position"] as? CGFloat else { continue }
-                    positions[position["name"] as! String] = ScrollPosition(y: y)
+                    positions[position["id"] as! String] = ScrollPosition(y: y)
                 }
-                print("AttributesDocPage html anchor positions initialized")
             } catch { print(error) }
         }
     }

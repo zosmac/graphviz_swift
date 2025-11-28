@@ -17,7 +17,7 @@ struct Attribute: Identifiable, Equatable, Hashable {
     let simpleType: String
     let options: [String]?
     let listItemType: String?
-    
+
     init(attribute: ParsedAttribute, value: String) {
         self.id = attribute.id
         self.name = attribute.name
@@ -41,7 +41,7 @@ final class ParsedAttribute: Comparable {
     static func == (lhs: ParsedAttribute, rhs: ParsedAttribute) -> Bool { // Equatable
         lhs.name == rhs.name
     }
-    
+
     let id = UUID()
     let name: String
     var value: String! // value if set in document, and changed by user in UI
@@ -50,7 +50,7 @@ final class ParsedAttribute: Comparable {
     var options: [String]? // option values of enumerated type, true/false for boolean
     var listItemType: String?
     var doc = ""
-    
+
     // Identify attribute's complexType membership, and whether it has a default value.
     // These values are only used during parsing.
     var graph: String?
@@ -58,12 +58,12 @@ final class ParsedAttribute: Comparable {
     var cluster: String?
     var node: String?
     var edge: String?
-    
+
     init(name: String) {
         self.name = name
         self.value = ""
     }
-    
+
     // An attribute may apply to a graph, node or edge, so each attribute must be copied to be distinct by kind.
     init(copy: ParsedAttribute, kind: Int, _ defaultValue: String? = nil) { // Copyable
         self.name = copy.name
@@ -71,7 +71,7 @@ final class ParsedAttribute: Comparable {
         self.options = copy.options
         self.listItemType = copy.listItemType
         self.doc = copy.doc
-        
+
         // for TextField, use defaultValue for field label
         self.defaultValue = copy.defaultValue
         if defaultValue != "" {
@@ -93,7 +93,7 @@ final class ParsedAttribute: Comparable {
 /// Attributes holds the attribute settings for a graph.
 struct Attributes {
     let kinds: [[Attribute]] // by kind: AGRAPH, AGNODE, AGEDGE
-    
+
     init(applying settings: [[AnyHashable: Any]]) {
         var kinds = Array(repeating: [Attribute](), count: 3)
         // merge document's attribute settings into its attributes
@@ -112,7 +112,7 @@ struct Attributes {
 final class ParsedAttributes {
     let kinds: [[ParsedAttribute]] // by kind: AGRAPH, AGNODE, AGEDGE
     let documentation: String
-    
+
     init() {
         let url = Bundle.main.url(forResource: "attributes", withExtension: "xml")
         let data = try! Data(contentsOf: url!)
@@ -131,10 +131,12 @@ function position(elem) {
 }
 function positions() {
     const anchors = document.querySelectorAll('a');
-    return [...anchors].map(anchor => ({
-        name: anchor.name,
-        position: position(anchor)
-    }));
+    return [...anchors]
+        .filter(anchor => anchor.id != "")
+        .map(anchor => ({
+            id: anchor.id,
+            position: position(anchor)
+        }));
 }
 </script>
 <style>
@@ -151,7 +153,7 @@ function positions() {
                 documentation += simpleTypeDoc
             }
         }
-        
+
         documentation += "<h3>Attributes</h3>"
         var kinds = Array(repeating: [ParsedAttribute](), count: 3)
         for attribute in delegate.attributes.sorted() {
@@ -162,9 +164,9 @@ function positions() {
                     attribute.options = options
                 }
             }
-            
+
             documentation += " " + attribute.doc
-            
+
             if attribute.graph != nil {
                 kinds[AGRAPH].append(ParsedAttribute(copy: attribute, kind: AGRAPH, attribute.graph!))
             }
@@ -175,10 +177,8 @@ function positions() {
                 kinds[AGEDGE].append(ParsedAttribute(copy: attribute, kind: AGEDGE, attribute.edge!))
             }
         }
-        
-        self.documentation = documentation.filter({
-            $0 != "\t" && $0 != "\r"
-        })
+
+        self.documentation = documentation
         self.kinds = kinds
     }
 }
@@ -190,7 +190,7 @@ final class AttributesParser: NSObject, XMLParserDelegate {
     var indices = [String: Int]()
     var simpleTypes = Dictionary<String, [String]>()
     var simpleTypeDoc = Dictionary<String, String>()
-    
+
     // track which XML element within as parsing proceeds
     var inAttribute: String?
     var inSimpleType: String?
@@ -198,7 +198,7 @@ final class AttributesParser: NSObject, XMLParserDelegate {
     var inAnnotation: String?
     var inDocumentation = false
     var anchorTagTail = ">"
-    
+
     func addHTML(stringer: () -> String) {
         let string = stringer()
         if inAnnotation != nil {
@@ -207,26 +207,26 @@ final class AttributesParser: NSObject, XMLParserDelegate {
             if attributes[indices[name]!].doc.isEmpty {
                 let type = attributes[indices[name]!].simpleType
                 if simpleTypeDoc[type] == nil {
-                    attributes[indices[name]!].doc = "<h4><a name=\"\(name)\">\(name)</a> <i>\(type)</i></h4>"
+                    attributes[indices[name]!].doc = "<h4><a id=\"\(name)\">\(name)</a> <i>\(type)</i></h4>"
                 } else {
-                    attributes[indices[name]!].doc = "<h4><a name=\"\(name)\">\(name)</a> <a href=\"#\(type)\"><i>\(type)</i></a></h4>"
+                    attributes[indices[name]!].doc = "<h4><a id=\"\(name)\">\(name)</a> <a href=\"#\(type)\"><i>\(type)</i></a></h4>"
                 }
             }
             attributes[indices[name]!].doc += string
         } else if let name = inSimpleType {
             if simpleTypeDoc[name] == nil {
-                simpleTypeDoc[name] = "<h4><a name=\"\(name)\">\(name)</a></h4>"
+                simpleTypeDoc[name] = "<h4><a id=\"\(name)\">\(name)</a></h4>"
             }
             simpleTypeDoc[name]! += string
         }
     }
-    
+
     // complete processing of document
     func parserDidEndDocument(
         _ parser: XMLParser
     ) {
     }
-    
+
     // begin handling for element
     func parser(
         _ parser: XMLParser,
@@ -235,7 +235,7 @@ final class AttributesParser: NSObject, XMLParserDelegate {
         qualifiedName qName: String?,
         attributes attributeDict: [String: String] = [:]
     ) {
-        print("startelement", elementName, attributeDict)
+//        print("startelement", elementName, attributeDict)
 
         if !elementName.hasPrefix("xsd:") && !inDocumentation {
             return
@@ -252,7 +252,7 @@ final class AttributesParser: NSObject, XMLParserDelegate {
                 attributes[index].simpleType = attributeDict["type"] ?? attributes[index].simpleType
                 attributes[index].defaultValue = attributeDict["default"]
             } else if let name = attributeDict["ref"] {
-                print(name)
+//                print(name)
                 // defaultValue meanings:
                 // 1. if nil, this attribute is not for this KIND
                 // 2. if among a complexType(i.e. a KIND), set default to non-nil
@@ -300,7 +300,7 @@ final class AttributesParser: NSObject, XMLParserDelegate {
         case "xsd:annotation":
             if let id = attributeDict["id"] {
                 inAnnotation = id // started special annotation section
-                overviewDoc += "<h4><a name=\"\(id)\">\(id)</a></h4>"
+                overviewDoc += "<h4><a id=\"\(id)\">\(id)</a></h4>"
             }
             //        case "xsd:restriction":
             //        case "xsd:schema":
@@ -322,7 +322,7 @@ final class AttributesParser: NSObject, XMLParserDelegate {
             }
         }
     }
-    
+
     // conclude handling for element
     func parser(
         _ parser: XMLParser,
@@ -330,8 +330,7 @@ final class AttributesParser: NSObject, XMLParserDelegate {
         namespaceURI: String?,
         qualifiedName qName: String?
     ) {
-        print("endelement", elementName)
-        
+//        print("endelement", elementName)
         switch elementName {
         case "xsd:attribute":
             inAttribute = nil // ended attribute name= element
@@ -349,7 +348,7 @@ final class AttributesParser: NSObject, XMLParserDelegate {
             }
         }
     }
-    
+
     // foundCharacters are part of the documentation
     func parser(
         _ parser: XMLParser,

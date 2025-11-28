@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ViewByType: View {
     @AppStorage("textSize") var textSize = defaultTextSize
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.documentConfiguration) private var configuration: DocumentConfiguration?
 
     @Binding var document: GraphvizDocument
     let viewType: String
@@ -22,13 +22,14 @@ struct ViewByType: View {
     @State private var saveError: Error? = nil
 
     var body: some View {
+        let url = configuration?.fileURL
         switch UTType(filenameExtension: viewType)! {
         case document.docType:
             TextEditor(text: $document.text)
                 .autocorrectionDisabled()
                 .font(.system(size: textSize*zoomScale, design: .monospaced))
                 .onChange(of: document.text) {
-                    print("text changed")
+                    print("text changed for file \(configuration?.fileURL, default: "?")")
                 }
         case .canon, .gv, .json:
             if let text = String(data: rendering, encoding: .utf8) {

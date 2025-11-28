@@ -16,6 +16,7 @@ enum GraphvizError: Int {
 }
 
 extension FocusedValues {
+    @Entry var attributesKind: Binding<Int>?  // by kind: AGRAPH, AGNODE, AGEDGE
     @Entry var docPagePosition: Binding<ScrollPosition>?
     @Entry var saveViewPresented: Binding<Bool>?
     @Entry var saveViewType: Binding<String>?
@@ -26,8 +27,6 @@ extension FocusedValues {
     @AppStorage("viewType") var viewType = defaultViewType
     @FocusedBinding(\.saveViewType) private var saveViewType
     @FocusedValue(\.docPagePosition) private var docPagePosition
-//    @FocusedValue(\.attributesKind) private var attributesKind
-//    @FocusedValue(\.attributesRow) private var attributesRow
 
     private let attributesDocPage = AttributesDocPage()
     @State private var position = ScrollPosition()
@@ -57,9 +56,6 @@ extension FocusedValues {
         UtilityWindow("Attributes Documentation", id: "AttributesDocView") {
             WebView(attributesDocPage.page)
                 .webViewScrollPosition((docPagePosition ?? $position))
-//            AttributesDocView()
-//                .focusedSceneValue(\.attributesKind, attributesKind)
-//                .focusedSceneValue(\.attributesRow, attributesRow)
         }
         .defaultSize(width: 350, height: 400)
         .defaultPosition(.topTrailing)

@@ -7,48 +7,42 @@
 
 import SwiftUI
 
-struct Kinds: View {
-    @Binding var kind: Int?
-
-    var body: some View {
-        HStack {
-            Button("Graph", systemImage: "rectangle.2.swap") {
-                kind = AGRAPH
-            }
-            .foregroundStyle(kind == AGRAPH ? Color.accentColor : .primary)
-            Button("Node", systemImage: "oval") {
-                kind = AGNODE
-            }
-            .foregroundStyle(kind == AGNODE ? Color.accentColor : .primary)
-            Button("Edge", systemImage: "stroke.line.diagonal") {
-                kind = AGEDGE
-            }
-            .foregroundStyle(kind == AGEDGE ? Color.accentColor : .primary)
-        }
-    }
-}
-
 // AttributesView shows the values of graph, node, and edge attributes of a graph.
 struct AttributesView: View {
+    @Environment(\.colorScheme) var colorScheme
+    @Environment(\.appearsActive) private var appearsActive
     @Environment(AttributesDocPage.self) var attributesDocPage
-//    @FocusedBinding(\.attributesKind) private var attributesKind
-//    @FocusedBinding(\.attributesRow) private var attributesRow
 
     @Bindable var graph: Graph
     @Binding var attributes: Attributes?
     @Binding var settings: [[String: String]]
 
-    @State private var kind: Int?
+    @State private var kind: Int = AGRAPH
     @State private var row: Attribute.ID?
-    @State private var scrollRow = ScrollPosition(idType: Attribute.ID.self)
     @State private var position = ScrollPosition()
 
     var body: some View {
-        VStack(spacing: 10) {
-            Kinds(kind: $kind)
-//                .focusedSceneValue(\.attributesKind, $kind)
-            if let kind,
-               let attributes = attributes?.kinds[kind] {
+        VStack(spacing: 0) {
+            HStack {
+                Button("Graph", systemImage: "rectangle.2.swap") {
+                    kind = AGRAPH
+                }
+                .glassEffect(.regular.tint(tint(kind == AGRAPH)))
+                Button("Node", systemImage: "oval") {
+                    kind = AGNODE
+                }
+                .glassEffect(.regular.tint(tint(kind == AGNODE)))
+                Button("Edge", systemImage: "stroke.line.diagonal") {
+                    kind = AGEDGE
+                }
+                .glassEffect(.regular.tint(tint(kind == AGEDGE)))
+            }
+            .frame(maxWidth: .infinity)
+            .padding(EdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0))
+            .background(Rectangle().fill(Color.accentColor.opacity(0.3)))
+            .focusedSceneValue(\.attributesKind, $kind)
+
+            if let attributes = attributes?.kinds[kind] {
                 ScrollViewReader { proxy in
                     Table(attributes, selection: $row) {
                         TableColumn("Attribute", value: \.name)
@@ -60,24 +54,36 @@ struct AttributesView: View {
                             }
                         }
                     }
+                    .onChange(of: appearsActive) {
+                        if $1 {
+                            if let index = attributes.firstIndex(where: { $0.id == row }) {
+                                proxy.scrollTo(attributes[index].id, anchor: .center)
+                            } else {
+                                proxy.scrollTo(attributes[0].id, anchor: .top)
+                            }
+                            position = scrollPosition(attributes: attributes, row: row)
+                        }
+                    }
                     .onChange(of: kind, initial: true) {
                         if let index = attributes.firstIndex(where: { $0.id == row }) {
                             proxy.scrollTo(attributes[index].id, anchor: .center)
                         } else {
                             proxy.scrollTo(attributes[0].id, anchor: .top)
                         }
-                        position = scrollPosition(attributes: attributes, row: row)                    }
+                        position = scrollPosition(attributes: attributes, row: row)
+                    }
                     .onChange(of: row) {
                         proxy.scrollTo($1, anchor: .center)
                         position = scrollPosition(attributes: attributes, row: $1)
                     }
-//                    .focusedSceneValue(\.attributesRow, $row)
-                    .focusedSceneValue(\.docPagePosition, $position) //scrollPosition(kind: kind, row: row))
                 }
-            } else {
-                Spacer() // push Kinds buttons to top
+                .focusedSceneValue(\.docPagePosition, $position)
             }
         }
+    }
+
+    func tint(_ accent: Bool) -> Color {
+        accent ? Color.accentColor.opacity(0.3) : colorScheme == .light ? Color.white : Color.black
     }
 
     func scrollPosition(attributes: [Attribute], row: Attribute.ID?) -> ScrollPosition {
