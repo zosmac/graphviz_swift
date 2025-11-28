@@ -90,5 +90,5 @@ clean:
 	@echo "\n====="
 	@echo Clean
 	@echo "=====\n"
-	rm -rf $(BUILD_DIR) graphvizswift-$(UNAME_M).pkg
+	rm -rf $(BUILD_DIR) graphvizswift-$(UNAME_M).pkg*
 
