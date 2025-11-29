@@ -129,7 +129,7 @@ final class ParsedAttributes {
   code {font-family:Menlo,monospace;font-size:9pt}
   tr:nth-child(odd) {background-color: #f2f2f2;}
 </style>
-<html><body>
+<html><body id="home">
 <h3>Attributes Overview</h3>
 \(delegate.overviewDoc)
 <h3>Attributes Types</h3>
@@ -193,15 +193,15 @@ final class AttributesParser: NSObject, XMLParserDelegate {
             if attributes[indices[name]!].doc.isEmpty {
                 let type = attributes[indices[name]!].simpleType
                 if simpleTypeDoc[type] == nil {
-                    attributes[indices[name]!].doc = "<h4><a id=\"\(name)\">\(name)</a> <i>\(type)</i></h4>"
+                    attributes[indices[name]!].doc = "<h4 id=\"\(name)\">\(name) <i>\(type)</i></h4>"
                 } else {
-                    attributes[indices[name]!].doc = "<h4><a id=\"\(name)\">\(name)</a> <a href=\"#\(type)\"><i>\(type)</i></a></h4>"
+                    attributes[indices[name]!].doc = "<h4 id=\"\(name)\">\(name) <a href=\"#\(type)\"><i>\(type)</i></a></h4>"
                 }
             }
             attributes[indices[name]!].doc += string
         } else if let name = inSimpleType {
             if simpleTypeDoc[name] == nil {
-                simpleTypeDoc[name] = "<h4><a id=\"\(name)\">\(name)</a></h4>"
+                simpleTypeDoc[name] = "<h4 id=\"\(name)\">\(name)</h4>"
             }
             simpleTypeDoc[name]! += string
         }
@@ -286,7 +286,7 @@ final class AttributesParser: NSObject, XMLParserDelegate {
         case "xsd:annotation":
             if let id = attributeDict["id"] {
                 inAnnotation = id // started special annotation section
-                overviewDoc += "<h4><a id=\"\(id)\">\(id)</a></h4>"
+                overviewDoc += "<h4 id=\"\(id)\">\(id)</h4>"
             }
             //        case "xsd:restriction":
             //        case "xsd:schema":
