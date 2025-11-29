@@ -21,9 +21,11 @@ ARCH=-arch $(UNAME_M)
 # content's user/group to root/wheel, requiring the use of sudo to remove it!
 #
 
+.PHONY: graphviz
 graphviz: $(PREFIX)/bin/dot
 
-pkg: graphvizswift-$(UNAME_M).pkg graphviz
+.PHONY: pkg
+pkg: clean graphviz graphvizswift-$(UNAME_M).pkg
 
 graphvizswift-$(UNAME_M).pkg: Resources/Component.plist $(BUILD_DIR)/Release/$(APP_NAME).app $(BUILD_DIR)/Scripts/postinstall
 	@echo "\n============================="
