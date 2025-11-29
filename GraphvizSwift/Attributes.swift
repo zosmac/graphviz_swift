@@ -193,15 +193,15 @@ final class AttributesParser: NSObject, XMLParserDelegate {
             if attributes[indices[name]!].doc.isEmpty {
                 let type = attributes[indices[name]!].simpleType
                 if simpleTypeDoc[type] == nil {
-                    attributes[indices[name]!].doc = "<h4 id=\"\(name)\">\(name) <i>\(type)</i></h4>"
+                    attributes[indices[name]!].doc = "<h4 id=\"\(name)\">\(name) <i>\(type)</i></h4>\n"
                 } else {
-                    attributes[indices[name]!].doc = "<h4 id=\"\(name)\">\(name) <a href=\"#\(type)\"><i>\(type)</i></a></h4>"
+                    attributes[indices[name]!].doc = "<h4 id=\"\(name)\">\(name) <a href=\"#\(type)\"><i>\(type)</i></a></h4>\n"
                 }
             }
             attributes[indices[name]!].doc += string
         } else if let name = inSimpleType {
             if simpleTypeDoc[name] == nil {
-                simpleTypeDoc[name] = "<h4 id=\"\(name)\">\(name)</h4>"
+                simpleTypeDoc[name] = "<h4 id=\"\(name)\">\(name)</h4>\n"
             }
             simpleTypeDoc[name]! += string
         }
@@ -286,7 +286,7 @@ final class AttributesParser: NSObject, XMLParserDelegate {
         case "xsd:annotation":
             if let id = attributeDict["id"] {
                 inAnnotation = id // started special annotation section
-                overviewDoc += "<h4 id=\"\(id)\">\(id)</h4>"
+                overviewDoc += "<h4 id=\"\(id)\">\(id)</h4>\n"
             }
             //        case "xsd:restriction":
             //        case "xsd:schema":
