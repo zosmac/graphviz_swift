@@ -19,7 +19,6 @@ struct AttributesView: View {
 
     @State private var kind: Int = AGRAPH
     @State private var row: Attribute.ID?
-    @State private var position = ScrollPosition()
 
     var body: some View {
         VStack(spacing: 0) {
@@ -61,7 +60,7 @@ struct AttributesView: View {
                             } else {
                                 proxy.scrollTo(attributes[0].id, anchor: .top)
                             }
-                            position = scrollPosition(attributes: attributes, row: row)
+                            docPagePosition(attributes: attributes, row: row)
                         }
                     }
                     .onChange(of: kind, initial: true) {
@@ -70,14 +69,13 @@ struct AttributesView: View {
                         } else {
                             proxy.scrollTo(attributes[0].id, anchor: .top)
                         }
-                        position = scrollPosition(attributes: attributes, row: row)
+                        docPagePosition(attributes: attributes, row: row)
                     }
                     .onChange(of: row) {
                         proxy.scrollTo($1, anchor: .center)
-                        position = scrollPosition(attributes: attributes, row: $1)
+                        docPagePosition(attributes: attributes, row: $1)
                     }
                 }
-                .focusedSceneValue(\.docPagePosition, $position)
             }
         }
     }
@@ -86,12 +84,18 @@ struct AttributesView: View {
         accent ? Color.accentColor.opacity(0.3) : colorScheme == .light ? Color.white : Color.black
     }
 
-    func scrollPosition(attributes: [Attribute], row: Attribute.ID?) -> ScrollPosition {
-        if let index = attributes.firstIndex(where: { $0.id == row }),
-           let position = attributesDocPage.positions[attributes[index].name] {
-            return position
+    func docPagePosition(attributes: [Attribute], row: Attribute.ID?) -> Void {
+        var href = "#"
+        if let index = attributes.firstIndex(where: { $0.id == row }) {
+            href += attributes[index].name
         }
-        return ScrollPosition(y: 0.0)
+        do {
+            Task { @MainActor in
+                do {
+                    try await attributesDocPage.page.callJavaScript("window.location.hash='\(href)'")
+                } catch { print(error) }
+            }
+        }
     }
 }
 

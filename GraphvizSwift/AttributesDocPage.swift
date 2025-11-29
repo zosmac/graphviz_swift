@@ -10,21 +10,8 @@ import WebKit
 
 @Observable final class AttributesDocPage {
     let page = WebPage()
-    var positions: [String: ScrollPosition] = [:]
 
     init() {
-        Task { @MainActor in
-            do {
-                page.load(html: parsedAttributes.documentation, baseURL: URL(string: "about:blank")!)
-                while page.isLoading {
-                    try? await Task.sleep(for: .milliseconds(100))
-                }
-                let result = try await page.callJavaScript("return positions();") as? [[String: Any]]
-                for position in result! {
-                    guard let y = position["position"] as? CGFloat else { continue }
-                    positions[position["id"] as! String] = ScrollPosition(y: y)
-                }
-            } catch { print(error) }
-        }
+        page.load(html: parsedAttributes.documentation, baseURL: URL(string: "about:blank")!)
     }
 }

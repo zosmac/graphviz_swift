@@ -8,6 +8,7 @@
 import Foundation
 
 let parsedAttributes = ParsedAttributes()
+
 /// Attribute reflects a graph, node, or edge property after the graph's setting applied.
 struct Attribute: Identifiable, Equatable, Hashable {
     let id: UUID
@@ -123,27 +124,12 @@ final class ParsedAttributes {
             print("parse failed \(parser.parserError?.localizedDescription ?? "")")
         }
         var documentation = """
-<script>
-function position(elem) {
-    var rect = elem.getBoundingClientRect(),
-    scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    return rect.top + scrollTop
-}
-function positions() {
-    const anchors = document.querySelectorAll('a');
-    return [...anchors]
-        .filter(anchor => anchor.id != "")
-        .map(anchor => ({
-            id: anchor.id,
-            position: position(anchor)
-        }));
-}
-</script>
 <style>
   p,li,i,td {font-family:sans-serif;font-size:10pt}
   code {font-family:Menlo,monospace;font-size:9pt}
   tr:nth-child(odd) {background-color: #f2f2f2;}
 </style>
+<html><body>
 <h3>Attributes Overview</h3>
 \(delegate.overviewDoc)
 <h3>Attributes Types</h3>
@@ -178,7 +164,7 @@ function positions() {
             }
         }
 
-        self.documentation = documentation
+        self.documentation = documentation + "</body></html>"
         self.kinds = kinds
     }
 }

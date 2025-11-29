@@ -19,7 +19,6 @@ struct GraphvizView: View {
     @State private var zoomScale: CGFloat = 1.0
     @State private var viewScale: CGFloat = 1.0
 
-    @State private var attributesDocLaunched: Bool = false
     @State private var saveViewPresented: Bool = false
     @State private var inspectorPresented: Bool = false
     @State private var messagePresented: Bool = false
@@ -35,12 +34,6 @@ struct GraphvizView: View {
             .inspector(isPresented: $inspectorPresented) {
                 AttributesView(graph: graph, attributes: $attributes, settings: $settings)
                     .inspectorColumnWidth(min: 200, ideal: 300, max: 400)
-            }
-            .onAppear {
-                if !attributesDocLaunched {
-                    attributesDocLaunched = true
-                    openWindow(id: "AttributesDocView")
-                }
             }
             .onChange(of: viewType, initial: true) {
                 zoomScale = 1.0
