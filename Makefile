@@ -77,7 +77,7 @@ $(GV_DIR)/Makefile: $(GV_DIR)/configure
 	@echo "\n=================="
 	@echo Configure Graphviz
 	@echo "==================\n"
-	cd $(GV_DIR) && ./configure --prefix=$(PREFIX) --with-quartz CFLAGS="-Os $(ARCH)" CXXFLAGS="-Os $(ARCH)" OBJCFLAGS="-Os $(ARCH)" OBJCXXFLAGS="-Os $(ARCH)" LDFLAGS="$(ARCH) -Wl,-dead_strip"
+	cd $(GV_DIR) && ./configure --prefix=$(PREFIX) --with-quartz CFLAGS="-Ofast $(ARCH)" CXXFLAGS="-Ofast $(ARCH)" OBJCFLAGS="-Ofast $(ARCH)" OBJCXXFLAGS="-Ofast $(ARCH)" LDFLAGS="$(ARCH) -Wl,-dead_strip"
 
 $(GV_DIR)/configure:
 	@echo "\n================="
