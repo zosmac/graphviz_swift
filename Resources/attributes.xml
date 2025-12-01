@@ -54,7 +54,7 @@
     <xsd:annotation id="undirected">
         <xsd:documentation>
             <html:p>
-                Some attributes, such as <html:a rel="attr">dir</html:a> or <html:a rel="attr">arrowtail</html:a>, are ambiguous when used in DOT with an undirected graph since the head and tail of an edge are meaningless. As a convention, the first time an undirected edge appears, the DOT parser will assign the left node as the tail node and the right node as the head. For example, the edge <html:code>A -- B</html:code> will have tail <html:code>A</html:code> and head <html:code>B</html:code>. It is the user's responsibility to handle such edges consistently. If the edge appears later with format
+                <b>Note:</b> Some attributes, such as <html:a rel="attr">dir</html:a> or <html:a rel="attr">arrowtail</html:a>, are ambiguous when used in DOT with an undirected graph since the head and tail of an edge are meaningless. As a convention, the first time an undirected edge appears, the DOT parser will assign the left node as the tail node and the right node as the head. For example, the edge <html:code>A -- B</html:code> will have tail <html:code>A</html:code> and head <html:code>B</html:code>. It is the user's responsibility to handle such edges consistently. If the edge appears later with format
             </html:p>
             <html:p>
                 <html:code>B -- A [taillabel = "tail"]</html:code>
@@ -74,35 +74,11 @@
     <xsd:documentation>
     <html:p>
     </html:p>
-    <html:p>
-    <html:ul>
-    <html:li>
-    <html:code>...</html:code>
-    </html:li>
-    </html:ul>
-    </html:p>
-    <html:p>
-    <html:table>
-    <html:tbody>
-    <html:tr>
-    <html:td><html:code>...</html:code></html:td>
-    <html:td>...</html:td>
-    </html:tr>
-    </html:tbody>
-    </html:table>
-    </html:p>
-    <html:p>
-    <html:code>...</html:code> is a valid type for
-    <html:ul>
-    <html:li>
-    <html:a rel="attr">...</html:a>
-    </html:li>
-    </html:ul>
-    </html:p>
     </xsd:documentation>
     </xsd:annotation>
     <xsd:restriction base="string">
-    <xsd:enumeration value="normal" />
+        <xsd:list itemType="..." />
+        <xsd:enumeration value="..." />
     </xsd:restriction>
     </xsd:simpleType>
 
@@ -125,17 +101,6 @@
                         </html:li>
                         <html:li>
                             shapes supported as special cases for backward-compatibility (<html:code>ediamond, open, halfopen, empty, invempty</html:code>).
-                        </html:li>
-                    </html:ul>
-                </html:p>
-                <html:p>
-                    <html:code>arrowType</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">arrowhead</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">arrowtail</html:a>
                         </html:li>
                     </html:ul>
                 </html:p>
@@ -169,102 +134,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Boolean; true or false.
-                </html:p>
-                <html:p>
-                    <html:code>bool</html:code> is a valid type for:
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">beautify</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">center</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">cluster</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">compound</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">concentrate</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">constraint</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">decorate</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">diredgeconstraints</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">fixedsize</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">forcelabels</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">headclip</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">imagescale</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">labelfloat</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">landscape</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">newrank</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">nojustify</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">normalize</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">notranslate</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">oneblock</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">overlap</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">overlap_shrink</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">pack</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">pin</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">quadtree</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">regular</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">remincross</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">root</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">splines</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">tailclip</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">truecolor</html:a>
-                        </html:li>
-                    </html:ul>
+                    Boolean
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -277,27 +147,6 @@
     <xsd:simpleType name="clusterMode">
         <xsd:annotation>
             <xsd:documentation>
-                <html:p>
-                    <html:ul>
-                        <html:li>
-                            <html:code>local</html:code>
-                        </html:li>
-                        <html:li>
-                            <html:code>global</html:code>
-                        </html:li>
-                        <html:li>
-                            <html:code>none</html:code>
-                        </html:li>
-                    </html:ul>
-                </html:p>
-                <html:p>
-                    <html:code>clusterMode</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">clusterrank</html:a>
-                        </html:li>
-                    </html:ul>
-                </html:p>
             </xsd:documentation>
         </xsd:annotation>
         <xsd:restriction base="string">
@@ -352,22 +201,13 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    A colon-separated list of (optionally weighted) color values, forming a linear gradient. <html:code>colorList</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">bgcolor</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">color</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">fillcolor</html:a>
-                        </html:li>
-                    </html:ul>
+                    A colon-separated list of (optionally weighted) color values, forming a linear gradient.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
-        <xsd:list itemType="color" />
+        <xsd:restriction base="string">
+            <xsd:list itemType="color" />
+        </xsd:restriction>
     </xsd:simpleType>
 
     <xsd:simpleType name="dirType">
@@ -375,14 +215,6 @@
             <xsd:documentation>
                 <html:p>
                     For undirected edges <html:code>T -- H;</html:code>, one of the nodes, usually the righthand one, is treated as the head for the purpose of interpreting <html:code>forward</html:code> and <html:code>back</html:code>.
-                </html:p>
-                <html:p>
-                    <html:code>dirType</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">dir</html:a>
-                        </html:li>
-                    </html:ul>
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -398,141 +230,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Double precision floating point number. <html:code>double</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">area</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">arrowsize</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">Damping</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">defaultdist</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">distortion</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">dpi</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">epsilon</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">fontsize</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">height</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">inputscale</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">K</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">labelangle</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">labeldistance</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">labelfontsize</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">len</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">levelsgap</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">lheight</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">lwidth</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">margin</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">mclimit</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">mindist</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">nodesep</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">normalize</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">nslimit</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">nslimit1</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">orientation</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">overlap_scaling</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">pad</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">page</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">penwidth</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">quantum</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">radius</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">ranksep</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">ratio</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">repulsiveforce</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">resolution</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">rotation</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">scale</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">size</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">skew</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">voro_margin</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">weight</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">width</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">z</html:a>
-                        </html:li>
-                    </html:ul>
+                    Double precision floating point number
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -544,16 +242,11 @@
                 <html:p>
                     A colon-separated list of <html:a rel="attr">double</html:a>s: <html:code>%f(:%f)*</html:code> where each %f is a double.
                 </html:p>
-                <html:p>
-                    <html:code>doubleList</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">ranksep</html:a>
-                        </html:li>
-                    </html:ul>
-                </html:p>
             </xsd:documentation>
         </xsd:annotation>
+        <xsd:restriction base="string">
+            <xsd:list itemType="double" />
+        </xsd:restriction>
     </xsd:simpleType>
 
     <xsd:simpleType name="escString">
@@ -564,74 +257,6 @@
                 </html:p>
                 <html:p>
                     In addition, if the associated attribute is <html:a rel="attr">label</html:a>, <html:a rel="attr">headlabel</html:a> or <html:a rel="attr">taillabel</html:a>, the escape sequences <html:code>\n</html:code>, <html:code>\l</html:code> and <html:code>\r</html:code> divide the label into lines, centered, left-justified, and right-justified, respectively.
-                </html:p>
-                <html:p>
-                    <html:code>escString</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">edgehref</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">edgetarget</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">edgetooltip</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">edgeURL</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">headhref</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">headtarget</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">headtooltip</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">headURL</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">href</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">id</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">labelhref</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">labeltarget</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">labeltooltip</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">labelURL</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">tailhref</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">tailtarget</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">tailtooltip</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">tailURL</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">target</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">tooltip</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">URL</html:a>
-                        </html:li>
-                    </html:ul>
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -644,64 +269,9 @@
                 <html:p>
                     Integer number
                 </html:p>
-                <html:p>
-                    <html:code>int</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">dim</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">dimen</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">gradientangle</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">label_scheme</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">levels</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">linelength</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">maxiter</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">minlen</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">pack</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">peripheries</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">rotate</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">samplepoints</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">searchsize</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">showboxes</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">sides</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">sortv</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">weight</html:a>
-                        </html:li>
-                    </html:ul>
-                </html:p>
             </xsd:documentation>
         </xsd:annotation>
+        <xsd:restriction base="string" />
     </xsd:simpleType>
 
     <xsd:simpleType name="layerList">
@@ -710,46 +280,33 @@
                 <html:p>
                     List of strings separated by characters from the <html:a rel="attr">layersep</html:a> attribute (by default, colons, tabs or spaces), defining <html:a rel="attr">layer</html:a> names and implicitly numbered 1,2,...
                 </html:p>
-                <html:p>
-                    <html:code>layerList</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">layers</html:a>
-                        </html:li>
-                    </html:ul>
-                </html:p>
             </xsd:documentation>
         </xsd:annotation>
+        <xsd:restriction base="string">
+            <xsd:list itemType="layer" />
+        </xsd:restriction>
     </xsd:simpleType>
 
     <xsd:simpleType name="layerRange">
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    A list of layers defined by the <html:a rel="attr">layers</html:a> attribute.
+                    A list of layers defined by the <html:a rel="attr">layers</html:a> attribute
                 </html:p>
                 <html:p>
                     It consists of a list of layer intervals separated by any collection of characters from the <html:code>layerlistsep</html:code> attribute. Each layer interval is specified as either a layerId or a layerId<html:b>S</html:b>layerId, where layerId = "all", a decimal integer or a layer name. (An integer i corresponds to layer i, layers being numbered from 1.)
                 </html:p>
                 <html:p>
-                    <html:b>S</html:b> consists of 1 or more separator characters specified by the <html:a rel="attr">layersep</html:a> attribute.
+                    The string <html:b>S</html:b> consists of 1 or more separator characters specified by the <html:a rel="attr">layersep</html:a> attribute.
                 </html:p>
                 <html:p>
                     Thus, assuming the default values for <html:a rel="attr">layersep</html:a> and <html:a rel="attr">layerlistsep</html:a>, if <html:code>layers="a:b:c:d:e:f:g:h"</html:code>, the layerRange string <html:code>layers="a:b,d,f:all"</html:code> would denote the layers a b d f g h.
                 </html:p>
-                <html:p>
-                    <html:code>layerRange</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">layer</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">layerselect</html:a>
-                        </html:li>
-                    </html:ul>
-                </html:p>
             </xsd:documentation>
         </xsd:annotation>
+        <xsd:restriction base="string">
+            <xsd:list itemType="layers" />
+        </xsd:restriction>
     </xsd:simpleType>
 
     <xsd:simpleType name="lblString">
@@ -761,25 +318,26 @@
                 <html:p>
                     An <html:a rel="attr">escString</html:a> or an HTML label.
                 </html:p>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="string" />
+    </xsd:simpleType>
+
+    <xsd:simpleType name="modeType">
+        <xsd:annotation>
+            <xsd:documentation>
                 <html:p>
-                    <html:code>lblString</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">headlabel</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">label</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">tablelabel</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">xlabel</html:a>
-                        </html:li>
-                    </html:ul>
+                    Mode type for <html:code>neato</html:code>
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
+        <xsd:restriction base="string">
+            <xsd:enumeration value="major" />
+            <xsd:enumeration value="KK" />
+            <xsd:enumeration value="sgd" />
+            <xsd:enumeration value="heir" />
+            <xsd:enumeration value="ipsep" />
+        </xsd:restriction>
     </xsd:simpleType>
 
     <xsd:simpleType name="outputMode">
@@ -818,14 +376,6 @@
                         </html:tbody>
                     </html:table>
                 </html:p>
-                <html:p>
-                    <html:code>int</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">dim</html:a>
-                        </html:li>
-                    </html:ul>
-                </html:p>
             </xsd:documentation>
         </xsd:annotation>
         <xsd:restriction base="string">
@@ -858,44 +408,7 @@
                     Page Direction
                 </html:p>
                 <html:p>
-                    <html:code>bool</html:code> is a valid type for:
-                    <html:ul>
-                        <html:li>
-                            <html:code>BL</html:code>
-                        </html:li>
-                        <html:li>
-                            <html:code>BR</html:code>
-                        </html:li>
-                        <html:li>
-                            <html:code>TL</html:code>
-                        </html:li>
-                        <html:li>
-                            <html:code>TR</html:code>
-                        </html:li>
-                        <html:li>
-                            <html:code>RB</html:code>
-                        </html:li>
-                        <html:li>
-                            <html:code>RT</html:code>
-                        </html:li>
-                        <html:li>
-                            <html:code>LB</html:code>
-                        </html:li>
-                        <html:li>
-                            <html:code>LT</html:code>
-                        </html:li>
-                    </html:ul>
-                </html:p>
-                <html:p>
                     These specify the 8 row or column major orders for traversing a rectangular array, the first character corresponding to the major order and the second to the minor order. Thus, for "BL", the major order is from bottom to top, and the minor order is from left to right. This means the bottom row is traversed first, from left to right, then the next row up, from left to right, and so on, until the topmost row is traversed.
-                </html:p>
-                <html:p>
-                    <html:code>pagedir</html:code> is a valid type for:
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">pagedir</html:a>
-                        </html:li>
-                    </html:ul>
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -923,43 +436,9 @@
                 <html:p>
                     If <html:a rel="attr">dim</html:a>=3, point may also have the format <html:code>%f,%f,%f('!')?</html:code> to represent the point (x,y,z).
                 </html:p>
-                <html:p>
-                    <html:code>point</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">head_lp</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">lp</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">margin</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">pad</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">page</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">pos</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">scale</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">size</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">tail_lp</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">xlp</html:a>
-                        </html:li>
-                    </html:ul>
-                </html:p>
             </xsd:documentation>
         </xsd:annotation>
+        <xsd:restriction base="string" />
     </xsd:simpleType>
 
     <xsd:simpleType name="pointList">
@@ -968,17 +447,11 @@
                 <html:p>
                     A list of <html:a rel="type">point</html:a>s, separated by spaces.
                 </html:p>
-                <html:p>
-                    <html:code>pointList</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">vertices</html:a>
-                        </html:li>
-                    </html:ul>
-                </html:p>
             </xsd:documentation>
         </xsd:annotation>
-        <xsd:list itemType="point" />
+        <xsd:restriction base="string">
+            <xsd:list itemType="point" />
+        </xsd:restriction>
     </xsd:simpleType>
 
     <xsd:simpleType name="portPos">
@@ -1036,17 +509,6 @@
                         </html:tbody>
                     </html:table>
                 </html:p>
-                <html:p>
-                    <html:code>portPos</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">headport</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">tailport</html:a>
-                        </html:li>
-                    </html:ul>
-                </html:p>
             </xsd:documentation>
         </xsd:annotation>
         <xsd:restriction base="string">
@@ -1069,27 +531,7 @@
                     Quadtree scheme
                 </html:p>
                 <html:p>
-                    <html:ul>
-                        <html:li>
-                            <html:code>normal</html:code>
-                        </html:li>
-                        <html:li>
-                            <html:code>fast</html:code>
-                        </html:li>
-                        <html:li>
-                            <html:code>none</html:code>
-                        </html:li>
-                    </html:ul>
-                </html:p>
-                <html:p>
-                </html:p> Using <html:code>fast</html:code> gives about a 2-4 times overall speedup compared with <html:code>normal</html:code>, though layout quality can suffer a little.
-                <html:p>
-                    <html:code>quadType</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">quadtree</html:a>
-                        </html:li>
-                    </html:ul>
+                    Using <html:code>fast</html:code> gives about a 2-4 times overall speedup compared with <html:code>normal</html:code>, though layout quality can suffer a little.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1144,14 +586,6 @@
                         </html:tbody>
                     </html:table>
                 </html:p>
-                <html:p>
-                    <html:code>rankdir</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">rankdir</html:a>.
-                        </html:li>
-                    </html:ul>
-                </html:p>
             </xsd:documentation>
         </xsd:annotation>
         <xsd:restriction base="string">
@@ -1165,33 +599,6 @@
     <xsd:simpleType name="rankType">
         <html:p>
             Rank constraints on the nodes in a subgraph
-        </html:p>
-        <html:p>
-            <html:ul>
-                <html:li>
-                    <html:code>same</html:code>
-                </html:li>
-                <html:li>
-                    <html:code>min</html:code>
-                </html:li>
-                <html:li>
-                    <html:code>source</html:code>
-                </html:li>
-                <html:li>
-                    <html:code>max</html:code>
-                </html:li>
-                <html:li>
-                    <html:code>sink</html:code>
-                </html:li>
-            </html:ul>
-        </html:p>
-        <html:p>
-            <html:code>rankType</html:code> is a valid type for
-            <html:ul>
-                <html:li>
-                    <html:a rel="attr">rank</html:a>.
-                </html:li>
-            </html:ul>
         </html:p>
         <xsd:restriction base="string">
             <xsd:enumeration value="same" />
@@ -1211,17 +618,6 @@
                 <html:p>
                     The rectangle <html:code>llx,lly,urx,ury</html:code> gives the coordinates, in points, of the lower-left corner (<html:code>llx,lly</html:code>) and the upper-right corner (<html:code>urx,ury</html:code>).
                 </html:p>
-                <html:p>
-                    <html:code>rect</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">bb</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">rects</html:a>
-                        </html:li>
-                    </html:ul>
-                </html:p>
             </xsd:documentation>
         </xsd:annotation>
         <xsd:restriction base="string">
@@ -1237,34 +633,6 @@
                 </html:p>
                 <html:p>
                     The record-based shape has largely been superseded and greatly generalized by HTML-like labels. That is, instead of using shape=record, consider using shape=none and an HTML-like label.
-                </html:p>
-                <html:p>
-                    Among the many, many polygon-based shapes are
-                    <html:ul>
-                        <html:li>
-                            <html:code>ellipse</html:code> (default)
-                        </html:li>
-                        <html:li>
-                            <html:code>box</html:code>
-                        </html:li>
-                        <html:li>
-                            <html:code>circle</html:code>
-                        </html:li>
-                        <html:li>
-                            <html:code>square</html:code>
-                        </html:li>
-                        <html:li>
-                            <html:code>hexagon</html:code>
-                        </html:li>
-                    </html:ul>
-                </html:p>
-                <html:p>
-                    <html:code>shape</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">shape</html:a>
-                        </html:li>
-                    </html:ul>
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1333,37 +701,6 @@
             <xsd:documentation>
                 <html:p>
                     Values are
-                    <html:ul>
-                        <html:li>
-                            <html:code>none</html:code>
-                        </html:li>
-                        <html:li>
-                            <html:code>avg_dist</html:code>
-                        </html:li>
-                        <html:li>
-                            <html:code>graph_dist</html:code>
-                        </html:li>
-                        <html:li>
-                            <html:code>power_dist</html:code>
-                        </html:li>
-                        <html:li>
-                            <html:code>rng</html:code>
-                        </html:li>
-                        <html:li>
-                            <html:code>spring</html:code>
-                        </html:li>
-                        <html:li>
-                            <html:code>triangle</html:code>
-                        </html:li>
-                    </html:ul>
-                </html:p>
-                <html:p>
-                    <html:code>smoothType</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">smoothing</html:a>
-                        </html:li>
-                    </html:ul>
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1402,14 +739,6 @@
                 </html:p>
                 <html:p>
                     If a spline has points p₁ p₂ p₃ ... pₙ, (n = 1 (mod 3)), the points correspond to the control points of a cubic B-spline from p₁ to pₙ. If startp is given, it touches one node of the edge, and the arrowhead goes from p₁ to startp. If startp is not given, p₁ touches a node. Similarly for pₙ and endp.
-                </html:p>
-                <html:p>
-                    <html:code>splineType</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">pos</html:a>
-                        </html:li>
-                    </html:ul>
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1450,17 +779,13 @@
                 <html:p>
                     Note that input positions, specified by a node's <html:a rel="attr">pos</html:a> attribute, are only used when the style is <html:code>random</html:code>.
                 </html:p>
-                <html:p>
-                    <html:code>startType</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">start</html:a>
-                        </html:li>
-                    </html:ul>
-                </html:p>
             </xsd:documentation>
         </xsd:annotation>
-        <xsd:restriction base="string" />
+        <xsd:restriction base="string">
+            <xsd:enumeration value="regular" />
+            <xsd:enumeration value="self" />
+            <xsd:enumeration value="random" />
+        </xsd:restriction>
     </xsd:simpleType>
 
     <xsd:simpleType name="string">
@@ -1472,121 +797,9 @@
                 <html:p>
                     See also <html:a rel="attr">escString</html:a>, text with escape-sequences.
                 </html:p>
-                <html:p>
-                    <html:code>string</html:code> is a valid type for
-                    <html:ul>
-                        <html:li>
-                            <html:a rel="attr">charset</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">class</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">colorscheme</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">comment</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">diredgeconstraints</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">fixedsize</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">fontname</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">fontnames</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">fontpath</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">group</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">image</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">imagepath</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">imagepos</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">imagescale</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">labelfontname</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">labeljust</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">labelloc</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">layerlistsep</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">layersep</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">layout</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">lhead</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">ltail</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">mode</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">model</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">ordering</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">overlap</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">ratio</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">root</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">samehead</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">sametail</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">shapefile</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">splines</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">stylesheet</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">target</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">TBbalance</html:a>
-                        </html:li>
-                        <html:li>
-                            <html:a rel="attr">xdotversion</html:a>
-                        </html:li>
-                    </html:ul>
-                </html:p>
             </xsd:documentation>
         </xsd:annotation>
+        <xsd:restriction base="string" />
     </xsd:simpleType>
 
     <!--
@@ -1614,11 +827,27 @@
     area (patchwork)
     -->
 
+    <xsd:attribute name="area" type="double" default="1.0">
+        <xsd:annotation>
+            <xsd:documentation>
+                <html:p>
+                    Indicates the preferred area for a node or empty cluster
+                </html:p>
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+
     <xsd:attribute name="arrowhead" type="arrowType" default="normal">
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Style of arrowhead on the head node of an edge. See also the <html:a rel="attr">dir</html:a> attribute, and the <html:a rel="note">undirected</html:a> note.
+                    Style of arrowhead on the head node of an edge
+                </html:p>
+                <html:p>
+                    This will only appear if the <html:a rel="attr">dir</html:a> attribute is <html:code>forward</html:code> or <html:code>both</html:code>.
+                </html:p>
+                <html:p>
+                    See the limitation regarding <html:a rel="note">undirected</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1628,7 +857,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Multiplicative scale factor for arrowheads.
+                    Multiplicative scale factor for arrowheads
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1638,7 +867,13 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Style of arrowhead on the tail node of an edge. See also the <html:a rel="attr">dir</html:a> attribute, and the <html:a rel="note">undirected</html:a> note.
+                    Style of arrowhead on the tail node of an edge
+                </html:p>
+                <html:p>
+                    This will only appear if the <html:a rel="attr">dir</html:a> attribute is <html:code>back</html:code> or <html:code>both</html:code>.
+                </html:p>
+                <html:p>
+                    See the limitation regarding <html:a rel="note">undirected</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1648,7 +883,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Bounding box of drawing in integer points.
+                    Bounding box of drawing in integer points
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2355,7 +1590,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Specifies the separator characters used to split the <html:a rel="attr">layers </html:a>attribute into a list of layer names.
+                    Specifies the separator characters used to split the <html:a rel="attr">layers</html:a> attribute into a list of layer names.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2492,14 +1727,36 @@
         </xsd:annotation>
     </xsd:attribute>
 
-    <xsd:attribute name="mode" type="string">
+    <xsd:attribute name="mode" type="modeType" gv:layouts="neato">
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Technique for optimizing the layout. If <html:a rel="attr">mode</html:a> is <html:code>major</html:code>, neato uses stress majorization. If <html:a rel="attr">mode</html:a> is <html:code>KK</html:code>, neato uses a version of the gradient descent method. The only advantage to the latter technique is that it is sometimes appreciably faster for small (number of nodes &lt; 100) graphs. A significant disadvantage is that it may cycle.
+                    Technique for optimizing the layout
                 </html:p>
                 <html:p>
-                    There are two new, experimental modes in neato, <html:code>hier</html:code>, which adds a top-down directionality similar to the layout used in dot, and <html:code>ipsep</html:code>, which allows the graph to specify minimum vertical and horizontal distances between nodes. (See the <html:a rel="attr">sep</html:a> attribute.)
+                    <html:code>neato</html:code> supports modes:
+                    <html:ul>
+                        <html:li>
+                            <html:code>mode=major</html:code>: uses stress majorization.
+                        </html:li>
+                        <html:li>
+                            <html:code>mode=KK</html:code>: uses the Kamada-Kawai version of the gradient descent method. <html:code>KK</html:code> is sometimes appreciably faster for small (number of nodes &lt; 100) graphs. A significant disadvantage is that <html:code>KK</html:code> may cycle.
+                        </html:li>
+                        <html:li>
+                            <html:code>mode=sgd</html:code>: uses a version of the Stochastic Gradient Descent method. <html:code>sgd</html:code>'s advantage is faster and more reliable convergence than both the previous methods, while <html:code>sgd</html:code>'s disadvantage is that it runs in a fixed number of iterations and may require larger values of <html:a rel="attr">maxiter</html:a> in some graphs.
+                        </html:li>
+                    </html:ul>
+                </html:p>
+                <html:p>
+                    There are two new, experimental modes in <html:code>neato</html:code>
+                    <html:ul>
+                        <html:li>
+                            <html:code>mode=heir</html:code>: uses a top-down directionality similar to the layout used in dot
+                        </html:li>
+                        <html:li>
+                            <html:code>mode=ipsep</html:code>: uses the graph to specify minimum vertical and horizontal distances between nodes. (See the <html:a rel="attr">sep</html:a> attribute.)
+                        </html:li>
+                    </html:ul>
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2614,29 +1871,44 @@
         </xsd:annotation>
     </xsd:attribute>
 
-    <xsd:attribute name="overlap" type="string">
+    <xsd:attribute name="overlap" type="string" gv:layouts="fdp neato sfdp circo twopi">
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Determines if and how node overlaps should be removed. Nodes are first enlarged using the <html:a rel="attr">sep</html:a> attribute. If <html:code>true</html:code>, overlaps are retained. If the value is <html:code>scale</html:code>, overlaps are removed by uniformly scaling in x and y. If the value converts to <html:code>false</html:code>, node overlaps are removed by a Voronoi-based technique. If the value is <html:code>scalexy</html:code>, x and y are separately scaled to remove overlaps. If the value is <html:code>orthoxy</html:code> or <html:code>orthoyx</html:code>, overlaps are moved by optimizing two constraint problems, one for the x axis and one for the y. The suffix indicates which axis is processed first. If the value is <html:code>ortho</html:code>, the technique is similar to <html:code>orthoxy</html:code> except a heuristic is used to reduce the bias between the two passes. If the value is <html:code>ortho_yx</html:code>, the technique is the same as <html:code>ortho</html:code>, except the roles of x and y are reversed. The values <html:code>portho</html:code>, <html:code>porthoxy</html:code>, <html:code>porthoxy</html:code>, and <html:code>portho_yx</html:code> are similar to the previous four, except only pseudo-orthogonal ordering is enforced.
+                    Determines if and how node overlaps should be removed
                 </html:p>
                 <html:p>
-                    If the value is <html:code>compress</html:code>, the layout will be scaled down as much as possible without introducing any overlaps, obviously assuming there are none to begin with.
+                    Nodes are first enlarged using the <html:a rel="attr">sep</html:a> attribute. If <html:code>true</html:code>, overlaps are retained. If the value is <html:code>scale</html:code>, overlaps are removed by uniformly scaling in x and y. If the value converts to <html:code>false</html:code> and Prism (a proximity graph-based algorithm) is available, it is used to remove node overlaps. This can also be invoked explicitly with <html:code>overlap=prism</html:code>. This technique starts with a small scaling up, controlled by the <html:a rel="attr">overlap_scaling</html:a> attribute, which can remove a significant portion of the overlap. The prism option also accepts an optional non-negative integer suffix. This can be used to control the number of attempts made at overlap removal. By default, <html:code>overlap=prism</html:code> is equivalent to <html:code>overlap=prism1000</html:code>. Setting <html:code>overlap=prism0</html:code> causes only the scaling phase to be run.
                 </html:p>
                 <html:p>
-                    If the value is <html:code>ipsep</html:code>, and the layout is done by neato with <html:a rel="attr">mode</html:a>="ipsep", the overlap removal constraints are incorporated into the layout algorithm itself. N.B. At present, this only supports one level of clustering.
+                    If Prism is not available, <html:code>overlap=false</html:code> node overlaps are removed by a Voronoi-based technique. This can always be invoked explicitly with <html:code>overlap=voronoi</html:code>.
                 </html:p>
                 <html:p>
-                    If the value is <html:code>vpsc</html:code>, overlap removal is similarly to <html:code>ortho</html:code>, except quadratic optimization is used to minimize node displacement. N.B. At present, this mode only works when <html:a rel="attr">mode</html:a>="ipsep".
+                    If the value is <html:code>scalexy</html:code>, x and y are separately scaled to remove overlaps.
                 </html:p>
                 <html:p>
-                    Except for fdp, the layouts assume <html:code>overlap="true"</html:code> as the default. Fdp first uses a number of passes using built-in, force-directed technique to remove overlaps. Thus, fdp accepts <html:a rel="attr">overlap</html:a> with an integer prefix followed by a colon, specifying the number of tries. If there is no prefix, no initial tries will be performed. If there is nothing following a colon, none of the above methods will be attempted. By default, fdp uses <html:code>overlap="9:portho"</html:code>. Note that <html:code>overlap="true"</html:code>, <html:code>overlap="0:true"</html:code> and <html:code>overlap="0:"</html:code> all turn off all overlap removal.
+                    If <html:code>overlap=compress</html:code>, the layout will be scaled down as much as possible without introducing any overlaps, obviously assuming there are none to begin with.
                 </html:p>
                 <html:p>
-                    Except for the Voronoi method, all of these transforms preserve the orthogonal ordering of the original layout. That is, if the x coordinates of two nodes are originally the same, they will remain the same, and if the x coordinate of one node is originally less than the x coordinate of another, this relation will still hold in the transformed layout. The similar properties hold for the y coordinates. This is not quite true for the "porth*" cases. For these, orthogonal ordering is only preserved among nodes related by an edge.
+                    <html:b>N.B.</html:b> The remaining allowed values of <html:code>overlap</html:code> correspond to algorithms which, at present, can produce bad aspect ratios. In addition, we deprecate the use of the <html:code>ortho*</html:code> and <html:code>portho*</html:code>.
                 </html:p>
                 <html:p>
-                    <html:b>NOTE</html:b>The methods <html:code>orthoxy</html:code> and <html:code>orthoyx</html:code> are still evolving. The semantics of these may change, or these methods may disappear altogether.
+                    If the value is <html:code>vpsc</html:code>, overlap removal is done as a quadratic optimization is used to minimize node displacement while removing node overlaps.
+                </html:p>
+                <html:p>
+                    If the value is <html:code>orthoxy</html:code> or <html:code>orthoyx</html:code>, overlaps are moved by optimizing two constraint problems, one for the x axis and one for the y. The suffix indicates which axis is processed first. If the value is <html:code>ortho</html:code>, the technique is similar to <html:code>orthoxy</html:code> except a heuristic is used to reduce the bias between the two passes. If the value is <html:code>ortho_yx</html:code>, the technique is the same as <html:code>ortho</html:code>, except the roles of x and y are reversed. The values <html:code>portho</html:code>, <html:code>porthoxy</html:code>, <html:code>porthoxy</html:code>, and <html:code>portho_yx</html:code> are similar to the previous four, except only pseudo-orthogonal ordering is enforced.
+                </html:p>
+                <html:p>
+                    If the layout is done by <html:code>neato</html:code> with <html:code><html:a rel="attr">mode</html:a>=ipsep</html:code>, then one can use <html:code>overlap=ipsep</html:code>. In this case, the overlap removal constraints are incorporated into the layout algorithm itself. N.B. At present, this only supports one level of clustering.
+                </html:p>
+                 <html:p>
+                    Except for <html:code>fdp</html:code> and <html:code>sfdp</html:code>, the layouts assume <html:code>overlap="true"</html:code> as the default. Fdp first uses a number of passes using built-in, force-directed technique to remove overlaps. Thus, <html:code>fdp</html:code> accepts <html:a rel="attr">overlap</html:a> with an integer prefix followed by a colon, specifying the number of tries. If there is no prefix, no initial tries will be performed. If there is nothing following a colon, none of the above methods will be attempted. By default, <html:code>fdp</html:code> uses <html:code>overlap="9:prism"</html:code>. Note that <html:code>overlap="true"</html:code>, <html:code>overlap="0:true"</html:code> and <html:code>overlap="0:"</html:code> all turn off all overlap removal.
+                 </html:p>
+                 <html:p>
+                     By default, <html:code>sfdp</html:code> uses <html:code>overlap=prism0</html:code>.
+                 </html:p>
+                 <html:p>
+                    Except for the Voronoi method, all of these transforms preserve the orthogonal ordering of the original layout. That is, if the x coordinates of two nodes are originally the same, they will remain the same, and if the x coordinate of one node is originally less than the x coordinate of another, this relation will still hold in the transformed layout. The similar properties hold for the y coordinates. This is not quite true for the <html:code>porth*</html:code> cases. For these, orthogonal ordering is only preserved among nodes related by an edge.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2782,7 +2054,10 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Rank constraints on the nodes in a subgraph. If <html:code>same</html:code>, all nodes are placed on the same rank. If <html:code>min</html:code>, all nodes are placed on the minimum rank. If <html:code>source</html:code>, all nodes are placed on the minimum rank, and the only nodes on the minimum rank belong to some subgraph whose rank attribute is "source" or "min". Analogous criteria hold for <html:a rel="attr">rank</html:a>=<html:code>max</html:code> and <html:a rel="attr">rank</html:a>=<html:code>sink</html:code>. (Note: the minimum rank is topmost or leftmost, and the maximum rank is bottommost or rightmost.)
+                    Rank constraints on the nodes in a subgraph
+                </html:p>
+                <html:p>
+                    If <html:code>same</html:code>, all nodes are placed on the same rank. If <html:code>min</html:code>, all nodes are placed on the minimum rank. If <html:code>source</html:code>, all nodes are placed on the minimum rank, and the only nodes on the minimum rank belong to some subgraph whose rank attribute is "source" or "min". Analogous criteria hold for <html:a rel="attr">rank</html:a>=<html:code>max</html:code> and <html:a rel="attr">rank</html:a>=<html:code>sink</html:code>. (Note: the minimum rank is topmost or leftmost, and the maximum rank is bottommost or rightmost.)
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -3059,7 +2334,7 @@
         </xsd:annotation>
     </xsd:attribute>
 
-    <xsd:attribute name="start" type="startType">
+    <xsd:attribute name="start" type="startType" gv:layouts="neato fdp sfdp">
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
@@ -3321,7 +2596,7 @@
         <xsd:attribute ref="fontcolor" default="black" />
         <xsd:attribute ref="fontname" default="Times-Roman" />
         <xsd:attribute ref="fontsize" default="14.0" />
-        <!-- <xsd:attribute ref="head_lp" /> -->
+        <xsd:attribute ref="head_lp" />
         <xsd:attribute ref="headclip" default="true" />
         <xsd:attribute ref="headhref"/>
         <xsd:attribute ref="headlabel" />
@@ -3330,7 +2605,7 @@
         <xsd:attribute ref="headtooltip" />
         <xsd:attribute ref="headURL" />
         <xsd:attribute ref="href" />
-        <!-- <xsd:attribute ref="id" /> -->
+        <xsd:attribute ref="id" />
         <xsd:attribute ref="label" />
         <xsd:attribute ref="labelURL" />
         <xsd:attribute ref="labelangle" default="-25.0" />
@@ -3352,7 +2627,7 @@
         <xsd:attribute ref="nojustify" default="false" />
         <xsd:attribute ref="penwidth" />
         <xsd:attribute ref="pos" />
-        <!-- <xsd:attribute ref="radius" default="0.0" /> -->
+        <xsd:attribute ref="radius" default="0.0" /> 
         <xsd:attribute ref="samehead" />
         <xsd:attribute ref="sametail" />
         <xsd:attribute ref="showboxes" default="0" />
@@ -3369,12 +2644,12 @@
         <xsd:attribute ref="tooltip" />
         <xsd:attribute ref="URL" />
         <xsd:attribute ref="weight" default="1.0" />
-        <!-- <xsd:attribute ref="xlabel" /> -->
-        <!-- <xsd:attribute ref="xlp" /> -->
+        <xsd:attribute ref="xlabel" />
+        <xsd:attribute ref="xlp" />
     </xsd:complexType>
 
     <xsd:complexType name="node">
-        <!-- <xsd:attribute ref="area" default="1.0" /> -->
+        <xsd:attribute ref="area" default="1.0" />
         <xsd:attribute ref="class" />
         <xsd:attribute ref="color" default="black" />
         <xsd:attribute ref="colorscheme" />
@@ -3385,20 +2660,20 @@
         <xsd:attribute ref="fontcolor" default="black" />
         <xsd:attribute ref="fontname" default="Times-Roman" />
         <xsd:attribute ref="fontsize" default="14.0" />
-        <!-- <xsd:attribute ref="gradientangle" default="0" /> -->
+        <xsd:attribute ref="gradientangle" default="0" />
         <xsd:attribute ref="group" />
         <xsd:attribute ref="height" default="0.5" />
-        <!-- <xsd:attribute ref="href" /> -->
-        <!-- <xsd:attribute ref="id" /> -->
+        <xsd:attribute ref="href" />
+        <xsd:attribute ref="id" />
         <xsd:attribute ref="image" />
-        <!-- <xsd:attribute ref="imagepos" default="mc" /> -->
+        <xsd:attribute ref="imagepos" default="mc" />
         <xsd:attribute ref="imagescale" default="false" />
         <xsd:attribute ref="label" default="\N" />
         <xsd:attribute ref="labelloc" default="c" />
         <xsd:attribute ref="layer" />
         <xsd:attribute ref="margin" />
         <xsd:attribute ref="nojustify" default="false" />
-        <!-- <xsd:attribute ref="ordering" /> -->
+        <xsd:attribute ref="ordering" />
         <xsd:attribute ref="orientation" default="0.0" />
         <xsd:attribute ref="penwidth" />
         <xsd:attribute ref="peripheries" />
@@ -3413,15 +2688,15 @@
         <xsd:attribute ref="showboxes" default="0" />
         <xsd:attribute ref="sides" default="4" />
         <xsd:attribute ref="skew" default="0.0" />
-        <!-- <xsd:attribute ref="sortv" default="0" /> -->
+        <xsd:attribute ref="sortv" default="0" />
         <xsd:attribute ref="style" />
         <xsd:attribute ref="target" />
         <xsd:attribute ref="tooltip" />
         <xsd:attribute ref="URL" />
         <xsd:attribute ref="vertices" />
         <xsd:attribute ref="width" default="0.75" />
-        <!-- <xsd:attribute ref="xlabel" /> -->
-        <!-- <xsd:attribute ref="xlp" default="0.0" /> -->
+        <xsd:attribute ref="xlabel" />
+        <xsd:attribute ref="xlp" default="0.0" />
         <xsd:attribute ref="z" default="0.0" />
     </xsd:complexType>
 
@@ -3440,7 +2715,7 @@
         <xsd:attribute ref="Damping" default="0.99" />
         <xsd:attribute ref="defaultdist" />
         <xsd:attribute ref="dim" default="2" />
-        <!-- <xsd:attribute ref="dimen" default="2" /> -->
+        <xsd:attribute ref="dimen" default="2" />
         <xsd:attribute ref="diredgeconstraints" default="false" />
         <xsd:attribute ref="dpi" default="96.0" />
         <xsd:attribute ref="epsilon" />
@@ -3450,82 +2725,82 @@
         <xsd:attribute ref="fontnames" />
         <xsd:attribute ref="fontpath" />
         <xsd:attribute ref="fontsize" default="14.0" />
-        <!-- <xsd:attribute ref="forcelabels" default="true" /> -->
-        <!-- <xsd:attribute ref="gradientangle" default="0" /> -->
-        <!-- <xsd:attribute ref="href" /> -->
-        <!-- <xsd:attribute ref="id" /> -->
+        <xsd:attribute ref="forcelabels" default="true" />
+        <xsd:attribute ref="gradientangle" default="0" />
+        <xsd:attribute ref="href" />
+        <xsd:attribute ref="id" />
         <xsd:attribute ref="imagepath" />
-        <!-- <xsd:attribute ref="inputscale" /> -->
+        <xsd:attribute ref="inputscale" />
         <xsd:attribute ref="K" default="0.3" />
         <xsd:attribute ref="label" />
-        <!-- <xsd:attribute ref="label_scheme" default="0" /> -->
+        <xsd:attribute ref="label_scheme" default="0" />
         <xsd:attribute ref="labeljust" default="c" />
         <xsd:attribute ref="labelloc" default="b" />
         <xsd:attribute ref="landscape" default="false" />
-        <!-- <xsd:attribute ref="layerlistsep" default="," /> -->
-        <xsd:attribute ref="layers" default="false" />
-        <!-- <xsd:attribute ref="layerselect" /> -->
+        <xsd:attribute ref="layerlistsep" default="," />
+        <xsd:attribute ref="layers" />
+        <xsd:attribute ref="layerselect" />
         <xsd:attribute ref="layersep" default=" :	" />
         <xsd:attribute ref="layout" />
-        <!-- <xsd:attribute ref="levels" /> -->
+        <xsd:attribute ref="levels" />
         <xsd:attribute ref="levelsgap" default="0.0" />
-        <!-- <xsd:attribute ref="lheight" /> -->
-        <!-- <xsd:attribute ref="linelength" efault="128" /> -->
+        <xsd:attribute ref="lheight" />
+        <xsd:attribute ref="linelength" efault="128" />
         <xsd:attribute ref="lp" />
-        <!-- <xsd:attribute ref="lwidth" /> -->
+        <xsd:attribute ref="lwidth" />
         <xsd:attribute ref="margin" />
         <xsd:attribute ref="maxiter" />
         <xsd:attribute ref="mclimit" default="1.0" />
         <xsd:attribute ref="mindist" default="1.0" />
         <xsd:attribute ref="mode" default="major" />
         <xsd:attribute ref="model" default="shortpath" />
-        <!-- <xsd:attribute ref="newrank" default="false" /> -->
+        <xsd:attribute ref="newrank" default="false" />
         <xsd:attribute ref="nodesep" default="0.25" />
         <xsd:attribute ref="nojustify" default="false" />
         <xsd:attribute ref="normalize" default="false" />
-        <!-- <xsd:attribute ref="notranslate" default="false" /> -->
+        <xsd:attribute ref="notranslate" default="false" />
         <xsd:attribute ref="nslimit" />
         <xsd:attribute ref="nslimit1" />
-        <!-- <xsd:attribute ref="oneblock" default="false" /> -->
+        <xsd:attribute ref="oneblock" default="false" />
         <xsd:attribute ref="ordering" />
         <xsd:attribute ref="outputorder" default="breadthfirst" />
         <xsd:attribute ref="overlap" default="true" />
-        <!-- <xsd:attribute ref="overlap_scaling" default="-4"/> -->
-        <!-- <xsd:attribute ref="overlap_shrink" default="true" /> -->
+        <xsd:attribute ref="overlap_scaling" default="-4"/>
+        <xsd:attribute ref="overlap_shrink" default="true" />
         <xsd:attribute ref="pack" default="false" />
         <xsd:attribute ref="packmode" default="node" />
         <xsd:attribute ref="pad" />
         <xsd:attribute ref="page" />
         <xsd:attribute ref="pagedir" />
-        <!-- <xsd:attribute ref="quadtree" default="normal" /> -->
+        <xsd:attribute ref="quadtree" default="normal" />
         <xsd:attribute ref="quantum" default="0.0" />
         <xsd:attribute ref="rankdir" default="TB" />
         <xsd:attribute ref="ranksep" />
         <xsd:attribute ref="ratio" />
         <xsd:attribute ref="remincross" default="false" />
-        <!-- <xsd:attribute ref="repulsiveforce" default="1.0" /> -->
+        <xsd:attribute ref="repulsiveforce" default="1.0" />
         <xsd:attribute ref="resolution" default="96.0" />
         <xsd:attribute ref="root" />
         <xsd:attribute ref="rotate" default="0" />
-        <!-- <xsd:attribute ref="rotation" default="0"/> -->
-        <!--        <xsd:attribute ref="scale" />-->
+        <xsd:attribute ref="rotation" default="0"/>
+        <xsd:attribute ref="scale" />
         <xsd:attribute ref="searchsize" default="30" />
         <xsd:attribute ref="sep" default="0.1" />
         <xsd:attribute ref="showboxes" default="0" />
         <xsd:attribute ref="size" />
-        <!--        <xsd:attribute ref="smoothing" default="none" />-->
-        <!-- <xsd:attribute ref="sortv" default="0" /> -->
+        <xsd:attribute ref="smoothing" default="none" />
+        <xsd:attribute ref="sortv" default="0" />
         <xsd:attribute ref="splines" />
         <xsd:attribute ref="start" />
         <xsd:attribute ref="stylesheet" />
         <xsd:attribute ref="target" />
-        <!-- <xsd:attribute ref="TBbalance" /> -->
-        <!-- <xsd:attribute ref="tooltip" /> -->
+        <xsd:attribute ref="TBbalance" />
+        <xsd:attribute ref="tooltip" />
         <xsd:attribute ref="truecolor" />
         <xsd:attribute ref="URL" />
         <xsd:attribute ref="viewport" />
         <xsd:attribute ref="voro_margin" default="0.05" />
-        <!-- <xsd:attribute ref="xdotversion" /> -->
+        <xsd:attribute ref="xdotversion" />
     </xsd:complexType>
 
     <xsd:complexType name="subgraph">
@@ -3533,27 +2808,35 @@
     </xsd:complexType>
 
     <xsd:complexType name="cluster">
-        <xsd:attribute ref="K" />
-        <xsd:attribute ref="URL" />
+        <xsd:attribute ref="area" />
         <xsd:attribute ref="bgcolor" />
+        <xsd:attribute ref="class" />
+        <xsd:attribute ref="cluster" />
         <xsd:attribute ref="color" default="black" />
         <xsd:attribute ref="colorscheme" />
         <xsd:attribute ref="fillcolor" default="black" />
-        <xsd:attribute ref="fixedsize" default="false" />
         <xsd:attribute ref="fontcolor" default="black" />
         <xsd:attribute ref="fontname" default="Times-Roman" />
         <xsd:attribute ref="fontsize" default="14.0" />
+        <xsd:attribute ref="href" />
+        <xsd:attribute ref="id" />
+        <xsd:attribute ref="K" />
         <xsd:attribute ref="label" />
         <xsd:attribute ref="labeljust" default="c" />
         <xsd:attribute ref="labelloc" default="t" />
+        <xsd:attribute ref="layer" />
+        <xsd:attribute ref="lheight" />
         <xsd:attribute ref="lp" />
+        <xsd:attribute ref="lwidth" />
         <xsd:attribute ref="nojustify" default="false" />
         <xsd:attribute ref="pencolor" />
         <xsd:attribute ref="penwidth" />
-        <!-- <xsd:attribute ref="sortv" default="0" /> -->
+        <xsd:attribute ref="peripheries" />
+        <xsd:attribute ref="sortv" default="0" />
         <xsd:attribute ref="style" />
         <xsd:attribute ref="target" />
         <xsd:attribute ref="tooltip" />
+        <xsd:attribute ref="URL" />
     </xsd:complexType>
 
 </xsd:schema>

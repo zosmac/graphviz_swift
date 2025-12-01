@@ -135,9 +135,23 @@ final class ParsedAttributes {
 <h3>Attributes Types</h3>
 """
         for key in delegate.simpleTypeDoc.keys.sorted() {
+            print(key)
             if let simpleTypeDoc = delegate.simpleTypeDoc[key], !simpleTypeDoc.isEmpty {
                 documentation += simpleTypeDoc
             }
+            for attribute in delegate.simpleTypes.filter({ $0.0 == key }) {
+                documentation += "<ul>"
+                for type in attribute.value {
+                    documentation += "<li><code>\(type)</code></li>"
+                }
+                documentation += "</ul>"
+            }
+            documentation += "<code>\(key)</code> is a valid type for<ul>"
+            for attribute in delegate.attributes.filter({ $0.simpleType == key }) {
+                print("\t\(attribute.name)")
+                documentation += "<li><a href=\"#\(attribute.name)\">\(attribute.name)</a></li>"
+            }
+            documentation += "</ul>"
         }
 
         documentation += "<h3>Attributes</h3>"
@@ -237,13 +251,13 @@ final class AttributesParser: NSObject, XMLParserDelegate {
                 let index = indices[name]!
                 attributes[index].simpleType = attributeDict["type"] ?? attributes[index].simpleType
                 attributes[index].defaultValue = attributeDict["default"]
-            } else if let name = attributeDict["ref"] {
+            } else if let name = attributeDict["ref"],
+                      let index = indices[name] {
 //                print(name)
                 // defaultValue meanings:
                 // 1. if nil, this attribute is not for this KIND
                 // 2. if among a complexType(i.e. a KIND), set default to non-nil
                 // 3. if not blank, the defaultValue FOR THIS KIND overrides any default set by <attribute name=> tag
-                let index = indices[name]!
                 let defaultValue = attributeDict["default"] ?? ""
                 switch inComplexType! {
                 case "graph":
@@ -330,7 +344,7 @@ final class AttributesParser: NSObject, XMLParserDelegate {
             inAnnotation = nil
         default:
             if elementName.hasPrefix("html:") {
-                addHTML { "</\(elementName.dropFirst(5))>" }
+                addHTML { "</\(elementName.dropFirst(5))>" } // drop "html:"
             }
         }
     }
