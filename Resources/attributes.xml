@@ -824,10 +824,9 @@
 
     <!--
     _background (xdot)
-    area (patchwork)
     -->
 
-    <xsd:attribute name="area" type="double" default="1.0">
+    <xsd:attribute name="area" type="double" default="1.0" gv:layouts="patchwork">
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
@@ -2649,7 +2648,7 @@
     </xsd:complexType>
 
     <xsd:complexType name="node">
-        <xsd:attribute ref="area" default="1.0" />
+        <xsd:attribute ref="area" />
         <xsd:attribute ref="class" />
         <xsd:attribute ref="color" default="black" />
         <xsd:attribute ref="colorscheme" />
