@@ -22,10 +22,10 @@ ARCH=-arch $(UNAME_M)
 #
 
 .PHONY: graphviz
-graphviz: $(PREFIX)/bin/dot
+graphviz: clean $(PREFIX)/bin/dot
 
 .PHONY: pkg
-pkg: clean graphviz graphvizswift-$(UNAME_M).pkg
+pkg: $(PREFIX)/bin/dot graphvizswift-$(UNAME_M).pkg
 
 graphvizswift-$(UNAME_M).pkg: Resources/Component.plist $(BUILD_DIR)/Release/$(APP_NAME).app $(BUILD_DIR)/Scripts/postinstall
 	@echo "\n============================="

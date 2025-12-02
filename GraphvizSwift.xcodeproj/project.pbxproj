@@ -16,6 +16,7 @@
 		58561A022E87331100814D06 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 58561A012E87331100814D06 /* README.md */; };
 		5858DC702E9AAC2F0073F393 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5858DC6F2E9AAC2F0073F393 /* Assets.xcassets */; };
 		58C1F7A22E7E220800FC6690 /* Component.plist in Resources */ = {isa = PBXBuildFile; fileRef = 58C1F7A12E7E220800FC6690 /* Component.plist */; };
+		58C21B5B2EDE770500C1F380 /* README.html in Resources */ = {isa = PBXBuildFile; fileRef = 58C21B5A2EDE770500C1F380 /* README.html */; };
 		58EF96272E8DEBBC0077C399 /* Help.html in Resources */ = {isa = PBXBuildFile; fileRef = 58EF96262E8DEBBC0077C399 /* Help.html */; };
 		58EF96292E8F056B0077C399 /* libcgraph.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EF96282E8F056B0077C399 /* libcgraph.8.dylib */; };
 /* End PBXBuildFile section */
@@ -51,6 +52,7 @@
 		58C1F79F2E7DF04500FC6690 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; name = Makefile; path = ../Makefile; sourceTree = "<group>"; };
 		58C1F7A12E7E220800FC6690 /* Component.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Component.plist; sourceTree = "<group>"; };
 		58C21B222EDDD5DA00C1F380 /* GraphvizSwift.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GraphvizSwift.entitlements; sourceTree = "<group>"; };
+		58C21B5A2EDE770500C1F380 /* README.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = README.html; sourceTree = "<group>"; };
 		58E5A58A2DCF89F000303648 /* GraphvizSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GraphvizSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		58E5A59B2DCF89F100303648 /* GraphvizSwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphvizSwiftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		58E5A5A52DCF89F100303648 /* GraphvizSwiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphvizSwiftUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -126,6 +128,7 @@
 				58C1F79F2E7DF04500FC6690 /* Makefile */,
 				587485B92E87793C00490930 /* Readme */,
 				58561A012E87331100814D06 /* README.md */,
+				58C21B5A2EDE770500C1F380 /* README.html */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -283,6 +286,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58C21B5B2EDE770500C1F380 /* README.html in Resources */,
 				5858DC702E9AAC2F0073F393 /* Assets.xcassets in Resources */,
 				580221972ED687F5002D67B9 /* attributes.xml in Resources */,
 				58C1F7A22E7E220800FC6690 /* Component.plist in Resources */,
