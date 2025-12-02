@@ -37,7 +37,10 @@
                 <html:code>abc -> def [arrowhead = diamond]</html:code>
             </html:p>
             <html:p>
-                Further details concerning DOT language and the setting of attributes can be found in the GraphvizSwift Help.
+                Further details concerning the setting of attributes can be found in the description of the <html:a href="https://www.graphviz.org/doc/info/lang.html">DOT language.</html:a>
+            </html:p>
+            <html:p>
+                From the Help menu, select GraphvizSwift Help to open Graphviz documentation in your browser.
             </html:p>
         </xsd:documentation>
     </xsd:annotation>
@@ -45,7 +48,7 @@
     <xsd:annotation id="points">
         <xsd:documentation>
             <html:p>
-                At present, most device-independent units are either inches or points, which we take as 72 points per inch.
+                At present, most device-independent units are either inches or <html:a href="http://en.wikipedia.org/wiki/Point_(typography)">points</html:a>, which we take as 72 points per inch.
             </html:p>
         </xsd:documentation>
 
@@ -54,7 +57,7 @@
     <xsd:annotation id="undirected">
         <xsd:documentation>
             <html:p>
-                <b>Note:</b> Some attributes, such as <html:a rel="attr">dir</html:a> or <html:a rel="attr">arrowtail</html:a>, are ambiguous when used in DOT with an undirected graph since the head and tail of an edge are meaningless. As a convention, the first time an undirected edge appears, the DOT parser will assign the left node as the tail node and the right node as the head. For example, the edge <html:code>A -- B</html:code> will have tail <html:code>A</html:code> and head <html:code>B</html:code>. It is the user's responsibility to handle such edges consistently. If the edge appears later with format
+                <b>Note:</b> Some attributes, such as <html:a rel="attr">dir</html:a> or <html:a rel="attr">arrowtail</html:a>, are ambiguous when used in <html:a href="https://www.graphviz.org/doc/info/lang.html">DOT</html:a> with an undirected graph since the head and tail of an edge are meaningless. As a convention, the first time an undirected edge appears, the <html:a href="https://www.graphviz.org/doc/info/lang.html">DOT</html:a> parser will assign the left node as the tail node and the right node as the head. For example, the edge <html:code>A -- B</html:code> will have tail <html:code>A</html:code> and head <html:code>B</html:code>. It is the user's responsibility to handle such edges consistently. If the edge appears later with format
             </html:p>
             <html:p>
                 <html:code>B -- A [taillabel = "tail"]</html:code>
@@ -70,16 +73,16 @@
     <!-- xsd:simpleType template
 
     <xsd:simpleType name="...">
-    <xsd:annotation>
-    <xsd:documentation>
-    <html:p>
-    </html:p>
-    </xsd:documentation>
-    </xsd:annotation>
-    <xsd:restriction base="string">
-        <xsd:list itemType="..." />
-        <xsd:enumeration value="..." />
-    </xsd:restriction>
+        <xsd:annotation>
+            <xsd:documentation>
+                <html:p>
+                </html:p>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="string">
+            <xsd:list itemType="..." />
+            <xsd:enumeration value="..." />
+        </xsd:restriction>
     </xsd:simpleType>
 
     -->
@@ -186,11 +189,20 @@
                                 <html:td>Hue-Saturation-Value-Alpha (HSVA) 0.0 &lt;= H,S,V,A &lt;= 1.0</html:td>
                             </html:tr>
                             <html:tr>
-                                <html:td><html:i>Color name</html:i></html:td>
-                                <html:td>A name resolved in the context of a color scheme namespace.</html:td>
+                                <html:td>string</html:td>
+                                <html:td><html:a href="https://www.graphviz.org/doc/info/colors.html">color name</html:a></html:td>
                             </html:tr>
                         </html:tbody>
                     </html:table>
+                </html:p>
+                <html:p>
+                    The specification for the RGB and RGBA formats are the format strings used by <html:code>sscanf</html:code> to scan the color value. Thus, these values have the form "#RGB" or "#RGBA", where R, G, B, and A each consist of 2 hexadecimal digits, and can be separated by whitespace. As of Graphviz 9.0.0, RGB components can also be given as 1 hexadecimal digit. These are each doubled to form 2-digit components, similar to shorthand HTML colors. HSV colors have the form of 3 or (as of Graphviz 8.0.1) 4 numbers between 0 and 1, separated by whitespace or commas.
+                </html:p>
+                <html:p>
+                    String-valued color specifications are case-insensitive and interpreted in the context of the current color scheme, as specified by the <html:a href="https://www.graphviz.org/docs/attrs/colorscheme/">colorscheme</html:a> attribute. If this is undefined, the X11 naming scheme will be used. An initial "/" character can be used to override the use of the colorscheme attribute. In particular, a single initial "/" will cause the string to be evaluated using the default X11 naming. If the color value has the form "/ssss/yyyy", the name yyyy is interpreted using the schema ssss. If the color scheme name is empty, i.e., the color has the form "//yyyy", the colorscheme attribute is used. Thus, the forms "yyyy" and "//yyyy" are equivalent.
+                </html:p>
+                <html:p>
+                    At present, Graphviz recognizes the default color scheme <html:code>X11</html:code>, and the <html:a href="https://www.graphviz.org/doc/info/colors.html#brewer">Brewer color schemes</html:a> (cf. <html:a href="https://en.wikipedia.org/wiki/ColorBrewer">ColorBrewer</html:a>). Please note that Brewer color schemes are covered by this <html:a href="https://www.graphviz.org/doc/info/colors.html#brewer_license">license</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -609,6 +621,20 @@
         </xsd:restriction>
     </xsd:simpleType>
 
+    <xsd:simpleType name="ratioType">
+        <html:p>
+            Aspect ratio for the drawing
+        </html:p>
+        <xsd:restriction base="string">
+            <xsd:enumeration value="fill" />
+            <xsd:enumeration value="compress" />
+            <xsd:enumeration value="expand" />
+            <xsd:enumeration value="auto" />
+            <xsd:enumeration value="1.33" />
+            <xsd:enumeration value="0.75" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
     <xsd:simpleType name="rect">
         <xsd:annotation>
             <xsd:documentation>
@@ -625,7 +651,7 @@
         </xsd:restriction>
     </xsd:simpleType>
 
-    <xsd:simpleType name="shape">
+    <xsd:simpleType name="shapeType">
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
@@ -1414,7 +1440,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Text label attached to objects. If a node's <html:a rel="attr">shape</html:a> is record, then the label can have a <html:a href="http://www.graphviz.org/doc/info/shapes.html#record">special format</html:a> which describes the record layout.
+                    Text label attached to objects. If a node's <html:a rel="attr">shape</html:a> is <html:code>record</html:code>, then the label can have a <html:a href="https://www.graphviz.org/doc/info/shapes.html#record">special format</html:a> which describes the record layout.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1551,7 +1577,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    If true, the graph is rendered in landscape mode. Synonymous with <html:code><html:a rel="attr">rotate</html:a>=90</html:code>.
+                    If true, the graph is rendered in landscape mode. Synonymous with <html:a rel="attr">rotate</html:a><html:code>=90</html:code>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1575,7 +1601,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Specifies a linearly ordered list of layer names attached to the graph The graph is then output in separate layers. Only those components belonging to the current output layer appear. For more information, see the page <html:a href="http://www.graphviz.org/Documentation/html/layers/">How to use drawing layers (overlays)</html:a>.
+                    Specifies a linearly ordered list of layer names attached to the graph The graph is then output in separate layers. Only those components belonging to the current output layer appear. For more information, see the page <html:a href="https://www.graphviz.org/Documentation/html/layers/">How to use drawing layers (overlays)</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1602,7 +1628,7 @@
                     Specifies the name of the layout algorithm to use, such as <html:code>dot</html:code> or <html:code>neato</html:code>. Normally, graphs should be kept independent of a type of layout. In some cases, however, it can be convenient to embed the type of layout desired within the graph. For example, a graph containing position information from a layout might want to record what the associated layout algorithm was.
                 </html:p>
                 <html:p>
-                    This attribute takes precedence over the <html:a href="http://www.graphviz.org/doc/info/command.html#minusK">-K flag</html:a> or the actual command name used.
+                    This attribute takes precedence over the <html:a href="https://www.graphviz.org/doc/info/command.html#minusK">-K flag</html:a> or the actual command name used.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1626,7 +1652,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Specifies strictness of level constraints in neato when <html:code><html:a rel="attr">mode</html:a>="ipsep" or "hier"</html:code>. Larger positive values mean stricter constraints, which demand more separation between levels. On the other hand, negative values will relax the constraints by allowing some overlap between the levels.
+                    Specifies strictness of level constraints in neato when <html:a rel="attr">mode</html:a><html:code>=ipsep</html:code> or <html:code>hier</html:code>. Larger positive values mean stricter constraints, which demand more separation between levels. On the other hand, negative values will relax the constraints by allowing some overlap between the levels.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1898,7 +1924,7 @@
                     If the value is <html:code>orthoxy</html:code> or <html:code>orthoyx</html:code>, overlaps are moved by optimizing two constraint problems, one for the x axis and one for the y. The suffix indicates which axis is processed first. If the value is <html:code>ortho</html:code>, the technique is similar to <html:code>orthoxy</html:code> except a heuristic is used to reduce the bias between the two passes. If the value is <html:code>ortho_yx</html:code>, the technique is the same as <html:code>ortho</html:code>, except the roles of x and y are reversed. The values <html:code>portho</html:code>, <html:code>porthoxy</html:code>, <html:code>porthoxy</html:code>, and <html:code>portho_yx</html:code> are similar to the previous four, except only pseudo-orthogonal ordering is enforced.
                 </html:p>
                 <html:p>
-                    If the layout is done by <html:code>neato</html:code> with <html:code><html:a rel="attr">mode</html:a>=ipsep</html:code>, then one can use <html:code>overlap=ipsep</html:code>. In this case, the overlap removal constraints are incorporated into the layout algorithm itself. N.B. At present, this only supports one level of clustering.
+                    If the layout is done by <html:code>neato</html:code> with <html:a rel="attr">mode</html:a><html:code>=ipsep</html:code>, then one can use <html:code>overlap=ipsep</html:code>. In this case, the overlap removal constraints are incorporated into the layout algorithm itself. N.B. At present, this only supports one level of clustering.
                 </html:p>
                  <html:p>
                     Except for <html:code>fdp</html:code> and <html:code>sfdp</html:code>, the layouts assume <html:code>overlap="true"</html:code> as the default. Fdp first uses a number of passes using built-in, force-directed technique to remove overlaps. Thus, <html:code>fdp</html:code> accepts <html:a rel="attr">overlap</html:a> with an integer prefix followed by a colon, specifying the number of tries. If there is no prefix, no initial tries will be performed. If there is nothing following a colon, none of the above methods will be attempted. By default, <html:code>fdp</html:code> uses <html:code>overlap="9:prism"</html:code>. Note that <html:code>overlap="true"</html:code>, <html:code>overlap="0:true"</html:code> and <html:code>overlap="0:"</html:code> all turn off all overlap removal.
@@ -2002,7 +2028,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Set number of peripheries used in polygonal shapes and cluster boundaries. Note that <html:a href="http://www.graphviz.org/doc/info/shapes.html#epsf">user-defined shapes</html:a> are treated as a form of box shape, so the default peripheries value is 1 and the user-defined shape will be drawn in a bounding rectangle. Setting <html:code>peripheries=0</html:code> will turn this off. Also, 1 is the maximum peripheries value for clusters.
+                    Set number of peripheries used in polygonal shapes and cluster boundaries. Note that <html:a href="https://www.graphviz.org/doc/info/shapes.html#epsf">user-defined shapes</html:a> are treated as a form of box shape, so the default peripheries value is 1 and the user-defined shape will be drawn in a bounding rectangle. Setting <html:code>peripheries=0</html:code> will turn this off. Also, 1 is the maximum peripheries value for clusters.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2025,10 +2051,10 @@
                     Position of node, or spline control points. For nodes, the position indicates the center of the node. On output, the coordinates are in <html:a href="#points">points</html:a>.
                 </html:p>
                 <html:p>
-                    In neato and fdp, pos can be used to set the initial position of a node. By default, the coordinates are assumed to be in inches. However, the <html:a href="http://www.graphviz.org/doc/info/command.html#d:s">-s</html:a> command line flag can be used to specify different units.
+                    In neato and fdp, pos can be used to set the initial position of a node. By default, the coordinates are assumed to be in inches. However, the <html:a href="https://www.graphviz.org/doc/info/command.html#d:s">-s</html:a> command line flag can be used to specify different units.
                 </html:p>
                 <html:p>
-                    When the <html:a href="http://www.graphviz.org/doc/info/command.html#d:n">-n</html:a> command line flag is used with neato, it is assumed the positions have been set by one of the layout programs, and are therefore in points. Thus, <html:code>neato -n</html:code> can accept input correctly without requiring a <html:code>-s</html:code> flag and, in fact, ignores any such flag.
+                    When the <html:a href="https://www.graphviz.org/doc/info/command.html#d:n">-n</html:a> command line flag is used with neato, it is assumed the positions have been set by one of the layout programs, and are therefore in points. Thus, <html:code>neato -n</html:code> can accept input correctly without requiring a <html:code>-s</html:code> flag and, in fact, ignores any such flag.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2091,7 +2117,7 @@
         </xsd:annotation>
     </xsd:attribute>
 
-    <xsd:attribute name="ratio" type="string">
+    <xsd:attribute name="ratio" type="ratioType">
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
@@ -2101,16 +2127,16 @@
                     If <html:a rel="attr">ratio</html:a> is numeric, it is taken as the desired aspect ratio. Then, if the actual aspect ratio is less than the desired ratio, the drawing height is scaled up to achieve the desired ratio; if the actual ratio is greater than that desired ratio, the drawing width is scaled up.
                 </html:p>
                 <html:p>
-                    If <html:a rel="attr">ratio</html:a> = <html:code>fill</html:code> and the <html:a rel="attr">size</html:a> attribute is set, node positions are scaled, separately in both x and y, so that the final drawing exactly fills the specified size.
+                    If <html:a rel="attr">ratio</html:a><html:code>=fill</html:code> and the <html:a rel="attr">size</html:a> attribute is set, node positions are scaled, separately in both x and y, so that the final drawing exactly fills the specified size.
                 </html:p>
                 <html:p>
-                    If <html:a rel="attr">ratio</html:a> = <html:code>compress</html:code> and the <html:a rel="attr">size</html:a> attribute is set, dot attempts to compress the initial layout to fit in the given size. This achieves a tighter packing of nodes but reduces the balance and symmetry. This feature only works in dot.
+                    If <html:a rel="attr">ratio</html:a><html:code>=compress</html:code> and the <html:a rel="attr">size</html:a> attribute is set, dot attempts to compress the initial layout to fit in the given size. This achieves a tighter packing of nodes but reduces the balance and symmetry. This feature only works in dot.
                 </html:p>
                 <html:p>
-                    If <html:a rel="attr">ratio</html:a> = <html:code>expand</html:code>, the <html:a rel="attr">size</html:a> attribute is set, and both the width and the height of the graph are less than the value in  <html:a rel="attr">size</html:a>, node positions are scaled uniformly until at least one dimension fits <html:a rel="attr">size</html:a> exactly. Note that this is distinct from using <html:a rel="attr">size</html:a> as the desired size, as here the drawing is expanded before edges are generated and all node and text sizes remain unchanged.
+                    If <html:a rel="attr">ratio</html:a><html:code>=expand</html:code>, the <html:a rel="attr">size</html:a> attribute is set, and both the width and the height of the graph are less than the value in  <html:a rel="attr">size</html:a>, node positions are scaled uniformly until at least one dimension fits <html:a rel="attr">size</html:a> exactly. Note that this is distinct from using <html:a rel="attr">size</html:a> as the desired size, as here the drawing is expanded before edges are generated and all node and text sizes remain unchanged.
                 </html:p>
                 <html:p>
-                    If <html:a rel="attr">ratio</html:a> = <html:code>auto</html:code>, the <html:a rel="attr">page</html:a> attribute is set and the graph cannot be drawn on a single page, then <html:a rel="attr">size</html:a> is set to an ``ideal'' value. In particular, the size in a given dimension will be the smallest integral multiple of the page size in that dimension which is at least half the current size. The two dimensions are then scaled independently to the new size. This feature only works in dot.
+                    If <html:a rel="attr">ratio</html:a><html:code>=auto</html:code>, the <html:a rel="attr">page</html:a> attribute is set and the graph cannot be drawn on a single page, then <html:a rel="attr">size</html:a> is set to an ''ideal'' value. In particular, the size in a given dimension will be the smallest integral multiple of the page size in that dimension which is at least half the current size. The two dimensions are then scaled independently to the new size. This feature only works in dot.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2208,7 +2234,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    If the input graph defines the <html:a rel="attr"><html:a rel="attr">vertices</html:a></html:a> attribute, and output is dot or xdot, this gives the number of points used for a node whose shape is a circle or ellipse. It plays the same role in neato, when adjusting the layout to avoid overlapping nodes, and in image maps.
+                    If the input graph defines the <html:a rel="attr">vertices</html:a> attribute, and output is dot or xdot, this gives the number of points used for a node whose shape is a circle or ellipse. It plays the same role in neato, when adjusting the layout to avoid overlapping nodes, and in image maps.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2231,13 +2257,13 @@
                     Fraction to increase polygons (multiply coordinates by 1 + sep) for purposes of determining overlap. Guarantees a minimal non-zero distance between nodes. If unset but <html:a rel="attr">esep</html:a> is defined, <html:a rel="attr">sep</html:a> will be set to <html:code>esep/0.8</html:code>. If <html:a rel="attr">esep</html:a> is unset, the default value is used.
                 </html:p>
                 <html:p>
-                    When <html:a rel="attr">overlap</html:a>="ipsep" or "vpsc", <html:a rel="attr">sep</html:a> gives a minimum distance, in inches, to be left between nodes. In this case, if <html:a rel="attr">sep</html:a> is a point, the x and y separations can be specified separately.
+                    When <html:a rel="attr">overlap</html:a><html:code>=ipsep</html:code> or <html:code>vpsc</html:code>, <html:a rel="attr">sep</html:a> gives a minimum distance, in inches, to be left between nodes. In this case, if <html:a rel="attr">sep</html:a> is a <html:a rel="attr">point</html:a>, the x and y separations can be specified separately.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
     </xsd:attribute>
 
-    <xsd:attribute name="shape" type="shape">
+    <xsd:attribute name="shape" type="shapeType">
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
@@ -2251,10 +2277,10 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    (Deprecated) If defined, shapefile specifies a file containing user-supplied node content. The <html:a rel="attr">shape</html:a> of the node is set to box. The image in the shapefile must be rectangular. The image formats supported as well as the precise semantics of how the file is used depends on the <html:a href="http://www.graphviz.org/doc/info/output.html">output format</html:a>.  For further details, see <html:a href="http://www.graphviz.org/Documentation/html/shapehowto.html#ext_image">External PostScript files</html:a>.
+                    (Deprecated) If defined, shapefile specifies a file containing user-supplied node content. The <html:a rel="attr">shape</html:a> of the node is set to <html:code>box</html:code>. The image in the shapefile must be rectangular. The image formats supported as well as the precise semantics of how the file is used depends on the <html:a href="https://www.graphviz.org/doc/info/output.html">output format</html:a>. For further details, see <html:a href="https://www.graphviz.org/Documentation/html/shapehowto.html#ext_image">External PostScript files</html:a>.
                 </html:p>
                 <html:p>
-                    There is one exception to this usage. If <html:a rel="attr">shape</html:a> is set to "epsf", shapefile gives a filename containing a definition of the node in PostScript. The graphics defined must be contain all of the node content, including any desired boundaries. For further details, see <html:a href="http://www.graphviz.org/Documentation/html/shapehowto.html#ext_ps"> External PostScript files</html:a>.
+                    There is one exception to this usage. If <html:a rel="attr">shape</html:a> is set to <html:code>epsf</html:code>, <html:a rel="attr">shapefile</html:a> gives a filename containing a definition of the node in PostScript. The graphics defined must be contain all of the node content, including any desired boundaries. For further details, see <html:a href="https://www.graphviz.org/Documentation/html/shapehowto.html#ext_ps">External PostScript files</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2274,7 +2300,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Number of sides if <html:a rel="attr">shape</html:a>=polygon.
+                    Number of sides if <html:a rel="attr">shape</html:a><html:code>=polygon</html:code>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>

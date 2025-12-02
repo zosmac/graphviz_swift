@@ -1,4 +1,5 @@
-# Welcome to *GraphvizSwift*, the *Swift* language based *macOS* *Graphviz* Application.
+# Welcome to *GraphvizSwift*
+## The *Swift* language based *macOS* *Graphviz* Application.
 
 - [Overview](#overview)
 - [Installing *GraphvizSwift*](#installing-graphvizswift)

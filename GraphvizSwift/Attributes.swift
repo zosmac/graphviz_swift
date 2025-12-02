@@ -84,7 +84,7 @@ final class ParsedAttribute: Comparable {
             if let defaultValue = self.defaultValue {
                 value = defaultValue
             } else {
-                self.options?.append("")
+                self.options?.insert("", at: 0)
             }
         }
         self.value = value
@@ -125,14 +125,16 @@ final class ParsedAttributes {
         }
         var documentation = """
 <style>
-  p,li,i,td {font-family:sans-serif;font-size:10pt}
+  * {font-family:sans-serif;font-size:10pt}
+  h1 {font-family:sans-serif;font-size:12pt}
+  a[rel] {font-family:Menlo,monospace;font-size:9pt}
   code {font-family:Menlo,monospace;font-size:9pt}
   tr:nth-child(odd) {background-color: #f2f2f2;}
 </style>
 <html><body id="home">
-<h3>Attributes Overview</h3>
-\(delegate.overviewDoc)
-<h3>Attributes Types</h3>
+    <h1>Attributes Overview</h1>
+        \(delegate.overviewDoc)
+    <h1>Attributes Types</h1>
 """
         for key in delegate.simpleTypeDoc.keys.sorted() {
             print(key)
@@ -154,7 +156,7 @@ final class ParsedAttributes {
             documentation += "</ul>"
         }
 
-        documentation += "<h3>Attributes</h3>"
+        documentation += "<h1>Attributes</h1>"
         var kinds = Array(repeating: [ParsedAttribute](), count: 3)
         for attribute in delegate.attributes.sorted() {
             if let options = delegate.simpleTypes[attribute.simpleType] {
@@ -165,7 +167,7 @@ final class ParsedAttributes {
                 }
             }
 
-            documentation += " " + attribute.doc
+            documentation += "\n" + attribute.doc
 
             if attribute.graph != nil {
                 kinds[AGRAPH].append(ParsedAttribute(copy: attribute, kind: AGRAPH, attribute.graph!))
@@ -207,15 +209,15 @@ final class AttributesParser: NSObject, XMLParserDelegate {
             if attributes[indices[name]!].doc.isEmpty {
                 let type = attributes[indices[name]!].simpleType
                 if simpleTypeDoc[type] == nil {
-                    attributes[indices[name]!].doc = "<h4 id=\"\(name)\">\(name) <i>\(type)</i></h4>\n"
+                    attributes[indices[name]!].doc = "<h2 id=\"\(name)\">\(name) <i>\(type)</i></h2>\n"
                 } else {
-                    attributes[indices[name]!].doc = "<h4 id=\"\(name)\">\(name) <a href=\"#\(type)\"><i>\(type)</i></a></h4>\n"
+                    attributes[indices[name]!].doc = "<h2 id=\"\(name)\">\(name) <a href=\"#\(type)\"><i>\(type)</i></a></h2>\n"
                 }
             }
             attributes[indices[name]!].doc += string
         } else if let name = inSimpleType {
             if simpleTypeDoc[name] == nil {
-                simpleTypeDoc[name] = "<h4 id=\"\(name)\">\(name)</h4>\n"
+                simpleTypeDoc[name] = "<h2 id=\"\(name)\">\(name)</h2>\n"
             }
             simpleTypeDoc[name]! += string
         }

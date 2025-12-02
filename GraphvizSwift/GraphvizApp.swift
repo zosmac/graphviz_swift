@@ -48,8 +48,13 @@ extension FocusedValues {
                 SaveViewButton(viewType: (saveViewType ?? viewType))
             }
             CommandGroup(replacing: .help) {
-                Button("GraphvizSwift Help") {
+                Button("Graphviz Help") {
                     if let url = Bundle.main.url(forResource: "Help", withExtension: "html") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }
+                Button("GraphvizSwift Help") {
+                    if let url = URL(string: "https://github.com/zosmac/graphviz_swift/#welcome-to-graphvizswift") {
                         NSWorkspace.shared.open(url)
                     }
                 }
