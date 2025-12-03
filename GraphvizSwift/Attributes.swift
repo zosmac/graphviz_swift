@@ -16,7 +16,7 @@ struct Attribute: Identifiable, Equatable, Hashable {
     let value: String /// Attribute's value
     let defaultValue: String?
     let simpleType: String
-    let options: [String]?
+    let enumeration: [String]?
     let listItemType: String?
 
     init(attribute: ParsedAttribute, value: String) {
@@ -25,7 +25,7 @@ struct Attribute: Identifiable, Equatable, Hashable {
         self.value = value
         self.defaultValue = attribute.defaultValue
         self.simpleType = attribute.simpleType
-        self.options = attribute.options
+        self.enumeration = attribute.enumeration
         self.listItemType = attribute.listItemType
     }
 
@@ -48,7 +48,7 @@ final class ParsedAttribute: Comparable {
     var value: String! // value if set in document, and changed by user in UI
     var defaultValue: String? // from attributes.xml
     var simpleType = ""
-    var options: [String]? // option values of enumerated type, true/false for boolean
+    var enumeration: [String]? // option values of enumerated type, true/false for boolean
     var listItemType: String?
     var doc = ""
 
@@ -69,7 +69,7 @@ final class ParsedAttribute: Comparable {
     init(copy: ParsedAttribute, kind: Int, _ defaultValue: String? = nil) { // Copyable
         self.name = copy.name
         self.simpleType = copy.simpleType
-        self.options = copy.options
+        self.enumeration = copy.enumeration
         self.listItemType = copy.listItemType
         self.doc = copy.doc
 
@@ -80,11 +80,11 @@ final class ParsedAttribute: Comparable {
         }
         // for Picker, set value to identify selection, seeding with defaultValue if defined
         var value = ""
-        if self.options != nil {
+        if self.enumeration != nil {
             if let defaultValue = self.defaultValue {
                 value = defaultValue
             } else {
-                self.options?.insert("", at: 0)
+                self.enumeration?.insert("", at: 0)
             }
         }
         self.value = value
@@ -125,24 +125,57 @@ final class ParsedAttributes {
         }
         var documentation = """
 <style>
-  * {font-family:sans-serif;font-size:10pt}
-  h1 {font-family:sans-serif;font-size:12pt}
-  a[rel] {font-family:Menlo,monospace;font-size:9pt}
-  code {font-family:Menlo,monospace;font-size:9pt}
-  tr:nth-child(odd) {background-color: #f2f2f2;}
+    :root {
+        color-scheme: light dark; /* Enables support for light-dark() */
+        --background-color: light-dark(#ffffff, #333333);
+        --text-color: light-dark(#000000, #ffffff);
+        --link-color: light-dark(#0000FF, #8888FF);
+    }
+    table {
+        border-collapse: collapse; /* Collapse borders for a clean grid */
+    }
+    th, td {
+        border: 2px solid #888;
+        padding: 4px; /* Add some padding inside cells */
+    }
+    * {
+        background-color: var(--background-color);
+        color: var(--text-color);
+        font-family: sans-serif;
+        font-size: 10pt;
+    }
+    h1 {
+        font-size: 13pt;
+        font-weight: bold;
+    }
+    h2 {
+        font-size: 12pt;
+    }
+    a[href] {
+        font-family: Menlo,monospace;
+        font-size: 9pt;
+        color: var(--link-color);
+    }
+    code {
+        font-family: Menlo,monospace;
+        font-size: 9pt;
+    }
 </style>
 <html><body id="home">
-    <h1>Attributes Overview</h1>
+    <h1>Overview</h1>
         \(delegate.overviewDoc)
-    <h1>Attributes Types</h1>
+    <h1>Attribute Types</h1>
 """
         for key in delegate.simpleTypeDoc.keys.sorted() {
             print(key)
             if let simpleTypeDoc = delegate.simpleTypeDoc[key], !simpleTypeDoc.isEmpty {
                 documentation += simpleTypeDoc
             }
-            for attribute in delegate.simpleTypes.filter({ $0.0 == key }) {
-                documentation += "<ul>"
+            if let listItemType = delegate.listItemType[key] {
+                documentation += "<p>A list of <a href=\"#\(listItemType)\">\(listItemType)s</a></p>"
+            }
+            for attribute in delegate.enumeration.filter({ $0.0 == key }) {
+                documentation += "Valid values for <code>\(key)</code> are<ul>"
                 for type in attribute.value {
                     documentation += "<li><code>\(type)</code></li>"
                 }
@@ -159,14 +192,8 @@ final class ParsedAttributes {
         documentation += "<h1>Attributes</h1>"
         var kinds = Array(repeating: [ParsedAttribute](), count: 3)
         for attribute in delegate.attributes.sorted() {
-            if let options = delegate.simpleTypes[attribute.simpleType] {
-                if options.count == 1 {
-                    attribute.listItemType = options.first!
-                } else {
-                    attribute.options = options
-                }
-            }
-
+            attribute.enumeration = delegate.enumeration[attribute.simpleType]
+            attribute.listItemType = delegate.listItemType[attribute.simpleType]
             documentation += "\n" + attribute.doc
 
             if attribute.graph != nil {
@@ -190,7 +217,8 @@ final class AttributesParser: NSObject, XMLParserDelegate {
     var overviewDoc = ""
     var attributes = [ParsedAttribute]()
     var indices = [String: Int]()
-    var simpleTypes = Dictionary<String, [String]>()
+    var listItemType = Dictionary<String, String>()
+    var enumeration = Dictionary<String, [String]>()
     var simpleTypeDoc = Dictionary<String, String>()
 
     // track which XML element within as parsing proceeds
@@ -199,7 +227,6 @@ final class AttributesParser: NSObject, XMLParserDelegate {
     var inComplexType: String?
     var inAnnotation: String?
     var inDocumentation = false
-    var anchorTagTail = ">"
 
     func addHTML(stringer: () -> String) {
         let string = stringer()
@@ -238,7 +265,6 @@ final class AttributesParser: NSObject, XMLParserDelegate {
         attributes attributeDict: [String: String] = [:]
     ) {
 //        print("startelement", elementName, attributeDict)
-
         if !elementName.hasPrefix("xsd:") && !inDocumentation {
             return
         }
@@ -278,15 +304,14 @@ final class AttributesParser: NSObject, XMLParserDelegate {
             }
         case "xsd:list":
             if let value = attributeDict["itemType"] {
-                // assume simpleType enumerations have multiple values, so options count 1 means "listItemType"
-                simpleTypes[inSimpleType!] = [value]
+                listItemType[inSimpleType!] = value
             }
         case "xsd:enumeration":
             if let value = attributeDict["value"] {
-                if simpleTypes[inSimpleType!] == nil {
-                    simpleTypes[inSimpleType!] = [value]
+                if enumeration[inSimpleType!] == nil {
+                    enumeration[inSimpleType!] = [value]
                 } else {
-                    simpleTypes[inSimpleType!]! += [value]
+                    enumeration[inSimpleType!]! += [value]
                 }
             }
         case "xsd:simpleType":
@@ -302,24 +327,18 @@ final class AttributesParser: NSObject, XMLParserDelegate {
         case "xsd:annotation":
             if let id = attributeDict["id"] {
                 inAnnotation = id // started special annotation section
-                overviewDoc += "<h4 id=\"\(id)\">\(id)</h4>\n"
+                overviewDoc += "<h2 id=\"\(id)\">\(id)</h2>\n"
             }
             //        case "xsd:restriction":
             //        case "xsd:schema":
         default:
             if elementName.hasPrefix("html:") {
                 addHTML {
-                    anchorTagTail = ">"
                     var string = "<" + elementName.suffix(elementName.count - 5)
                     for (key, value) in attributeDict {
-                        if key == "rel" {
-                            anchorTagTail = " href=\"#"
-                        } else {
-                            string += " \(key)=\"\(value)\""
-                        }
+                        string += " \(key)=\"\(value)\""
                     }
-                    string += anchorTagTail
-                    return string
+                    return string + ">"
                 }
             }
         }
@@ -356,11 +375,6 @@ final class AttributesParser: NSObject, XMLParserDelegate {
         _ parser: XMLParser,
         foundCharacters string: String
     ) {
-        if anchorTagTail == ">" {
-            addHTML { string }
-        } else {
-            addHTML { string + "\">" + string }
-            anchorTagTail = ">"
-        }
+        addHTML { string }
     }
 }

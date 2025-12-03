@@ -51,7 +51,6 @@
 		58AA16342DFD956200C4345A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		58C1F79F2E7DF04500FC6690 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; name = Makefile; path = ../Makefile; sourceTree = "<group>"; };
 		58C1F7A12E7E220800FC6690 /* Component.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Component.plist; sourceTree = "<group>"; };
-		58C21B222EDDD5DA00C1F380 /* GraphvizSwift.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GraphvizSwift.entitlements; sourceTree = "<group>"; };
 		58C21B5A2EDE770500C1F380 /* README.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = README.html; sourceTree = "<group>"; };
 		58E5A58A2DCF89F000303648 /* GraphvizSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GraphvizSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		58E5A59B2DCF89F100303648 /* GraphvizSwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphvizSwiftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -122,7 +121,6 @@
 				5854A8FC2E93F05B009F1CC1 /* Graphviz.icns */,
 				581859AB2E929F9200741031 /* Graphviz.icon */,
 				58AA16302DFD956200C4345A /* Graphviz-Bridging-Header.h */,
-				58C21B222EDDD5DA00C1F380 /* GraphvizSwift.entitlements */,
 				58EF96262E8DEBBC0077C399 /* Help.html */,
 				58AA16342DFD956200C4345A /* Info.plist */,
 				58C1F79F2E7DF04500FC6690 /* Makefile */,
@@ -358,7 +356,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = Graphviz;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
-				CODE_SIGN_ENTITLEMENTS = Resources/GraphvizSwift.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Manual;
@@ -409,7 +406,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = Graphviz;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
-				CODE_SIGN_ENTITLEMENTS = Resources/GraphvizSwift.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Manual;

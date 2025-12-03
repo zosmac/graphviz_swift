@@ -46,10 +46,10 @@ struct AttributesView: View {
                     Table(attributes, selection: $row) {
                         TableColumn("Attribute", value: \.name)
                         TableColumn("Value") { attribute in
-                            if attribute.options == nil {
+                            if attribute.enumeration == nil {
                                 ValueView(settings: $settings, kind: kind, attribute: attribute, label: attribute.defaultValue ?? "", value: attribute.value) //, isDisabled: !attribute.value.isEmpty)
                             } else {
-                                OptionView(settings: $settings, kind: kind, attribute: attribute, value: attribute.value)
+                                EnumerationView(settings: $settings, kind: kind, attribute: attribute, value: attribute.value)
                             }
                         }
                     }
@@ -119,8 +119,8 @@ struct ValueView: View {
     }
 }
 
-/// OptionView defines a picker for selecting an attribute value from a list of options.
-struct OptionView: View {
+/// EnumerationView defines a picker for selecting an attribute value from a list of options.
+struct EnumerationView: View {
     @Binding var settings: [[String: String]]
     let kind: Int?
     let attribute: Attribute
@@ -128,7 +128,7 @@ struct OptionView: View {
 
     var body: some View {
         Picker(attribute.name, selection: $value) {
-            ForEach(attribute.options!, id: \.self) {
+            ForEach(attribute.enumeration!, id: \.self) {
                 Text($0)
             }
         }

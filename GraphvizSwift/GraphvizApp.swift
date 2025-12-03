@@ -23,8 +23,9 @@ extension FocusedValues {
 
 /// GraphvizApp creates the graphviz document views and attributes documentation window.
 @main struct GraphvizApp: App {
-    @AppStorage("viewType") var viewType = defaultViewType
-    @Environment(\.openWindow) var openWindow
+    @AppStorage("viewType") private var viewType = defaultViewType
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.openWindow) private var openWindow
     @FocusedBinding(\.saveViewType) private var saveViewType
 
     private let attributesDocPage = AttributesDocPage()
@@ -49,12 +50,9 @@ extension FocusedValues {
             }
             CommandGroup(replacing: .help) {
                 Button("GraphvizSwift Help") {
-                    if let url = Bundle.main.url(forResource: "README", withExtension: "html") {
+                    if let url = Bundle.main.url(forResource: "README", withExtension: "html") ?? URL(string: "https://github.com/zosmac/graphviz_swift/#welcome-to-graphvizswift") {
                         NSWorkspace.shared.open(url)
                     }
-//                    if let url = URL(string: "https://github.com/zosmac/graphviz_swift/#welcome-to-graphvizswift") {
-//                        NSWorkspace.shared.open(url)
-//                    }
                 }
                 Button("Graphviz Help") {
                     if let url = Bundle.main.url(forResource: "Help", withExtension: "html") {
@@ -66,8 +64,20 @@ extension FocusedValues {
         .defaultSize(width: 800, height: 600)
         .defaultPosition(UnitPoint(x: 0.4, y: 0.1))
 
-        UtilityWindow("Attributes Documentation", id: "AttributesDocView") {
+        Window("Attributes Documentation", id: "AttributesDocView") {
             WebView(attributesDocPage.page)
+                .onAppear {
+                    attributesDocPage.loadHome()
+                }
+                .toolbarBackground(Color.accentColor.opacity(0.3))
+                .toolbar(id: "AttributesDocViewToolbar") {
+                    ToolbarItem(id: "AttributesDocViewHomeButton", placement: .navigation) {
+                        Button("Home", systemImage: "house") {
+                            attributesDocPage.loadHome()
+                        }
+                        .glassEffect()
+                    }
+                }
         }
         .defaultSize(width: 350, height: 400)
         .defaultPosition(.topTrailing)

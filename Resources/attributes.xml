@@ -25,7 +25,7 @@
                 Note that attribute names are case-sensitive. This is usually true for attribute values as well, unless noted.
             </html:p>
             <html:p>
-                All Graphviz attributes are specified by name-value pairs. Thus, to set the <html:code>color</html:code> of a node <html:code>abc</html:code>, one would use
+                All Graphviz attributes are specified by name-value pairs. Thus, to set the <html:a href="#color">color</html:a> of a node <html:code>abc</html:code>, one would use
             </html:p>
             <html:p>
                 <html:code>abc [color = red]</html:code>
@@ -40,7 +40,10 @@
                 Further details concerning the setting of attributes can be found in the description of the <html:a href="https://www.graphviz.org/doc/info/lang.html">DOT language.</html:a>
             </html:p>
             <html:p>
-                From the Help menu, select GraphvizSwift Help to open Graphviz documentation in your browser.
+                From the Help menu, select Graphviz Help to open Graphviz documentation in your browser.
+            </html:p>
+            <html:p>
+                From the Help menu, select GraphvizSwift Help to view the README.
             </html:p>
         </xsd:documentation>
     </xsd:annotation>
@@ -51,19 +54,18 @@
                 At present, most device-independent units are either inches or <html:a href="http://en.wikipedia.org/wiki/Point_(typography)">points</html:a>, which we take as 72 points per inch.
             </html:p>
         </xsd:documentation>
-
     </xsd:annotation>
 
     <xsd:annotation id="undirected">
         <xsd:documentation>
             <html:p>
-                <b>Note:</b> Some attributes, such as <html:a rel="attr">dir</html:a> or <html:a rel="attr">arrowtail</html:a>, are ambiguous when used in <html:a href="https://www.graphviz.org/doc/info/lang.html">DOT</html:a> with an undirected graph since the head and tail of an edge are meaningless. As a convention, the first time an undirected edge appears, the <html:a href="https://www.graphviz.org/doc/info/lang.html">DOT</html:a> parser will assign the left node as the tail node and the right node as the head. For example, the edge <html:code>A -- B</html:code> will have tail <html:code>A</html:code> and head <html:code>B</html:code>. It is the user's responsibility to handle such edges consistently. If the edge appears later with format
+                <html:b>Note:</html:b> Some attributes, such as <html:a href="#dir">dir</html:a> or <html:a href="#arrowtail">arrowtail</html:a>, are ambiguous when used in <html:a href="https://www.graphviz.org/doc/info/lang.html">DOT</html:a> with an undirected graph since the head and tail of an edge are meaningless. As a convention, the first time an undirected edge appears, the <html:a href="https://www.graphviz.org/doc/info/lang.html">DOT</html:a> parser will assign the left node as the tail node and the right node as the head. For example, the edge <html:code>A -- B</html:code> will have tail <html:code>A</html:code> and head <html:code>B</html:code>. It is the user's responsibility to handle such edges consistently. If the edge appears later with format
             </html:p>
             <html:p>
                 <html:code>B -- A [taillabel = "tail"]</html:code>
             </html:p>
             <html:p>
-                then the drawing will attach the tail label to node <html:code>A</html:code>. To avoid possible confusion when such attributes are required, the user is encouraged to use a directed graph. If it is important to make the graph appear undirected, this can be done using the <html:a rel="attr">dir</html:a>, <html:a rel="attr">arrowtail</html:a> or <html:a rel="attr">arrowhead</html:a> attributes.
+                then the drawing will attach the tail label to node <html:code>A</html:code>. To avoid possible confusion when such attributes are required, the user is encouraged to use a directed graph. If it is important to make the graph appear undirected, this can be done using the <html:a href="#dir">dir</html:a>, <html:a href="#arrowtail">arrowtail</html:a> or <html:a href="#arrowhead">arrowhead</html:a> attributes.
             </html:p>
         </xsd:documentation>
     </xsd:annotation>
@@ -73,16 +75,19 @@
     <!-- xsd:simpleType template
 
     <xsd:simpleType name="...">
-        <xsd:annotation>
-            <xsd:documentation>
-                <html:p>
-                </html:p>
-            </xsd:documentation>
-        </xsd:annotation>
-        <xsd:restriction base="string">
-            <xsd:list itemType="..." />
-            <xsd:enumeration value="..." />
-        </xsd:restriction>
+    <xsd:annotation>
+    <xsd:documentation>
+    <html:p>
+    </html:p>
+    </xsd:documentation>
+    </xsd:annotation>
+-
+    <xsd:list itemType="..." />
+- OR -
+    <xsd:restriction base="string">
+        <xsd:enumeration value="..." />
+    </xsd:restriction>
+-
     </xsd:simpleType>
 
     -->
@@ -92,20 +97,6 @@
             <xsd:documentation>
                 <html:p>
                     Edge arrowhead shape
-                </html:p>
-                <html:p>
-                    The basic arrowshapes are
-                    <html:ul>
-                        <html:li>
-                            most of the primitive shapes (<html:code>box, crow, diamond, dot, inv, none, normal, tee, vee</html:code>)
-                        </html:li>
-                        <html:li>
-                            shapes that can be derived from the grammar (<html:code>odot, invdot, invodot, obox, odiamond</html:code>)
-                        </html:li>
-                        <html:li>
-                            shapes supported as special cases for backward-compatibility (<html:code>ediamond, open, halfopen, empty, invempty</html:code>).
-                        </html:li>
-                    </html:ul>
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -166,34 +157,32 @@
                     Colors can be specified using one of five formats
                 </html:p>
                 <html:p>
-                    <html:table>
-                        <html:tbody>
-                            <html:tr>
-                                <html:td><html:code>#%2x%2x%2x</html:code></html:td>
-                                <html:td>Red-Green-Blue (RGB)</html:td>
-                            </html:tr>
-                            <html:tr>
-                                <html:td><html:code>#%1x%1x%1x</html:code></html:td>
-                                <html:td>Shorthand Red-Green-Blue (RGB)</html:td>
-                            </html:tr>
-                            <html:tr>
-                                <html:td><html:code>#%2x%2x%2x%2x</html:code></html:td>
-                                <html:td>Red-Green-Blue-Alpha (RGBA)</html:td>
-                            </html:tr>
-                            <html:tr>
-                                <html:td><html:code>H[,&#160;]+S[,&#160;]+V</html:code></html:td>
-                                <html:td>Hue-Saturation-Value (HSV) 0.0 &lt;= H,S,V &lt;= 1.0</html:td>
-                            </html:tr>
-                            <html:tr>
-                                <html:td><html:code>H[,&#160;]+S[,&#160;]+V[,&#160;]A</html:code></html:td>
-                                <html:td>Hue-Saturation-Value-Alpha (HSVA) 0.0 &lt;= H,S,V,A &lt;= 1.0</html:td>
-                            </html:tr>
-                            <html:tr>
-                                <html:td>string</html:td>
-                                <html:td><html:a href="https://www.graphviz.org/doc/info/colors.html">color name</html:a></html:td>
-                            </html:tr>
-                        </html:tbody>
-                    </html:table>
+                    <html:table><html:tbody>
+                        <html:tr>
+                            <html:td><html:code>#%2x%2x%2x</html:code></html:td>
+                            <html:td>Red-Green-Blue (RGB)</html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td><html:code>#%1x%1x%1x</html:code></html:td>
+                            <html:td>Shorthand Red-Green-Blue (RGB)</html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td><html:code>#%2x%2x%2x%2x</html:code></html:td>
+                            <html:td>Red-Green-Blue-Alpha (RGBA)</html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td><html:code>H[,&#160;]+S[,&#160;]+V</html:code></html:td>
+                            <html:td>Hue-Saturation-Value (HSV) 0.0 &lt;= H,S,V &lt;= 1.0</html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td><html:code>H[,&#160;]+S[,&#160;]+V[,&#160;]A</html:code></html:td>
+                            <html:td>Hue-Saturation-Value-Alpha (HSVA) 0.0 &lt;= H,S,V,A &lt;= 1.0</html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td>string</html:td>
+                            <html:td><html:a href="https://www.graphviz.org/doc/info/colors.html">color name</html:a></html:td>
+                        </html:tr>
+                    </html:tbody></html:table>
                 </html:p>
                 <html:p>
                     The specification for the RGB and RGBA formats are the format strings used by <html:code>sscanf</html:code> to scan the color value. Thus, these values have the form "#RGB" or "#RGBA", where R, G, B, and A each consist of 2 hexadecimal digits, and can be separated by whitespace. As of Graphviz 9.0.0, RGB components can also be given as 1 hexadecimal digit. These are each doubled to form 2-digit components, similar to shorthand HTML colors. HSV colors have the form of 3 or (as of Graphviz 8.0.1) 4 numbers between 0 and 1, separated by whitespace or commas.
@@ -217,9 +206,7 @@
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
-        <xsd:restriction base="string">
-            <xsd:list itemType="color" />
-        </xsd:restriction>
+        <xsd:list itemType="color" />
     </xsd:simpleType>
 
     <xsd:simpleType name="dirType">
@@ -242,33 +229,32 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Double precision floating point number
+                    Decimal number
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
+        <xsd:restriction base="xsd:double" />
     </xsd:simpleType>
 
     <xsd:simpleType name="doubleList">
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    A colon-separated list of <html:a rel="attr">double</html:a>s: <html:code>%f(:%f)*</html:code> where each %f is a double.
+                    A colon-separated list of <html:a href="#double">doubles</html:a>: <html:code>%f(:%f)*</html:code> where each %f is a double.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
-        <xsd:restriction base="string">
-            <xsd:list itemType="double" />
-        </xsd:restriction>
+        <xsd:list itemType="double" />
     </xsd:simpleType>
 
     <xsd:simpleType name="escString">
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    A <html:a rel="attr">string</html:a> allowing backslashed escape sequences which are replaced according to the context. For node attributes, the substring <html:code>\N</html:code> is replaced by the name of the node, and the substring <html:code>\G</html:code> by the name of the graph. For graph or cluster attributes, the substring <html:code>\G</html:code> is replaced by the name of the graph or cluster. For edge attributes, the substring <html:code>\E</html:code> is replaced by the name of the edge, the substring <html:code>\G</html:code> is replaced by the name of the graph or cluster, and the substrings <html:code>\T</html:code> and <html:code>\H</html:code> by the names of  the tail and head nodes, respectively. The name of an edge is the string formed from the name of the tail node, the appropriate edge operator (<html:code>--</html:code> or <html:code>-></html:code>) and the name of the head node.
+                    A <html:a href="#string">string</html:a> allowing backslashed escape sequences which are replaced according to the context. For node attributes, the substring <html:code>\N</html:code> is replaced by the name of the node, and the substring <html:code>\G</html:code> by the name of the graph. For graph or cluster attributes, the substring <html:code>\G</html:code> is replaced by the name of the graph or cluster. For edge attributes, the substring <html:code>\E</html:code> is replaced by the name of the edge, the substring <html:code>\G</html:code> is replaced by the name of the graph or cluster, and the substrings <html:code>\T</html:code> and <html:code>\H</html:code> by the names of  the tail and head nodes, respectively. The name of an edge is the string formed from the name of the tail node, the appropriate edge operator (<html:code>--</html:code> or <html:code>-></html:code>) and the name of the head node.
                 </html:p>
                 <html:p>
-                    In addition, if the associated attribute is <html:a rel="attr">label</html:a>, <html:a rel="attr">headlabel</html:a> or <html:a rel="attr">taillabel</html:a>, the escape sequences <html:code>\n</html:code>, <html:code>\l</html:code> and <html:code>\r</html:code> divide the label into lines, centered, left-justified, and right-justified, respectively.
+                    In addition, if the associated attribute is <html:a href="#label">label</html:a>, <html:a href="#headlabel">headlabel</html:a> or <html:a href="#taillabel">taillabel</html:a>, the escape sequences <html:code>\n</html:code>, <html:code>\l</html:code> and <html:code>\r</html:code> divide the label into lines, centered, left-justified, and right-justified, respectively.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -290,35 +276,31 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    List of strings separated by characters from the <html:a rel="attr">layersep</html:a> attribute (by default, colons, tabs or spaces), defining <html:a rel="attr">layer</html:a> names and implicitly numbered 1,2,...
+                    List of strings separated by characters from the <html:a href="#layersep">layersep</html:a> attribute (by default, colons, tabs or spaces), defining <html:a href="#layer">layer</html:a> names and implicitly numbered 1,2,...
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
-        <xsd:restriction base="string">
-            <xsd:list itemType="layer" />
-        </xsd:restriction>
+        <xsd:list itemType="layer" />
     </xsd:simpleType>
 
     <xsd:simpleType name="layerRange">
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    A list of layers defined by the <html:a rel="attr">layers</html:a> attribute
+                    A list of layers defined by the <html:a href="#layers">layers</html:a> attribute
                 </html:p>
                 <html:p>
-                    It consists of a list of layer intervals separated by any collection of characters from the <html:code>layerlistsep</html:code> attribute. Each layer interval is specified as either a layerId or a layerId<html:b>S</html:b>layerId, where layerId = "all", a decimal integer or a layer name. (An integer i corresponds to layer i, layers being numbered from 1.)
+                    It consists of a list of layer intervals separated by any collection of characters from the <html:code>layerlistsep</html:code> attribute. Each layer interval is specified as either a layerId or a layerId<html:b>S</html:b>layerId, where layerId = "all", an integer, or a layer name. (An integer i corresponds to layer i, layers being numbered from 1.)
                 </html:p>
                 <html:p>
-                    The string <html:b>S</html:b> consists of 1 or more separator characters specified by the <html:a rel="attr">layersep</html:a> attribute.
+                    The string <html:b>S</html:b> consists of 1 or more separator characters specified by the <html:a href="#layersep">layersep</html:a> attribute.
                 </html:p>
                 <html:p>
-                    Thus, assuming the default values for <html:a rel="attr">layersep</html:a> and <html:a rel="attr">layerlistsep</html:a>, if <html:code>layers="a:b:c:d:e:f:g:h"</html:code>, the layerRange string <html:code>layers="a:b,d,f:all"</html:code> would denote the layers a b d f g h.
+                    Thus, assuming the default values for <html:a href="#layersep">layersep</html:a> and <html:a href="#layerlistsep">layerlistsep</html:a>, if <html:code>layers="a:b:c:d:e:f:g:h"</html:code>, the layerRange string <html:code>layers="a:b,d,f:all"</html:code> would denote the layers a b d f g h.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
-        <xsd:restriction base="string">
-            <xsd:list itemType="layers" />
-        </xsd:restriction>
+        <xsd:list itemType="layers" />
     </xsd:simpleType>
 
     <xsd:simpleType name="lblString">
@@ -328,7 +310,7 @@
                     Label string
                 </html:p>
                 <html:p>
-                    An <html:a rel="attr">escString</html:a> or an HTML label.
+                    An <html:a href="#escString">escString</html:a> or an HTML label.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -359,34 +341,32 @@
                     These specify the order in which nodes and edges are drawn in output.
                 </html:p>
                 <html:p>
-                    <html:table>
-                        <html:tbody>
-                            <html:tr>
-                                <html:td>
-                                    <html:code>breadthfirst</html:code>
-                                </html:td>
-                                <html:td>
-                                    Avoid edge-node overlap.
-                                </html:td>
-                            </html:tr>
-                            <html:tr>
-                                <html:td>
-                                    <html:code>nodesfirst</html:code>
-                                </html:td>
-                                <html:td>
-                                    Draw nodes before edges.
-                                </html:td>
-                            </html:tr>
-                            <html:tr>
-                                <html:td>
-                                    <html:code>edgesfirst</html:code>
-                                </html:td>
-                                <html:td>
-                                    Draw edges befire nodes.
-                                </html:td>
-                            </html:tr>
-                        </html:tbody>
-                    </html:table>
+                    <html:table><html:tbody>
+                        <html:tr>
+                            <html:td>
+                                <html:code>breadthfirst</html:code>
+                            </html:td>
+                            <html:td>
+                                Avoid edge-node overlap.
+                            </html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td>
+                                <html:code>nodesfirst</html:code>
+                            </html:td>
+                            <html:td>
+                                Draw nodes before edges.
+                            </html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td>
+                                <html:code>edgesfirst</html:code>
+                            </html:td>
+                            <html:td>
+                                Draw edges before nodes.
+                            </html:td>
+                        </html:tr>
+                    </html:tbody></html:table>
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -401,7 +381,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    These specify the granularity of packing connected components when the <html:a rel="attr">pack</html:a> attribute is true. A value of <html:code>node</html:code> causes packing at the node and edge label, with no overlapping of these objects. This produces a layout with the least area, but it also allows interleaving, where a node of one component may lie between two nodes in another component. A value of <html:code>graph</html:code> does a packing using the bounding box of the component. Thus, there will be a rectangular region around a component free of elements of any other component. A value of <html:code>clust</html:code> guarantees that top-level clusters are kept intact. What effect a value has also depends on the layout algorithm. For example, neato does not support clusters, so a value of <html:code>clust</html:code> will have the same effect as the default <html:code>node</html:code> value.
+                    These specify the granularity of packing connected components when the <html:a href="#pack">pack</html:a> attribute is true. A value of <html:code>node</html:code> causes packing at the node and edge label, with no overlapping of these objects. This produces a layout with the least area, but it also allows interleaving, where a node of one component may lie between two nodes in another component. A value of <html:code>graph</html:code> does a packing using the bounding box of the component. Thus, there will be a rectangular region around a component free of elements of any other component. A value of <html:code>clust</html:code> guarantees that top-level clusters are kept intact. What effect a value has also depends on the layout algorithm. For example, neato does not support clusters, so a value of <html:code>clust</html:code> will have the same effect as the default <html:code>node</html:code> value.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -446,7 +426,7 @@
                     <html:code>%f,%f('!')?</html:code> representing the point (x,y). The optional '!' indicates the node position should not change (input-only).
                 </html:p>
                 <html:p>
-                    If <html:a rel="attr">dim</html:a>=3, point may also have the format <html:code>%f,%f,%f('!')?</html:code> to represent the point (x,y,z).
+                    If <html:a href="#dim">dim</html:a>=3, point may also have the format <html:code>%f,%f,%f('!')?</html:code> to represent the point (x,y,z).
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -457,13 +437,11 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    A list of <html:a rel="type">point</html:a>s, separated by spaces.
+                    A list of <html:a href="#point">points</html:a>, separated by spaces.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
-        <xsd:restriction base="string">
-            <xsd:list itemType="point" />
-        </xsd:restriction>
+        <xsd:list itemType="point" />
     </xsd:simpleType>
 
     <xsd:simpleType name="portPos">
@@ -476,50 +454,44 @@
                     Modifies edge placement to aim for the corresponding compass point on nodes. The default compass point <html:code>center</html:code> specifies the center of the node.
                 </html:p>
                 <html:p>
-                    <html:table>
-                        <html:tbody>
-                            <html:tr>
-                                <html:td><html:code>center</html:code></html:td>
-                                <html:td>Center</html:td>
-                            </html:tr>
-                            <html:tr>
-                                <html:td><html:code>n</html:code></html:td>
-                                <html:td>North</html:td>
-                            </html:tr>
-                            <html:tr>
-                                <html:td><html:code>ne</html:code></html:td>
-                                <html:td>Northeast</html:td>
-                            </html:tr>
-                            <html:tr>
-                                <html:td><html:code>e</html:code></html:td>
-                                <html:td>East</html:td>
-                            </html:tr>
-                            <html:tr>
-                                <html:td><html:code>se</html:code></html:td>
-                                <html:td>Southeast</html:td>
-                            </html:tr>
-                            <html:tr>
-                                <html:td><html:code>s</html:code></html:td>
-                                <html:td>South</html:td>
-                            </html:tr>
-                            <html:tr>
-                                <html:td><html:code>sw</html:code></html:td>
-                                <html:td>Southwest</html:td>
-                            </html:tr>
-                            <html:tr>
-                                <html:td><html:code>w</html:code></html:td>
-                                <html:td>West</html:td>
-                            </html:tr>
-                            <html:tr>
-                                <html:td><html:code>w</html:code></html:td>
-                                <html:td>West</html:td>
-                            </html:tr>
-                            <html:tr>
-                                <html:td><html:code>nw</html:code></html:td>
-                                <html:td>Northwest</html:td>
-                            </html:tr>
-                        </html:tbody>
-                    </html:table>
+                    <html:table><html:tbody>
+                        <html:tr>
+                            <html:td><html:code>center</html:code></html:td>
+                            <html:td>Center</html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td><html:code>n</html:code></html:td>
+                            <html:td>North</html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td><html:code>ne</html:code></html:td>
+                            <html:td>Northeast</html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td><html:code>e</html:code></html:td>
+                            <html:td>East</html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td><html:code>se</html:code></html:td>
+                            <html:td>Southeast</html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td><html:code>s</html:code></html:td>
+                            <html:td>South</html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td><html:code>sw</html:code></html:td>
+                            <html:td>Southwest</html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td><html:code>w</html:code></html:td>
+                            <html:td>West</html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td><html:code>nw</html:code></html:td>
+                            <html:td>Northwest</html:td>
+                        </html:tr>
+                    </html:tbody></html:table>
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -561,42 +533,40 @@
                     Corresponding to directed graphs drawn from from top to bottom, from left to right, from bottom to top, and from right to left, respectively.
                 </html:p>
                 <html:p>
-                    <html:table>
-                        <html:tbody>
-                            <html:tr>
-                                <html:td>
-                                    <html:code>TB</html:code>
-                                </html:td>
-                                <html:td>
-                                    top to bottom
-                                </html:td>
-                            </html:tr>
-                            <html:tr>
-                                <html:td>
-                                    <html:code>LR</html:code>
-                                </html:td>
-                                <html:td>
-                                    left to right
-                                </html:td>
-                            </html:tr>
-                            <html:tr>
-                                <html:td>
-                                    <html:code>BT</html:code>
-                                </html:td>
-                                <html:td>
-                                    bottom to top
-                                </html:td>
-                            </html:tr>
-                            <html:tr>
-                                <html:td>
-                                    <html:code>RL</html:code>
-                                </html:td>
-                                <html:td>
-                                    right to left
-                                </html:td>
-                            </html:tr>
-                        </html:tbody>
-                    </html:table>
+                    <html:table><html:tbody>
+                        <html:tr>
+                            <html:td>
+                                <html:code>TB</html:code>
+                            </html:td>
+                            <html:td>
+                                top to bottom
+                            </html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td>
+                                <html:code>LR</html:code>
+                            </html:td>
+                            <html:td>
+                                left to right
+                            </html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td>
+                                <html:code>BT</html:code>
+                            </html:td>
+                            <html:td>
+                                bottom to top
+                            </html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td>
+                                <html:code>RL</html:code>
+                            </html:td>
+                            <html:td>
+                                right to left
+                            </html:td>
+                        </html:tr>
+                    </html:tbody></html:table>
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -611,6 +581,36 @@
     <xsd:simpleType name="rankType">
         <html:p>
             Rank constraints on the nodes in a subgraph
+        </html:p>
+        <html:p>
+            <html:table>
+                <html:tbody>
+                    <html:tr>
+                        <html:td><html:code>#%2x%2x%2x</html:code></html:td>
+                        <html:td>Red-Green-Blue (RGB)</html:td>
+                    </html:tr>
+                    <html:tr>
+                        <html:td><html:code>#%1x%1x%1x</html:code></html:td>
+                        <html:td>Shorthand Red-Green-Blue (RGB)</html:td>
+                    </html:tr>
+                    <html:tr>
+                        <html:td><html:code>#%2x%2x%2x%2x</html:code></html:td>
+                        <html:td>Red-Green-Blue-Alpha (RGBA)</html:td>
+                    </html:tr>
+                    <html:tr>
+                        <html:td><html:code>H[,&#160;]+S[,&#160;]+V</html:code></html:td>
+                        <html:td>Hue-Saturation-Value (HSV) 0.0 &lt;= H,S,V &lt;= 1.0</html:td>
+                    </html:tr>
+                    <html:tr>
+                        <html:td><html:code>H[,&#160;]+S[,&#160;]+V[,&#160;]A</html:code></html:td>
+                        <html:td>Hue-Saturation-Value-Alpha (HSVA) 0.0 &lt;= H,S,V,A &lt;= 1.0</html:td>
+                    </html:tr>
+                    <html:tr>
+                        <html:td>string</html:td>
+                        <html:td><html:a href="https://www.graphviz.org/doc/info/colors.html">color name</html:a></html:td>
+                    </html:tr>
+                </html:tbody>
+            </html:table>
         </html:p>
         <xsd:restriction base="string">
             <xsd:enumeration value="same" />
@@ -639,16 +639,14 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    A geometric rectangle in space, defined by two <html:a rel="attr">point</html:a>s <html:code>%f,%f,%f,%f</html:code>
+                    A geometric rectangle in space, defined by two <html:a href="#point">points</html:a> <html:code>%f,%f,%f,%f</html:code>
                 </html:p>
                 <html:p>
                     The rectangle <html:code>llx,lly,urx,ury</html:code> gives the coordinates, in points, of the lower-left corner (<html:code>llx,lly</html:code>) and the upper-right corner (<html:code>urx,ury</html:code>).
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
-        <xsd:restriction base="string">
-            <xsd:list itemType="point" />
-        </xsd:restriction>
+        <xsd:list itemType="point" />
     </xsd:simpleType>
 
     <xsd:simpleType name="shapeType">
@@ -779,22 +777,20 @@
                 </html:p>
                 <html:p>
                     Syntax <html:code>(style)?(seed)?</html:code>. If <html:code>style</html:code> is present, it must be one of the strings
-                    <html:table>
-                        <html:tbody>
-                            <html:tr>
-                                <html:td><html:code>regular</html:code></html:td>
-                                <html:td>place nodes regularly about a circle</html:td>
-                            </html:tr>
-                            <html:tr>
-                                <html:td><html:code>self</html:code></html:td>
-                                <html:td>run an abbreviated version of neato to obtain the initial layout</html:td>
-                            </html:tr>
-                            <html:tr>
-                                <html:td><html:code>random</html:code></html:td>
-                                <html:td>place nodes randomly in a unit square</html:td>
-                            </html:tr>
-                        </html:tbody>
-                    </html:table>
+                    <html:table><html:tbody>
+                        <html:tr>
+                            <html:td><html:code>regular</html:code></html:td>
+                            <html:td>place nodes regularly about a circle</html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td><html:code>self</html:code></html:td>
+                            <html:td>run an abbreviated version of neato to obtain the initial layout</html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td><html:code>random</html:code></html:td>
+                            <html:td>place nodes randomly in a unit square</html:td>
+                        </html:tr>
+                    </html:tbody></html:table>
                 </html:p>
                 <html:p>
                     If <html:code>seed</html:code> is present, it specifies a seed for the random number generator. If seed is a positive number, this is used as the seed. If it is anything else, the current time, and possibly the process id, is used to pick a seed, thereby making the choice more random. In this case, the seed value is stored in the graph.
@@ -803,7 +799,7 @@
                     If the value is just <html:code>random</html:code>, a time-based seed is chosen.
                 </html:p>
                 <html:p>
-                    Note that input positions, specified by a node's <html:a rel="attr">pos</html:a> attribute, are only used when the style is <html:code>random</html:code>.
+                    Note that input positions, specified by a node's <html:a href="#pos">pos</html:a> attribute, are only used when the style is <html:code>random</html:code>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -821,7 +817,7 @@
                     Text; a sequence of characters.
                 </html:p>
                 <html:p>
-                    See also <html:a rel="attr">escString</html:a>, text with escape-sequences.
+                    See also <html:a href="#escString">escString</html:a>, text with escape-sequences.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -869,10 +865,10 @@
                     Style of arrowhead on the head node of an edge
                 </html:p>
                 <html:p>
-                    This will only appear if the <html:a rel="attr">dir</html:a> attribute is <html:code>forward</html:code> or <html:code>both</html:code>.
+                    This will only appear if the <html:a href="#dir">dir</html:a> attribute is <html:code>forward</html:code> or <html:code>both</html:code>.
                 </html:p>
                 <html:p>
-                    See the limitation regarding <html:a rel="note">undirected</html:a>.
+                    See the limitation regarding <html:a href="#undirected">undirected</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -895,10 +891,10 @@
                     Style of arrowhead on the tail node of an edge
                 </html:p>
                 <html:p>
-                    This will only appear if the <html:a rel="attr">dir</html:a> attribute is <html:code>back</html:code> or <html:code>both</html:code>.
+                    This will only appear if the <html:a href="#dir">dir</html:a> attribute is <html:code>back</html:code> or <html:code>both</html:code>.
                 </html:p>
                 <html:p>
-                    See the limitation regarding <html:a rel="note">undirected</html:a>.
+                    See the limitation regarding <html:a href="#undirected">undirected</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -928,10 +924,10 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    When attached to the root graph, this color is used as the background for entire canvas. When a cluster attribute, it is used as the initial background for the cluster. If a cluster has a filled <html:a rel="attr">style</html:a>, the cluster's <html:a rel="attr">fillcolor</html:a> will overlay the background color.
+                    When attached to the root graph, this color is used as the background for entire canvas. When a cluster attribute, it is used as the initial background for the cluster. If a cluster has a filled <html:a href="#style">style</html:a>, the cluster's <html:a href="#fillcolor">fillcolor</html:a> will overlay the background color.
                 </html:p>
                 <html:p>
-                    If no background color is specified for the root graph, no graphics operation are performed on the background. This works fine for PostScript but for bitmap output, all bits are initialized to something. This means that when the bitmap output is included in some other document, all of the bits within the bitmap's bounding box will be set, overwriting whatever color or graphics where already on the page. If this effect is not desired, and you only want to set bits explicitly assigned in drawing the graph, set <html:a rel="attr">bgcolor</html:a>="transparent".
+                    If no background color is specified for the root graph, no graphics operation are performed on the background. This works fine for PostScript but for bitmap output, all bits are initialized to something. This means that when the bitmap output is included in some other document, all of the bits within the bitmap's bounding box will be set, overwriting whatever color or graphics where already on the page. If this effect is not desired, and you only want to set bits explicitly assigned in drawing the graph, set <html:a href="#bgcolor">bgcolor</html:a>="transparent".
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -951,7 +947,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Specifies the character encoding used when interpreting string input as a text label. The default value is <html:code>UTF-8</html:code>. The other legal value is <html:code>iso-8859-1</html:code> or, equivalently, <html:code>Latin1</html:code>. The <html:a rel="attr">charset</html:a> attribute is case-insensitive. Note that if the character encoding used in the input does not match the <html:a rel="attr">charset</html:a> value, the resulting output may be very strange.
+                    Specifies the character encoding used when interpreting string input as a text label. The default value is <html:code>UTF-8</html:code>. The other legal value is <html:code>iso-8859-1</html:code> or, equivalently, <html:code>Latin1</html:code>. The <html:a href="#charset">charset</html:a> attribute is case-insensitive. Note that if the character encoding used in the input does not match the <html:a href="#charset">charset</html:a> value, the resulting output may be very strange.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -964,7 +960,7 @@
                     Classnames to attach to the node, edge, graph, or cluster's SVG element.
                 </html:p>
                 <html:p>
-                    Combine with <html:a rel="attr">stylesheet</html:a> for styling SVG output using CSS classnames.
+                    Combine with <html:a href="#stylesheet">stylesheet</html:a> for styling SVG output using CSS classnames.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -978,7 +974,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Mode used for handling clusters. If <html:code>clusterrank=local</html:code>, a subgraph whose name begins with <html:code>cluster</html:code> is given special treatment. The subgraph is laid out separately, and then integrated as a unit into its parent graph, with a bounding rectangle drawn about it. If the cluster has a <html:a rel="attr">label</html:a> parameter, this label is displayed within the rectangle. Note also that there can be clusters within clusters. The modes <html:code>clusterrank=global</html:code> and <html:code>clusterrank=none</html:code> appear to be identical, both turning off the special cluster processing.
+                    Mode used for handling clusters. If <html:code>clusterrank=local</html:code>, a subgraph whose name begins with <html:code>cluster</html:code> is given special treatment. The subgraph is laid out separately, and then integrated as a unit into its parent graph, with a bounding rectangle drawn about it. If the cluster has a <html:a href="#label">label</html:a> parameter, this label is displayed within the rectangle. Note also that there can be clusters within clusters. The modes <html:code>clusterrank=global</html:code> and <html:code>clusterrank=none</html:code> appear to be identical, both turning off the special cluster processing.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -988,10 +984,10 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Basic drawing color for graphics, not text. For the latter, use the <html:a rel="attr">fontcolor</html:a> attribute.
+                    Basic drawing color for graphics, not text. For the latter, use the <html:a href="#fontcolor">fontcolor</html:a> attribute.
                 </html:p>
                 <html:p>
-                    For edges, the value can either be a single <html:a rel="type">color</html:a> or a <html:a rel="type">colorList</html:a>. In the latter case, the edge is drawn using parallel splines or lines, one for each color in the list, in the order given. The head arrow, if any, is drawn using the first color in the list, and the tail arrow, if any, the second color. This supports the common case of drawing opposing edges, but using parallel splines instead of separately routed multiedges.
+                    For edges, the value can either be a single <html:a href="#color">color</html:a> or a <html:a href="#colorList">colorList</html:a>. In the latter case, the edge is drawn using parallel splines or lines, one for each color in the list, in the order given. The head arrow, if any, is drawn using the first color in the list, and the tail arrow, if any, the second color. This supports the common case of drawing opposing edges, but using parallel splines instead of separately routed multiedges.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1001,7 +997,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    This attribute specifies a color scheme namespace. If defined, it specifies the context for interpreting color names. In particular, if a <html:a rel="type">color</html:a> value has form <html:code>xxx</html:code> or <html:code>//xxx</html:code>, then the color <html:code>xxx</html:code> will be evaluated according to the current color scheme. If no color scheme is set, the standard X11 naming is used. For example, if <html:code>colorscheme=bugn9</html:code>, then <html:code>color=7</html:code> is interpreted as <html:code>/bugn9/7</html:code>.
+                    This attribute specifies a color scheme namespace. If defined, it specifies the context for interpreting color names. In particular, if a <html:a href="#color">color</html:a> value has form <html:code>xxx</html:code> or <html:code>//xxx</html:code>, then the color <html:code>xxx</html:code> will be evaluated according to the current color scheme. If no color scheme is set, the standard X11 naming is used. For example, if <html:code>colorscheme=bugn9</html:code>, then <html:code>color=7</html:code> is interpreted as <html:code>/bugn9/7</html:code>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1021,7 +1017,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    If <html:code>true</html:code>, allow edges between clusters. (See <html:a rel="attr">lhead</html:a> and <html:a rel="attr">ltail</html:a> below.)
+                    If <html:code>true</html:code>, allow edges between clusters. (See <html:a href="#lhead">lhead</html:a> and <html:a href="#ltail">ltail</html:a> below.)
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1071,7 +1067,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    This specifies the distance between nodes in separate connected components. If set too small, connected components may overlap. Only applicable if <html:a rel="attr">pack</html:a>=false.
+                    This specifies the distance between nodes in separate connected components. If set too small, connected components may overlap. Only applicable if <html:a href="#pack">pack</html:a>=false.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1095,7 +1091,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Set edge type for drawing arrowheads. This indicates which ends of the edge should be decorated with an arrowhead. The actual style of the arrowhead can be specified using the <html:a rel="attr">arrowhead</html:a> and <html:a rel="attr">arrowtail</html:a> attributes. See <html:a rel="note">undirected</html:a>.
+                    Set edge type for drawing arrowheads. This indicates which ends of the edge should be decorated with an arrowhead. The actual style of the arrowhead can be specified using the <html:a href="#arrowhead">arrowhead</html:a> and <html:a href="#arrowtail">arrowtail</html:a> attributes. See <html:a href="#undirected">undirected</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1105,7 +1101,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Only valid when <html:a rel="attr">mode</html:a>="ipsep". If <html:code>true</html:code>, constraints are generated for each edge in the largest (heuristic) directed acyclic subgraph such that the edge must point downwards. If <html:code>hier</html:code>, generates level constraints similar to those used with <html:a rel="attr">mode</html:a>="hier". The main difference is that, in the latter case, only these constraints are involved, so a faster solver can be used.
+                    Only valid when <html:a href="#mode">mode</html:a>="ipsep". If <html:code>true</html:code>, constraints are generated for each edge in the largest (heuristic) directed acyclic subgraph such that the edge must point downwards. If <html:code>hier</html:code>, generates level constraints similar to those used with <html:a href="#mode">mode</html:a>="hier". The main difference is that, in the latter case, only these constraints are involved, so a faster solver can be used.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1115,7 +1111,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Distortion factor for <html:a rel="attr">shape</html:a>=polygon. Positive values cause top part to be larger than bottom; negative values do the opposite.
+                    Distortion factor for <html:a href="#shape">shape</html:a>=polygon. Positive values cause top part to be larger than bottom; negative values do the opposite.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1135,7 +1131,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Synonym for <html:a rel="attr">edgeURL</html:a>.
+                    Synonym for <html:a href="#edgeURL">edgeURL</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1145,7 +1141,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    If the edge has a <html:a rel="attr">URL</html:a> or <html:a rel="attr">edgeURL</html:a> attribute, this attribute determines which window of the browser is used for the URL attached to the non-label part of the edge. Setting it to "_graphviz" will open a new window if it doesn't already exist, or reuse it if it does. If undefined, the value of the <html:a rel="attr">target</html:a> is used.
+                    If the edge has a <html:a href="#URL">URL</html:a> or <html:a href="#edgeURL">edgeURL</html:a> attribute, this attribute determines which window of the browser is used for the URL attached to the non-label part of the edge. Setting it to "_graphviz" will open a new window if it doesn't already exist, or reuse it if it does. If undefined, the value of the <html:a href="#target">target</html:a> is used.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1155,7 +1151,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Tooltip annotation attached to the non-label part of an edge. This is used only if the edge has a <html:a rel="attr">URL</html:a> or <html:a rel="attr">edgeURL</html:a> attribute.
+                    Tooltip annotation attached to the non-label part of an edge. This is used only if the edge has a <html:a href="#URL">URL</html:a> or <html:a href="#edgeURL">edgeURL</html:a> attribute.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1165,7 +1161,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    If <html:a rel="attr">edgeURL</html:a> is defined, this is the link used for the non-label parts of an edge. This value overrides any <html:a rel="attr">URL</html:a> defined for the edge. Also, this value is used near the head or tail node unless overridden by a <html:a rel="attr">headURL</html:a> or <html:a rel="attr">tailURL</html:a> value, respectively. See <html:a rel="note">undirected</html:a>.
+                    If <html:a href="#edgeURL">edgeURL</html:a> is defined, this is the link used for the non-label parts of an edge. This value overrides any <html:a href="#URL">URL</html:a> defined for the edge. Also, this value is used near the head or tail node unless overridden by a <html:a href="#headURL">headURL</html:a> or <html:a href="#tailURL">tailURL</html:a> value, respectively. See <html:a href="#undirected">undirected</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1175,7 +1171,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Terminating condition. If the length squared of all energy gradients are &lt; <html:a rel="attr">epsilon</html:a>, the algorithm stops.
+                    Terminating condition. If the length squared of all energy gradients are &lt; <html:a href="#epsilon">epsilon</html:a>, the algorithm stops.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1185,7 +1181,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Fraction to increase polygons (multiply coordinates by 1 + esep) for purposes of spline edge routing. This should normally be strictly less than <html:a rel="attr">sep</html:a>.
+                    Fraction to increase polygons (multiply coordinates by 1 + esep) for purposes of spline edge routing. This should normally be strictly less than <html:a href="#sep">sep</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1195,10 +1191,10 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Color used to fill the background of a node or cluster assuming <html:a rel="attr">style</html:a>=filled. If <html:a rel="attr">fillcolor</html:a> is not defined, <html:a rel="attr">color</html:a> is used. (For clusters, if <html:a rel="attr">color</html:a> is not defined, <html:a rel="attr">bgcolor</html:a> is used.) If this is not defined, the default is used, except for <html:a rel="attr">shape</html:a>=point or when the output format is MIF, which use black by default.
+                    Color used to fill the background of a node or cluster assuming <html:a href="#style">style</html:a>=filled. If <html:a href="#fillcolor">fillcolor</html:a> is not defined, <html:a href="#color">color</html:a> is used. (For clusters, if <html:a href="#color">color</html:a> is not defined, <html:a href="#bgcolor">bgcolor</html:a> is used.) If this is not defined, the default is used, except for <html:a href="#shape">shape</html:a>=point or when the output format is MIF, which use black by default.
                 </html:p>
                 <html:p>
-                    Note that a cluster inherits the root graph's attributes if defined. Thus, if the root graph has defined a <html:a rel="attr">fillcolor</html:a>, this will override a <html:a rel="attr">color</html:a> or <html:a rel="attr">bgcolor</html:a> attribute set for the cluster.
+                    Note that a cluster inherits the root graph's attributes if defined. Thus, if the root graph has defined a <html:a href="#fillcolor">fillcolor</html:a>, this will override a <html:a href="#color">color</html:a> or <html:a href="#bgcolor">bgcolor</html:a> attribute set for the cluster.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1208,7 +1204,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    If true, the node size is specified by the values of the <html:a rel="attr">width</html:a>  and <html:a rel="attr">height</html:a> attributes only and is not expanded to contain the text label.
+                    If true, the node size is specified by the values of the <html:a href="#width">width</html:a>  and <html:a href="#height">height</html:a> attributes only and is not expanded to contain the text label.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1231,10 +1227,10 @@
                     Font used for text. This very much depends on the output format and, for non-bitmap output such as PostScript or SVG, the availability of the font when the graph is displayed or printed. As such, it is best to rely on font faces that are generally available, such as Times-Roman, Helvetica or Courier.
                 </html:p>
                 <html:p>
-                    If Graphviz was built using the <html:a href="http://pdx.freedesktop.org/~fontconfig/fontconfig-user.html">fontconfig library</html:a>, the latter library will be used to search for the font. However, if the <html:a rel="attr">fontname</html:a> string contains a slash character "/", it is treated as a pathname for the font file, though font lookup will append the usual font suffixes.
+                    If Graphviz was built using the <html:a href="http://pdx.freedesktop.org/~fontconfig/fontconfig-user.html">fontconfig library</html:a>, the latter library will be used to search for the font. However, if the <html:a href="#fontname">fontname</html:a> string contains a slash character "/", it is treated as a pathname for the font file, though font lookup will append the usual font suffixes.
                 </html:p>
                 <html:p>
-                    If Graphviz does not use fontconfig, <html:a rel="attr">fontname</html:a> will be considered the name of a Type 1 or True Type font file. If you specify <html:code>fontname=schlbk</html:code>, the tool will look for a file named  <html:code>schlbk.ttf</html:code> or <html:code>schlbk.pfa</html:code> or <html:code>schlbk.pfb</html:code> in one of the directories specified by the <html:a rel="attr">fontpath</html:a> attribute. The lookup does support various aliases for the common fonts.
+                    If Graphviz does not use fontconfig, <html:a href="#fontname">fontname</html:a> will be considered the name of a Type 1 or True Type font file. If you specify <html:code>fontname=schlbk</html:code>, the tool will look for a file named  <html:code>schlbk.ttf</html:code> or <html:code>schlbk.pfa</html:code> or <html:code>schlbk.pfb</html:code> in one of the directories specified by the <html:a href="#fontpath">fontpath</html:a> attribute. The lookup does support various aliases for the common fonts.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1244,7 +1240,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Allows user control of how basic fontnames are represented in SVG output. If <html:a rel="attr">fontnames</html:a> is undefined or <html:code>svg</html:code>, the output will try to use known SVG fontnames. For example, the default font <html:code>Times-Roman</html:code> will be mapped to the basic SVG font <html:code>serif</html:code>. This can be overridden by setting <html:a rel="attr">fontnames</html:a> to <html:code>ps</html:code> or <html:code>gd</html:code>. In the former case, known PostScript font names such as <html:code>Times-Roman</html:code> will be used in the output. In the latter case, the fontconfig font conventions are used. Thus, <html:code>Times-Roman</html:code> would be treated as <html:code>Nimbus Roman No9 L</html:code>. These last two options are useful with SVG viewers that support these richer fontname spaces.
+                    Allows user control of how basic fontnames are represented in SVG output. If <html:a href="#fontnames">fontnames</html:a> is undefined or <html:code>svg</html:code>, the output will try to use known SVG fontnames. For example, the default font <html:code>Times-Roman</html:code> will be mapped to the basic SVG font <html:code>serif</html:code>. This can be overridden by setting <html:a href="#fontnames">fontnames</html:a> to <html:code>ps</html:code> or <html:code>gd</html:code>. In the former case, known PostScript font names such as <html:code>Times-Roman</html:code> will be used in the output. In the latter case, the fontconfig font conventions are used. Thus, <html:code>Times-Roman</html:code> would be treated as <html:code>Nimbus Roman No9 L</html:code>. These last two options are useful with SVG viewers that support these richer fontname spaces.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1254,7 +1250,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Directory list used by libgd to search for bitmap fonts if Graphviz was not built with the fontconfig library. If <html:a rel="attr">fontpath</html:a> is not set, the environment variable <html:code>DOTFONTPATH</html:code> is checked. If that is not set, <html:code>GDFONTPATH</html:code> is checked. If not set, libgd uses its compiled-in font path. Note that fontpath is an attribute of the root graph.
+                    Directory list used by libgd to search for bitmap fonts if Graphviz was not built with the fontconfig library. If <html:a href="#fontpath">fontpath</html:a> is not set, the environment variable <html:code>DOTFONTPATH</html:code> is checked. If that is not set, <html:code>GDFONTPATH</html:code> is checked. If not set, libgd uses its compiled-in font path. Note that fontpath is an attribute of the root graph.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1264,7 +1260,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Font size, in <html:a rel="note">points</html:a>, used for text.
+                    Font size, in <html:a href="#points">points</html:a>, used for text.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1299,7 +1295,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Synonym for <html:a rel="attr">headURL</html:a>.
+                    Synonym for <html:a href="#headURL">headURL</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1309,7 +1305,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Text label to be placed near head of edge. See <html:a rel="note">undirected</html:a>.
+                    Text label to be placed near head of edge. See <html:a href="#undirected">undirected</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1319,7 +1315,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Indicates where on the head node to attach the head of the edge. In the default case, the edge is aimed towards the center of the node, and then clipped at the node boundary. See <html:a rel="note">undirected</html:a>.
+                    Indicates where on the head node to attach the head of the edge. In the default case, the edge is aimed towards the center of the node, and then clipped at the node boundary. See <html:a href="#undirected">undirected</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1329,7 +1325,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    If the edge has a <html:a rel="attr">headURL</html:a>, this attribute determines which window of the browser is used for the URL. Setting it to "_graphviz" will open a new window if it doesn't already exist, or reuse it if it does. If undefined, the value of the <html:a rel="attr">target</html:a> is used.
+                    If the edge has a <html:a href="#headURL">headURL</html:a>, this attribute determines which window of the browser is used for the URL. Setting it to "_graphviz" will open a new window if it doesn't already exist, or reuse it if it does. If undefined, the value of the <html:a href="#target">target</html:a> is used.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1339,7 +1335,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Tooltip annotation attached to the head of an edge. This is used only if the edge has a <html:a rel="attr">headURL</html:a> attribute.
+                    Tooltip annotation attached to the head of an edge. This is used only if the edge has a <html:a href="#headURL">headURL</html:a> attribute.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1349,7 +1345,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    If <html:a rel="attr">headURL</html:a> is defined, it is output as part of the head label of the edge. Also, this value is used near the head node, overriding any <html:a rel="attr">URL</html:a> value. See <html:a rel="note">undirected</html:a>.
+                    If <html:a href="#headURL">headURL</html:a> is defined, it is output as part of the head label of the edge. Also, this value is used near the head node, overriding any <html:a href="#URL">URL</html:a> value. See <html:a href="#undirected">undirected</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1359,7 +1355,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Height of node, in inches. This is taken as the initial, minimum height of the node. If <html:a rel="attr">fixedsize</html:a> is true, this will be the final height of the node. Otherwise, if the node label requires more height to fit, the node's height will be increased to contain the label. Note also that, if the output format is dot, the value given to <html:a rel="attr">height</html:a> will be the final value.
+                    Height of node, in inches. This is taken as the initial, minimum height of the node. If <html:a href="#fixedsize">fixedsize</html:a> is true, this will be the final height of the node. Otherwise, if the node label requires more height to fit, the node's height will be increased to contain the label. Note also that, if the output format is dot, the value given to <html:a href="#height">height</html:a> will be the final value.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1369,7 +1365,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Synonym for <html:a rel="attr">URL</html:a>.
+                    Synonym for <html:a href="#URL">URL</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1386,7 +1382,7 @@
                     Gives the name of a file containing an image to be displayed inside a node. The image file must be in one of the recognized formats, typically JPEG, PNG, GIF or Postscript, and be able to be converted into the desired output format.
                 </html:p>
                 <html:p>
-                    Unlike with the <html:a rel="attr">shapefile</html:a> attribute, the image is treated as node content rather than the entire node. In particular, an image can be contained in a node of any shape, not just a rectangle.
+                    Unlike with the <html:a href="#shapefile">shapefile</html:a> attribute, the image is treated as node content rather than the entire node. In particular, an image can be contained in a node of any shape, not just a rectangle.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1410,7 +1406,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Attribute controlling how an image fills its containing node. In general, the image is given its natural size, (cf. <html:a rel="attr">dpi</html:a>), and the node size is made large enough to contain its image, its label, its margin, and its peripheries. Its width and height will also be at least as large as its minimum <html:a rel="attr">width</html:a> and <html:a rel="attr">height</html:a>. If, however, <html:code>fixedsize=true</html:code>, the width and height attributes specify the exact size of the node.
+                    Attribute controlling how an image fills its containing node. In general, the image is given its natural size, (cf. <html:a href="#dpi">dpi</html:a>), and the node size is made large enough to contain its image, its label, its margin, and its peripheries. Its width and height will also be at least as large as its minimum <html:a href="#width">width</html:a> and <html:a href="#height">height</html:a>. If, however, <html:code>fixedsize=true</html:code>, the width and height attributes specify the exact size of the node.
                 </html:p>
                 <html:p>
                     During rendering, in the default case (<html:code>imagescale=false</html:code>), the image retains its natural size. If <html:code>true</html:code>, the image is uniformly scaled (i.e., its aspect ratio is preserved) to fit inside the node. At least one dimension of the image will be as large as possible given the size of the node. When <html:code>width</html:code>, the width of the image is scaled to fill the node width. The corresponding property holds when <html:code>imagescale=height</html:code>. When <html:code>both</html:code>, both the height and the width are scaled separately to fill the node.
@@ -1430,7 +1426,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Spring constant used in virtual physical model. It roughly corresponds to an ideal edge length (in inches), in that increasing K tends to increase the distance between nodes. Note that the edge attribute <html:a rel="attr">len</html:a> can be used to override this value for adjacent nodes.
+                    Spring constant used in virtual physical model. It roughly corresponds to an ideal edge length (in inches), in that increasing K tends to increase the distance between nodes. Note that the edge attribute <html:a href="#len">len</html:a> can be used to override this value for adjacent nodes.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1440,7 +1436,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Text label attached to objects. If a node's <html:a rel="attr">shape</html:a> is <html:code>record</html:code>, then the label can have a <html:a href="https://www.graphviz.org/doc/info/shapes.html#record">special format</html:a> which describes the record layout.
+                    Text label attached to objects. If a node's <html:a href="#shape">shape</html:a> is <html:code>record</html:code>, then the label can have a <html:a href="https://www.graphviz.org/doc/info/shapes.html#record">special format</html:a> which describes the record layout.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1454,7 +1450,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    This, along with <html:a rel="attr">labeldistance</html:a>, determine where the headlabel (taillabel) are placed with respect to the head (tail) in polar coordinates. The origin in the coordinate system is the point where the edge touches the node. The ray of 0 degrees goes from the origin back along the edge, parallel to the edge at the origin.
+                    This, along with <html:a href="#labeldistance">labeldistance</html:a>, determine where the headlabel (taillabel) are placed with respect to the head (tail) in polar coordinates. The origin in the coordinate system is the point where the edge touches the node. The ray of 0 degrees goes from the origin back along the edge, parallel to the edge at the origin.
                 </html:p>
                 <html:p>
                     The angle, in degrees, specifies the rotation from the 0 degree ray, with positive angles moving counterclockwise and negative angles moving clockwise.
@@ -1467,7 +1463,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Multiplicative scaling factor adjusting the distance that the headlabel (taillabel) is from the head (tail) node. The default distance is 10 points. See <html:a rel="attr">labelangle</html:a> for more details.
+                    Multiplicative scaling factor adjusting the default distance (10 points) that the headlabel/taillabel is from the head/tail node. See <html:a href="#labelangle">labelangle</html:a> for more details.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1507,7 +1503,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Font size, in <html:a rel="note">points</html:a>, used for headlabel and taillabel. If not set, defaults to edge's fontsize.
+                    Font size, in <html:a href="#points">points</html:a>, used for headlabel and taillabel. If not set, defaults to edge's fontsize.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1517,7 +1513,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Synonym for <html:a rel="attr">labelURL</html:a>.
+                    Synonym for <html:a href="#labelURL">labelURL</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1527,7 +1523,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Justification for cluster labels. If <html:code>r</html:code>, the label is right-justified within bounding rectangle; if <html:code>l</html:code>, left-justified; else the label is centered. Note that a subgraph inherits attributes from its parent. Thus, if the root graph sets <html:a rel="attr">labeljust</html:a> to <html:code>l</html:code>, the subgraph inherits this value.
+                    Justification for cluster labels. If <html:code>r</html:code>, the label is right-justified within bounding rectangle; if <html:code>l</html:code>, left-justified; else the label is centered. Note that a subgraph inherits attributes from its parent. Thus, if the root graph sets <html:a href="#labeljust">labeljust</html:a> to <html:code>l</html:code>, the subgraph inherits this value.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1537,7 +1533,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Top/bottom placement of graph and cluster labels. If the attribute is <html:code>t</html:code>, place label at the top; if the attribute is <html:code>b</html:code>, place label at the bottom. By default, root graph labels go on the bottom and cluster labels go on the top. Note that a subgraph inherits attributes from its parent. Thus, if the root graph sets <html:a rel="attr">labelloc</html:a> to <html:code>b</html:code>, the subgraph inherits this value.
+                    Top/bottom placement of graph and cluster labels. If the attribute is <html:code>t</html:code>, place label at the top; if the attribute is <html:code>b</html:code>, place label at the bottom. By default, root graph labels go on the bottom and cluster labels go on the top. Note that a subgraph inherits attributes from its parent. Thus, if the root graph sets <html:a href="#labelloc">labelloc</html:a> to <html:code>b</html:code>, the subgraph inherits this value.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1547,7 +1543,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    If the edge has a <html:a rel="attr">URL</html:a> or <html:a rel="attr">labelURL</html:a> attribute, this attribute determines which window of the browser is used for the URL attached to the label. Setting it to "_graphviz" will open a new window if it doesn't already exist, or reuse it if it does. If undefined, the value of the <html:a rel="attr">target</html:a> is used.
+                    If the edge has a <html:a href="#URL">URL</html:a> or <html:a href="#labelURL">labelURL</html:a> attribute, this attribute determines which window of the browser is used for the URL attached to the label. Setting it to "_graphviz" will open a new window if it doesn't already exist, or reuse it if it does. If undefined, the value of the <html:a href="#target">target</html:a> is used.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1557,7 +1553,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Tooltip annotation attached to label of an edge. This is used only if the edge has a <html:a rel="attr">URL</html:a> or <html:a rel="attr">labelURL</html:a> attribute.
+                    Tooltip annotation attached to label of an edge. This is used only if the edge has a <html:a href="#URL">URL</html:a> or <html:a href="#labelURL">labelURL</html:a> attribute.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1567,7 +1563,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    If <html:a rel="attr">labelURL</html:a> is defined, this is the link used for the label of an edge. This value overrides any <html:a rel="attr">URL</html:a> defined for the edge.
+                    If <html:a href="#labelURL">labelURL</html:a> is defined, this is the link used for the label of an edge. This value overrides any <html:a href="#URL">URL</html:a> defined for the edge.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1577,7 +1573,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    If true, the graph is rendered in landscape mode. Synonymous with <html:a rel="attr">rotate</html:a><html:code>=90</html:code>.
+                    If true, the graph is rendered in landscape mode. Synonymous with <html:a href="#rotate">rotate</html:a><html:code>=90</html:code>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1615,7 +1611,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Specifies the separator characters used to split the <html:a rel="attr">layers</html:a> attribute into a list of layer names.
+                    Specifies the separator characters used to split the <html:a href="#layers">layers</html:a> attribute into a list of layer names.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1652,7 +1648,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Specifies strictness of level constraints in neato when <html:a rel="attr">mode</html:a><html:code>=ipsep</html:code> or <html:code>hier</html:code>. Larger positive values mean stricter constraints, which demand more separation between levels. On the other hand, negative values will relax the constraints by allowing some overlap between the levels.
+                    Specifies strictness of level constraints in neato when <html:a href="#mode">mode</html:a><html:code>=ipsep</html:code> or <html:code>hier</html:code>. Larger positive values mean stricter constraints, which demand more separation between levels. On the other hand, negative values will relax the constraints by allowing some overlap between the levels.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1662,7 +1658,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Logical head of an edge. When <html:a rel="attr">compound</html:a> is true, if <html:a rel="attr">lhead</html:a> is defined and is the name of a cluster containing the real head, the edge is clipped to the boundary of the cluster. See <html:a rel="note">undirected</html:a>.
+                    Logical head of an edge. When <html:a href="#compound">compound</html:a> is true, if <html:a href="#lhead">lhead</html:a> is defined and is the name of a cluster containing the real head, the edge is clipped to the boundary of the cluster. See <html:a href="#undirected">undirected</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1676,7 +1672,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Label position, in <html:a rel="note">points</html:a>. The position indicates the center of the label.
+                    Label position, in <html:a href="#points">points</html:a>. The position indicates the center of the label.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1686,7 +1682,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Logical tail of an edge. When <html:a rel="attr">compound</html:a> is true, if <html:a rel="attr">ltail</html:a> is defined and is the name of a cluster containing the real tail, the edge is clipped to the boundary of the cluster. See <html:a rel="note">undirected</html:a>.
+                    Logical tail of an edge. When <html:a href="#compound">compound</html:a> is true, if <html:a href="#ltail">ltail</html:a> is defined and is the name of a cluster containing the real tail, the edge is clipped to the boundary of the cluster. See <html:a href="#undirected">undirected</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1700,10 +1696,10 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    For graphs, this sets x and y margins of canvas, in inches. If the margin is a single double, both margins are set equal to the given value.
+                    For graphs, this sets x and y margins of canvas, in inches. If the margin is a single value, both margins are set equal to the given value.
                 </html:p>
                 <html:p>
-                    Note that the margin is not part of the drawing but just empty space left around the drawing. It basically corresponds to a translation of drawing, as would be necessary to center a drawing on a page. Nothing is actually drawn in the margin. To actually extend the background of a drawing, see the <html:a rel="attr">pad</html:a> attribute.
+                    Note that the margin is not part of the drawing but just empty space left around the drawing. It basically corresponds to a translation of drawing, as would be necessary to center a drawing on a page. Nothing is actually drawn in the margin. To actually extend the background of a drawing, see the <html:a href="#pad">pad</html:a> attribute.
                 </html:p>
                 <html:p>
                     For nodes, this attribute specifies space left around the node's label. By default, the value is <html:code>0.11,0.055</html:code>.
@@ -1768,7 +1764,7 @@
                             <html:code>mode=KK</html:code>: uses the Kamada-Kawai version of the gradient descent method. <html:code>KK</html:code> is sometimes appreciably faster for small (number of nodes &lt; 100) graphs. A significant disadvantage is that <html:code>KK</html:code> may cycle.
                         </html:li>
                         <html:li>
-                            <html:code>mode=sgd</html:code>: uses a version of the Stochastic Gradient Descent method. <html:code>sgd</html:code>'s advantage is faster and more reliable convergence than both the previous methods, while <html:code>sgd</html:code>'s disadvantage is that it runs in a fixed number of iterations and may require larger values of <html:a rel="attr">maxiter</html:a> in some graphs.
+                            <html:code>mode=sgd</html:code>: uses a version of the Stochastic Gradient Descent method. <html:code>sgd</html:code>'s advantage is faster and more reliable convergence than both the previous methods, while <html:code>sgd</html:code>'s disadvantage is that it runs in a fixed number of iterations and may require larger values of <html:a href="#maxiter">maxiter</html:a> in some graphs.
                         </html:li>
                     </html:ul>
                 </html:p>
@@ -1779,7 +1775,7 @@
                             <html:code>mode=heir</html:code>: uses a top-down directionality similar to the layout used in dot
                         </html:li>
                         <html:li>
-                            <html:code>mode=ipsep</html:code>: uses the graph to specify minimum vertical and horizontal distances between nodes. (See the <html:a rel="attr">sep</html:a> attribute.)
+                            <html:code>mode=ipsep</html:code>: uses the graph to specify minimum vertical and horizontal distances between nodes. (See the <html:a href="#sep">sep</html:a> attribute.)
                         </html:li>
                     </html:ul>
                 </html:p>
@@ -1791,7 +1787,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    This value specifies how the distance matrix is computed for the input graph. The distance matrix specifies the ideal distance between every pair of nodes. neato attemps to find a layout which best achieves these distances. By default, it uses the length of the shortest path, where the length of each edge is given by its <html:a rel="attr">len</html:a> attribute. If <html:a rel="attr">model</html:a> is <html:code>circuit</html:code>, neato uses the circuit resistance model to compute the distances. This tends to emphasize clusters. If <html:a rel="attr">model</html:a> is <html:code>subset</html:code>, neato uses the subset model. This sets the edge length to be the number of nodes that are neighbors of exactly one of the end points, and then calculates the shortest paths. This helps to separate nodes with high degree.
+                    This value specifies how the distance matrix is computed for the input graph. The distance matrix specifies the ideal distance between every pair of nodes. neato attemps to find a layout which best achieves these distances. By default, it uses the length of the shortest path, where the length of each edge is given by its <html:a href="#len">len</html:a> attribute. If <html:a href="#model">model</html:a> is <html:code>circuit</html:code>, neato uses the circuit resistance model to compute the distances. This tends to emphasize clusters. If <html:a href="#model">model</html:a> is <html:code>subset</html:code>, neato uses the subset model. This sets the edge length to be the number of nodes that are neighbors of exactly one of the end points, and then calculates the shortest paths. This helps to separate nodes with high degree.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1815,7 +1811,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    By default, the justification of multi-line labels is done within the largest context that makes sense. Thus, in the label of a polygonal node, a left-justified line will align with the left side of the node (shifted by the prescribed <html:a rel="attr">margin</html:a>). In record nodes, left-justified line will line up with the left side of the enclosing column of fields. If <html:a rel="attr">nojustify</html:a> is <html:code>true</html:code>, multi-line labels will be justified in the context of itself. For example, if the attribute is set, the first label line is long, and the second is shorter and left-justified, the second will align with the left-most character in the first line, regardless of  how large the node might be.
+                    By default, the justification of multi-line labels is done within the largest context that makes sense. Thus, in the label of a polygonal node, a left-justified line will align with the left side of the node (shifted by the prescribed <html:a href="#margin">margin</html:a>). In record nodes, left-justified line will line up with the left side of the enclosing column of fields. If <html:a href="#nojustify">nojustify</html:a> is <html:code>true</html:code>, multi-line labels will be justified in the context of itself. For example, if the attribute is set, the first label line is long, and the second is shorter and left-justified, the second will align with the left-most character in the first line, regardless of  how large the node might be.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1839,7 +1835,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Used to set number of iterations in network simplex applications, used in computing node x coordinates. If defined, # iterations =  <html:a rel="attr">nslimit</html:a> * # nodes; otherwise,  # iterations = MAXINT.
+                    Used to set number of iterations in network simplex applications, used in computing node x coordinates. If defined, # iterations =  <html:a href="#nslimit">nslimit</html:a> * # nodes; otherwise,  # iterations = MAXINT.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1849,7 +1845,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Used to set number of iterations in network simplex applications, used for ranking nodes. If defined, # iterations =  <html:a rel="attr">nslimit1</html:a> * # nodes; otherwise,  # iterations = MAXINT.
+                    Used to set number of iterations in network simplex applications, used for ranking nodes. If defined, # iterations =  <html:a href="#nslimit1">nslimit1</html:a> * # nodes; otherwise,  # iterations = MAXINT.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1881,7 +1877,7 @@
     <xsd:annotation>
     <xsd:documentation>
     If "[lL]*", set graph orientation to landscape
-    Used only if <html:a rel="attr">rotate</html:a> is not defined.
+    Used only if <html:a href="#rotate">rotate</html:a> is not defined.
     </xsd:documentation>
     </xsd:annotation>
     </xsd:attribute>
@@ -1903,7 +1899,7 @@
                     Determines if and how node overlaps should be removed
                 </html:p>
                 <html:p>
-                    Nodes are first enlarged using the <html:a rel="attr">sep</html:a> attribute. If <html:code>true</html:code>, overlaps are retained. If the value is <html:code>scale</html:code>, overlaps are removed by uniformly scaling in x and y. If the value converts to <html:code>false</html:code> and Prism (a proximity graph-based algorithm) is available, it is used to remove node overlaps. This can also be invoked explicitly with <html:code>overlap=prism</html:code>. This technique starts with a small scaling up, controlled by the <html:a rel="attr">overlap_scaling</html:a> attribute, which can remove a significant portion of the overlap. The prism option also accepts an optional non-negative integer suffix. This can be used to control the number of attempts made at overlap removal. By default, <html:code>overlap=prism</html:code> is equivalent to <html:code>overlap=prism1000</html:code>. Setting <html:code>overlap=prism0</html:code> causes only the scaling phase to be run.
+                    Nodes are first enlarged using the <html:a href="#sep">sep</html:a> attribute. If <html:code>true</html:code>, overlaps are retained. If the value is <html:code>scale</html:code>, overlaps are removed by uniformly scaling in x and y. If the value converts to <html:code>false</html:code> and Prism (a proximity graph-based algorithm) is available, it is used to remove node overlaps. This can also be invoked explicitly with <html:code>overlap=prism</html:code>. This technique starts with a small scaling up, controlled by the <html:a href="#overlap_scaling">overlap_scaling</html:a> attribute, which can remove a significant portion of the overlap. The prism option also accepts an optional non-negative integer suffix. This can be used to control the number of attempts made at overlap removal. By default, <html:code>overlap=prism</html:code> is equivalent to <html:code>overlap=prism1000</html:code>. Setting <html:code>overlap=prism0</html:code> causes only the scaling phase to be run.
                 </html:p>
                 <html:p>
                     If Prism is not available, <html:code>overlap=false</html:code> node overlaps are removed by a Voronoi-based technique. This can always be invoked explicitly with <html:code>overlap=voronoi</html:code>.
@@ -1924,15 +1920,15 @@
                     If the value is <html:code>orthoxy</html:code> or <html:code>orthoyx</html:code>, overlaps are moved by optimizing two constraint problems, one for the x axis and one for the y. The suffix indicates which axis is processed first. If the value is <html:code>ortho</html:code>, the technique is similar to <html:code>orthoxy</html:code> except a heuristic is used to reduce the bias between the two passes. If the value is <html:code>ortho_yx</html:code>, the technique is the same as <html:code>ortho</html:code>, except the roles of x and y are reversed. The values <html:code>portho</html:code>, <html:code>porthoxy</html:code>, <html:code>porthoxy</html:code>, and <html:code>portho_yx</html:code> are similar to the previous four, except only pseudo-orthogonal ordering is enforced.
                 </html:p>
                 <html:p>
-                    If the layout is done by <html:code>neato</html:code> with <html:a rel="attr">mode</html:a><html:code>=ipsep</html:code>, then one can use <html:code>overlap=ipsep</html:code>. In this case, the overlap removal constraints are incorporated into the layout algorithm itself. N.B. At present, this only supports one level of clustering.
+                    If the layout is done by <html:code>neato</html:code> with <html:a href="#mode">mode</html:a><html:code>=ipsep</html:code>, then one can use <html:code>overlap=ipsep</html:code>. In this case, the overlap removal constraints are incorporated into the layout algorithm itself. N.B. At present, this only supports one level of clustering.
                 </html:p>
-                 <html:p>
-                    Except for <html:code>fdp</html:code> and <html:code>sfdp</html:code>, the layouts assume <html:code>overlap="true"</html:code> as the default. Fdp first uses a number of passes using built-in, force-directed technique to remove overlaps. Thus, <html:code>fdp</html:code> accepts <html:a rel="attr">overlap</html:a> with an integer prefix followed by a colon, specifying the number of tries. If there is no prefix, no initial tries will be performed. If there is nothing following a colon, none of the above methods will be attempted. By default, <html:code>fdp</html:code> uses <html:code>overlap="9:prism"</html:code>. Note that <html:code>overlap="true"</html:code>, <html:code>overlap="0:true"</html:code> and <html:code>overlap="0:"</html:code> all turn off all overlap removal.
-                 </html:p>
-                 <html:p>
-                     By default, <html:code>sfdp</html:code> uses <html:code>overlap=prism0</html:code>.
-                 </html:p>
-                 <html:p>
+                <html:p>
+                    Except for <html:code>fdp</html:code> and <html:code>sfdp</html:code>, the layouts assume <html:code>overlap="true"</html:code> as the default. Fdp first uses a number of passes using built-in, force-directed technique to remove overlaps. Thus, <html:code>fdp</html:code> accepts <html:a href="#overlap">overlap</html:a> with an integer prefix followed by a colon, specifying the number of tries. If there is no prefix, no initial tries will be performed. If there is nothing following a colon, none of the above methods will be attempted. By default, <html:code>fdp</html:code> uses <html:code>overlap="9:prism"</html:code>. Note that <html:code>overlap="true"</html:code>, <html:code>overlap="0:true"</html:code> and <html:code>overlap="0:"</html:code> all turn off all overlap removal.
+                </html:p>
+                <html:p>
+                    By default, <html:code>sfdp</html:code> uses <html:code>overlap=prism0</html:code>.
+                </html:p>
+                <html:p>
                     Except for the Voronoi method, all of these transforms preserve the orthogonal ordering of the original layout. That is, if the x coordinates of two nodes are originally the same, they will remain the same, and if the x coordinate of one node is originally less than the x coordinate of another, this relation will still hold in the transformed layout. The similar properties hold for the y coordinates. This is not quite true for the <html:code>porth*</html:code> cases. For these, orthogonal ordering is only preserved among nodes related by an edge.
                 </html:p>
             </xsd:documentation>
@@ -1948,10 +1944,10 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    This is true if the value of pack is <html:code>true</html:code> (case-insensitive) or a non-negative integer. If true, each connected component of the graph is laid out separately, and then the graphs are packed tightly. If pack has an integral value, this is used as the size, in <html:a href="#points">points</html:a>, of a margin around each part; otherwise, a default margin of 8 is used. If pack is interpreted as false, the entire graph is laid out together. The granularity and method of packing is influenced by the <html:a rel="attr">packmode</html:a> attribute.
+                    This is true if the value of pack is <html:code>true</html:code> (case-insensitive) or a non-negative integer. If true, each connected component of the graph is laid out separately, and then the graphs are packed tightly. If pack has an integral value, this is used as the size, in <html:a href="#points">points</html:a>, of a margin around each part; otherwise, a default margin of 8 is used. If pack is interpreted as false, the entire graph is laid out together. The granularity and method of packing is influenced by the <html:a href="#packmode">packmode</html:a> attribute.
                 </html:p>
                 <html:p>
-                    For layouts which always do packing, such a twopi, the <html:a rel="attr">pack</html:a> attribute is just used to set the margin.
+                    For layouts which always do packing, such a twopi, the <html:a href="#pack">pack</html:a> attribute is just used to set the margin.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1961,7 +1957,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    This indicates the granularity and method used for packing (cf. <html:a rel="type">packMode</html:a>). Note that defining <html:a rel="attr">packmode</html:a> will automatically turn on packing as though one had set <html:code>pack=true</html:code>.
+                    This indicates the granularity and method used for packing (cf. <html:a href="#packMode">packMode</html:a>). Note that defining <html:a href="#packmode">packmode</html:a> will automatically turn on packing as though one had set <html:code>pack=true</html:code>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1971,7 +1967,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    The pad attribute specifies how much, in inches, to extend the drawing area around the minimal area needed to draw the graph. If the pad is a single double, both the x and y pad values are set equal to the given value. This area is part of the drawing and will be filled with the background color, if appropriate.
+                    The pad attribute specifies how much, in inches, to extend the drawing area around the minimal area needed to draw the graph. If the pad is a single value, both the x and y pad values are set equal to the given value. This area is part of the drawing and will be filled with the background color, if appropriate.
                 </html:p>
                 <html:p>
                     Normally, a small pad is used for aesthetic reasons, especially when a background color is used, to avoid having nodes and edges abutting the boundary of the drawn region.
@@ -1984,10 +1980,10 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Width and height of output pages, in inches. If this is set and is smaller than the size of the layout, a rectangular array of pages of the specified page size is overlaid on the layout, with origins aligned in the lower-left corner, thereby partitioning the layout into pages. The pages are then produced one at a time, in <html:a rel="attr">pagedir</html:a> order.
+                    Width and height of output pages, in inches. If this is set and is smaller than the size of the layout, a rectangular array of pages of the specified page size is overlaid on the layout, with origins aligned in the lower-left corner, thereby partitioning the layout into pages. The pages are then produced one at a time, in <html:a href="#pagedir">pagedir</html:a> order.
                 </html:p>
                 <html:p>
-                    At present, this only works for PostScript output. For other types of output, one should use another tool to split the output into multiple output files. Or use the <html:a rel="attr">viewport</html:a> to generate multiple files.
+                    At present, this only works for PostScript output. For other types of output, one should use another tool to split the output into multiple output files. Or use the <html:a href="#viewport">viewport</html:a> to generate multiple files.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -1997,7 +1993,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    If the <html:a rel="attr">page</html:a> attribute is set and applicable, this attribute specifies the order in which the pages are emitted. This is limited to one of the 8 row or column major orders.
+                    If the <html:a href="#page">page</html:a> attribute is set and applicable, this attribute specifies the order in which the pages are emitted. This is limited to one of the 8 row or column major orders.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2007,10 +2003,10 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Color used to draw the bounding box around a cluster. If <html:a rel="attr">pencolor</html:a> is not defined, <html:a rel="attr">color</html:a> is used. If this is not defined, <html:a rel="attr">bgcolor</html:a> is used. If this is not defined, the default is used.
+                    Color used to draw the bounding box around a cluster. If <html:a href="#pencolor">pencolor</html:a> is not defined, <html:a href="#color">color</html:a> is used. If this is not defined, <html:a href="#bgcolor">bgcolor</html:a> is used. If this is not defined, the default is used.
                 </html:p>
                 <html:p>
-                    Note that a cluster inherits the root graph's attributes if defined. Thus, if the root graph has defined a <html:a rel="attr">pencolor</html:a>, this will override a <html:a rel="attr">color</html:a> or <html:a rel="attr">bgcolor</html:a> attribute set for the cluster.
+                    Note that a cluster inherits the root graph's attributes if defined. Thus, if the root graph has defined a <html:a href="#pencolor">pencolor</html:a>, this will override a <html:a href="#color">color</html:a> or <html:a href="#bgcolor">bgcolor</html:a> attribute set for the cluster.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2038,7 +2034,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    If true and the node has a pos attribute on input, neato prevents the node from moving from the input position. This property can also be specified in the pos attribute itself (cf. the <html:a rel="attr">point</html:a> type).
+                    If true and the node has a pos attribute on input, neato prevents the node from moving from the input position. This property can also be specified in the pos attribute itself (cf. the <html:a href="#point">point</html:a> type).
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2069,7 +2065,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    If <html:a rel="attr">quantum</html:a> &gt; 0.0, node label dimensions will be rounded to integral multiples of the quantum.
+                    If <html:a href="#quantum">quantum</html:a> &gt; 0.0, node label dimensions will be rounded to integral multiples of the quantum.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2082,7 +2078,31 @@
                     Rank constraints on the nodes in a subgraph
                 </html:p>
                 <html:p>
-                    If <html:code>same</html:code>, all nodes are placed on the same rank. If <html:code>min</html:code>, all nodes are placed on the minimum rank. If <html:code>source</html:code>, all nodes are placed on the minimum rank, and the only nodes on the minimum rank belong to some subgraph whose rank attribute is "source" or "min". Analogous criteria hold for <html:a rel="attr">rank</html:a>=<html:code>max</html:code> and <html:a rel="attr">rank</html:a>=<html:code>sink</html:code>. (Note: the minimum rank is topmost or leftmost, and the maximum rank is bottommost or rightmost.)
+                    <html:table><html:tbody>
+                        <html:tr>
+                            <html:td><html:code>same</html:code></html:td>
+                            <html:td>all nodes placed on the same rank</html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td><html:code>min</html:code></html:td>
+                            <html:td>all nodes placed on the minimum rank</html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td><html:code>source</html:code></html:td>
+                            <html:td>all nodes placed on the minimum rank, and the only nodes on the minimum rank belong to some subgraph whose rank attribute is <html:code>source</html:code> or <html:code>min</html:code></html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td><html:code>max</html:code></html:td>
+                            <html:td>all nodes placed on the maximum rank</html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td><html:code>sink</html:code></html:td>
+                            <html:td>all nodes placed on the maximum rank, and the only nodes on the maximum rank belong to some subgraph whose rank attribute is <html:code>sink</html:code> or <html:code>max</html:code></html:td>
+                        </html:tr>
+                    </html:tbody></html:table>
+                </html:p>
+                <html:p>
+                    Note: the minimum rank is topmost or leftmost, and the maximum rank is bottommost or rightmost.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2092,7 +2112,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Sets direction of graph layout. For example, if <html:a rel="attr">rankdir</html:a>="LR", and barring cycles, an edge <html:code>T -&gt; H;</html:code> will go from left to right. By default, graphs are laid out from top to bottom.
+                    Sets direction of graph layout. For example, if <html:a href="#rankdir">rankdir</html:a><html:code>=LR</html:code>, and barring cycles, an edge <html:code>T -&gt; H;</html:code> will go from left to right. By default, graphs are laid out from top to bottom.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2105,13 +2125,13 @@
                     Specifies separation between ranks
                 </html:p>
                 <html:p>
-                    type: <html:a rel="attr">double</html:a> | <html:a rel="attr">doubleList</html:a>, default: 0.5 (dot), 1.0 (twopi), minimum: 0.02
+                    type: <html:a href="#double">double</html:a> | <html:a href="#doubleList">doubleList</html:a>, default: 0.5 (dot), 1.0 (twopi), minimum: 0.02
                 </html:p>
                 <html:p>
                     In dot, sets the desired rank separation, in inches. This is the minimum vertical distance between the bottom of the nodes in one rank and the tops of nodes in the next. If the value contains "equally", the centers of all ranks are spaced equally apart. Note that both settings are possible, e.g., <html:code>ranksep = "1.2 equally"</html:code>.
                 </html:p>
                 <html:p>
-                    In twopi, specifies radial separation of concentric circles. For twopi, ranksep can also be a list of doubles. The first double specifies the radius of the inner circle; the second double specifies the increase in radius from the first circle to the second; etc. If there are more circles than numbers, the last number is used as the increment for the remainder.
+                    In twopi, specifies radial separation of concentric circles. For twopi, ranksep can also be a list of double values. The first value specifies the radius of the inner circle; the second value specifies the increase in radius from the first circle to the second; etc. If there are more circles than numbers, the last number is used as the increment for the remainder.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2121,22 +2141,38 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Sets the aspect ratio (drawing height/drawing width) for the drawing. Note that this is adjusted before the <html:a rel="attr">size</html:a> attribute constraints are enforced.
+                    Sets the aspect ratio (drawing height/drawing width) for the drawing. Note that this is adjusted before the <html:a href="#size">size</html:a> attribute constraints are enforced.
                 </html:p>
                 <html:p>
-                    If <html:a rel="attr">ratio</html:a> is numeric, it is taken as the desired aspect ratio. Then, if the actual aspect ratio is less than the desired ratio, the drawing height is scaled up to achieve the desired ratio; if the actual ratio is greater than that desired ratio, the drawing width is scaled up.
+                    Note that <html:code>fill, compress, expand</html:code> settings depend on <html:a href="#size">size</html:a> being set.
                 </html:p>
                 <html:p>
-                    If <html:a rel="attr">ratio</html:a><html:code>=fill</html:code> and the <html:a rel="attr">size</html:a> attribute is set, node positions are scaled, separately in both x and y, so that the final drawing exactly fills the specified size.
-                </html:p>
-                <html:p>
-                    If <html:a rel="attr">ratio</html:a><html:code>=compress</html:code> and the <html:a rel="attr">size</html:a> attribute is set, dot attempts to compress the initial layout to fit in the given size. This achieves a tighter packing of nodes but reduces the balance and symmetry. This feature only works in dot.
-                </html:p>
-                <html:p>
-                    If <html:a rel="attr">ratio</html:a><html:code>=expand</html:code>, the <html:a rel="attr">size</html:a> attribute is set, and both the width and the height of the graph are less than the value in  <html:a rel="attr">size</html:a>, node positions are scaled uniformly until at least one dimension fits <html:a rel="attr">size</html:a> exactly. Note that this is distinct from using <html:a rel="attr">size</html:a> as the desired size, as here the drawing is expanded before edges are generated and all node and text sizes remain unchanged.
-                </html:p>
-                <html:p>
-                    If <html:a rel="attr">ratio</html:a><html:code>=auto</html:code>, the <html:a rel="attr">page</html:a> attribute is set and the graph cannot be drawn on a single page, then <html:a rel="attr">size</html:a> is set to an ''ideal'' value. In particular, the size in a given dimension will be the smallest integral multiple of the page size in that dimension which is at least half the current size. The two dimensions are then scaled independently to the new size. This feature only works in dot.
+                    <html:table><html:tbody>
+                        <html:tr>
+                            <html:td><html:code>fill</html:code></html:td>
+                            <html:td>
+                                Node positions are scaled separately in both x and y so that the final drawing exactly fills the specified size.
+                            </html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td><html:code>compress</html:code></html:td>
+                            <html:td>
+                                This feature only works in dot, which attempts to compress the initial layout to fit in the given size. This achieves a tighter packing of nodes but reduces the balance and symmetry.
+                            </html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td><html:code>expand</html:code></html:td>
+                            <html:td>
+                                If both width and height of graph are less than <html:a href="#size">size</html:a>, node positions are scaled uniformly until at least one dimension fits exactly. Note that this is distinct from using <html:a href="#size">size</html:a> as the desired size, as here the drawing is expanded before edges are generated and all node and text sizes remain unchanged.
+                            </html:td>
+                        </html:tr>
+                        <html:tr>
+                            <html:td><html:code>auto</html:code></html:td>
+                            <html:td>
+                                If <html:a href="#page">page</html:a> is set and graph cannot be drawn on single page, then <html:a href="#size">size</html:a> is set to an "ideal" value. In particular, the size in a given dimension will be the smallest integral multiple of the page size in that dimension which is at least half the current size. The two dimensions are then scaled independently to the new size. This feature only works in dot.
+                            </html:td>
+                        </html:tr>
+                    </html:tbody></html:table>
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2146,7 +2182,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Rectangles for fields of records, in <html:a rel="note">points</html:a>.
+                    Rectangles for fields of records, in <html:a href="#points">points</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2180,7 +2216,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    This is a synonym for the <html:a rel="attr">dpi</html:a> attribute.
+                    This is a synonym for the <html:a href="#dpi">dpi</html:a> attribute.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2214,7 +2250,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Edges with the same head and the same <html:a rel="attr">samehead</html:a> value are aimed at the same point on the head. See <html:a rel="note">undirected</html:a>.
+                    Edges with the same head and the same <html:a href="#samehead">samehead</html:a> value are aimed at the same point on the head. See <html:a href="#undirected">undirected</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2224,7 +2260,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Edges with the same tail and the same <html:a rel="attr">sametail</html:a> value are aimed at the same point on the tail. See <html:a rel="note">undirected</html:a>.
+                    Edges with the same tail and the same <html:a href="#sametail">sametail</html:a> value are aimed at the same point on the tail. See <html:a href="#undirected">undirected</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2234,7 +2270,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    If the input graph defines the <html:a rel="attr">vertices</html:a> attribute, and output is dot or xdot, this gives the number of points used for a node whose shape is a circle or ellipse. It plays the same role in neato, when adjusting the layout to avoid overlapping nodes, and in image maps.
+                    If the input graph defines the <html:a href="#vertices">vertices</html:a> attribute, and output is dot or xdot, this gives the number of points used for a node whose shape is a circle or ellipse. It plays the same role in neato, when adjusting the layout to avoid overlapping nodes, and in image maps.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2254,10 +2290,10 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Fraction to increase polygons (multiply coordinates by 1 + sep) for purposes of determining overlap. Guarantees a minimal non-zero distance between nodes. If unset but <html:a rel="attr">esep</html:a> is defined, <html:a rel="attr">sep</html:a> will be set to <html:code>esep/0.8</html:code>. If <html:a rel="attr">esep</html:a> is unset, the default value is used.
+                    Fraction to increase polygons (multiply coordinates by 1 + sep) for purposes of determining overlap. Guarantees a minimal non-zero distance between nodes. If unset but <html:a href="#esep">esep</html:a> is defined, <html:a href="#sep">sep</html:a> will be set to <html:code>esep/0.8</html:code>. If <html:a href="#esep">esep</html:a> is unset, the default value is used.
                 </html:p>
                 <html:p>
-                    When <html:a rel="attr">overlap</html:a><html:code>=ipsep</html:code> or <html:code>vpsc</html:code>, <html:a rel="attr">sep</html:a> gives a minimum distance, in inches, to be left between nodes. In this case, if <html:a rel="attr">sep</html:a> is a <html:a rel="attr">point</html:a>, the x and y separations can be specified separately.
+                    When <html:a href="#overlap">overlap</html:a><html:code>=ipsep</html:code> or <html:code>vpsc</html:code>, <html:a href="#sep">sep</html:a> gives a minimum distance, in inches, to be left between nodes. In this case, if <html:a href="#sep">sep</html:a> is a <html:a href="#point">point</html:a>, the x and y separations can be specified separately.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2277,10 +2313,10 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    (Deprecated) If defined, shapefile specifies a file containing user-supplied node content. The <html:a rel="attr">shape</html:a> of the node is set to <html:code>box</html:code>. The image in the shapefile must be rectangular. The image formats supported as well as the precise semantics of how the file is used depends on the <html:a href="https://www.graphviz.org/doc/info/output.html">output format</html:a>. For further details, see <html:a href="https://www.graphviz.org/Documentation/html/shapehowto.html#ext_image">External PostScript files</html:a>.
+                    (Deprecated) If defined, shapefile specifies a file containing user-supplied node content. The <html:a href="#shape">shape</html:a> of the node is set to <html:code>box</html:code>. The image in the shapefile must be rectangular. The image formats supported as well as the precise semantics of how the file is used depends on the <html:a href="https://www.graphviz.org/doc/info/output.html">output format</html:a>. For further details, see <html:a href="https://www.graphviz.org/Documentation/html/shapehowto.html#ext_image">External PostScript files</html:a>.
                 </html:p>
                 <html:p>
-                    There is one exception to this usage. If <html:a rel="attr">shape</html:a> is set to <html:code>epsf</html:code>, <html:a rel="attr">shapefile</html:a> gives a filename containing a definition of the node in PostScript. The graphics defined must be contain all of the node content, including any desired boundaries. For further details, see <html:a href="https://www.graphviz.org/Documentation/html/shapehowto.html#ext_ps">External PostScript files</html:a>.
+                    There is one exception to this usage. If <html:a href="#shape">shape</html:a> is set to <html:code>epsf</html:code>, <html:a href="#shapefile">shapefile</html:a> gives a filename containing a definition of the node in PostScript. The graphics defined must be contain all of the node content, including any desired boundaries. For further details, see <html:a href="https://www.graphviz.org/Documentation/html/shapehowto.html#ext_ps">External PostScript files</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2300,7 +2336,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Number of sides if <html:a rel="attr">shape</html:a><html:code>=polygon</html:code>.
+                    Number of sides if <html:a href="#shape">shape</html:a><html:code>=polygon</html:code>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2313,10 +2349,10 @@
                     Maximum width and height of drawing, in inches. If defined and the drawing is too large, the drawing is uniformly scaled down so that it fits within the given size.
                 </html:p>
                 <html:p>
-                    If <html:a rel="attr">size</html:a> ends in an exclamation point (<html:code>!</html:code>), then it is taken to be the desired size. In this case, if both dimensions of the drawing are less than <html:a rel="attr">size</html:a>, the drawing is scaled up uniformly until at least one dimension equals its dimension in <html:a rel="attr">size</html:a>.
+                    If <html:a href="#size">size</html:a> ends in an exclamation point (<html:code>!</html:code>), then it is taken to be the desired size. In this case, if both dimensions of the drawing are less than <html:a href="#size">size</html:a>, the drawing is scaled up uniformly until at least one dimension equals its dimension in <html:a href="#size">size</html:a>.
                 </html:p>
                 <html:p>
-                    Note that there is some interaction between the <html:a rel="attr">size</html:a> and <html:a rel="attr">ratio</html:a> attributes.
+                    Note that there is some interaction between the <html:a href="#size">size</html:a> and <html:a href="#ratio">ratio</html:a> attributes.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2326,7 +2362,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Skew factor for <html:a rel="attr">shape</html:a>=polygon. Positive values skew top of polygon to right; negative to left.
+                    Skew factor for <html:a href="#shape">shape</html:a>=polygon. Positive values skew top of polygon to right; negative to left.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2353,7 +2389,7 @@
                     <html:code>splines=curved</html:code> specifies edges should be drawn as curved arcs.
                 </html:p>
                 <html:p>
-                    By default, the attribute is unset. How this is interpreted depends on the layout. For dot, the default is to draw edges as splines. For all other layouts, the default is to draw edges as line segments. Note that for these latter layouts, if <html:code>splines="true"</html:code>, this requires non-overlapping nodes (cf. <html:a rel="attr">overlap</html:a>). If fdp is used for layout and <html:code>splines="compound"</html:code>, then the edges are drawn to avoid clusters as well as nodes.
+                    By default, the attribute is unset. How this is interpreted depends on the layout. For dot, the default is to draw edges as splines. For all other layouts, the default is to draw edges as line segments. Note that for these latter layouts, if <html:code>splines="true"</html:code>, this requires non-overlapping nodes (cf. <html:a href="#overlap">overlap</html:a>). If fdp is used for layout and <html:code>splines="compound"</html:code>, then the edges are drawn to avoid clusters as well as nodes.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2386,7 +2422,7 @@
                     A URL or pathname specifying an XML style sheet, used in SVG output.
                 </html:p>
                 <html:p>
-                    Combine with <html:a rel="attr">class</html:a> to style elements using CSS selectors.
+                    Combine with <html:a href="#class">class</html:a> to style elements using CSS selectors.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2396,7 +2432,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Position of an edge's tail label, in <html:a rel="attr">point</html:a>s.
+                    Position of an edge's tail label, in <html:a href="#point">points</html:a>.
                 </html:p>
                 <html:p>
                     The position indicates the center of the label.
@@ -2419,7 +2455,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Synonym for <html:a rel="attr">tailURL</html:a>.
+                    Synonym for <html:a href="#tailURL">tailURL</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2429,7 +2465,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Text label to be placed near tail of edge. See <html:a rel="note">undirected</html:a>.
+                    Text label to be placed near tail of edge. See <html:a href="#undirected">undirected</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2439,7 +2475,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Indicates where on the tail node to attach the tail of the edge. See <html:a rel="note">undirected</html:a>.
+                    Indicates where on the tail node to attach the tail of the edge. See <html:a href="#undirected">undirected</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2449,7 +2485,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    If the edge has a <html:a rel="attr">tailURL</html:a>, this attribute determines which window of the browser is used for the URL. Setting it to "_graphviz" will open a new window if it doesn't already exist, or reuse it if it does. If undefined, the value of the <html:a rel="attr">target</html:a> is used.
+                    If the edge has a <html:a href="#tailURL">tailURL</html:a>, this attribute determines which window of the browser is used for the URL. Setting it to "_graphviz" will open a new window if it doesn't already exist, or reuse it if it does. If undefined, the value of the <html:a href="#target">target</html:a> is used.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2459,7 +2495,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Tooltip annotation attached to the tail of an edge. This is used only if the edge has a <html:a rel="attr">tailURL</html:a> attribute.
+                    Tooltip annotation attached to the tail of an edge. This is used only if the edge has a <html:a href="#tailURL">tailURL</html:a> attribute.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2469,7 +2505,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    If <html:a rel="attr">tailURL</html:a> is defined, it is output as part of the tail label of the edge. Also, this value is used near the tail node, overriding any <html:a rel="attr">URL</html:a> value. See <html:a rel="note">undirected</html:a>.
+                    If <html:a href="#tailURL">tailURL</html:a> is defined, it is output as part of the tail label of the edge. Also, this value is used near the tail node, overriding any <html:a href="#URL">URL</html:a> value. See <html:a href="#undirected">undirected</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2493,7 +2529,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Tooltip annotation attached to the node or edge. If unset, Graphviz will use the object's <html:a rel="attr">label</html:a> if defined. Note that if the label is a record specification or an HTML-like label, the resulting tooltip may be unhelpful. In this case, if tooltips will be generated, the user should set a <html:code>tooltip</html:code> attribute explicitly.
+                    Tooltip annotation attached to the node or edge. If unset, Graphviz will use the object's <html:a href="#label">label</html:a> if defined. Note that if the label is a record specification or an HTML-like label, the resulting tooltip may be unhelpful. In this case, if tooltips will be generated, the user should set a <html:code>tooltip</html:code> attribute explicitly.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2503,13 +2539,13 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    If set explicitly to true or false, the value determines whether or not internal bitmap rendering relies on a truecolor color model or uses a color palette. If the attribute is unset, truecolor is not used unless there is a <html:a rel="attr">shapefile</html:a> property for some node in the graph. The output model will use the input model when possible.
+                    If set explicitly to true or false, the value determines whether or not internal bitmap rendering relies on a truecolor color model or uses a color palette. If the attribute is unset, truecolor is not used unless there is a <html:a href="#shapefile">shapefile</html:a> property for some node in the graph. The output model will use the input model when possible.
                 </html:p>
                 <html:p>
                     Use of color palettes results in less memory usage during creation of the bitmaps and smaller output files.
                 </html:p>
                 <html:p>
-                    Usually, the only time it is necessary to specify the truetype model is if the graph uses more than 256 colors. However, if one uses <html:a rel="attr">bgcolor</html:a>=transparent with a color palette, font antialiasing can show up as a fuzzy white area around characters. Using <html:a rel="attr">truecolor</html:a>=true avoids this problem.
+                    Usually, the only time it is necessary to specify the truetype model is if the graph uses more than 256 colors. However, if one uses <html:a href="#bgcolor">bgcolor</html:a>=transparent with a color palette, font antialiasing can show up as a fuzzy white area around characters. Using <html:a href="#truecolor">truecolor</html:a>=true avoids this problem.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2525,7 +2561,7 @@
                     For svg, cmapx and imap output, the active area for a node is its visible image. For example, an unfilled node with no drawn boundary will only be active on its label. For other output, the active area is its bounding box. The active area for a cluster is its bounding box. For edges, the active areas are small circles where the edge contacts its head and tail nodes. In addition, for svg, cmapx and imap, the active area includes a thin polygon approximating the edge. The circles may overlap the related node, and the edge URL dominates. If the edge has a label, this will also be active. Finally, if the edge has a head or tail label, this will also be active.
                 </html:p>
                 <html:p>
-                    Note that, for edges, the attributes <html:a rel="attr">headURL</html:a>, <html:a rel="attr">tailURL</html:a>, <html:a rel="attr">labelURL</html:a> and <html:a rel="attr">edgeURL</html:a> allow control of various parts of an edge. Also note that, if active areas of two edges overlap, it is unspecified which area dominates.
+                    Note that, for edges, the attributes <html:a href="#headURL">headURL</html:a>, <html:a href="#tailURL">tailURL</html:a>, <html:a href="#labelURL">labelURL</html:a> and <html:a href="#edgeURL">edgeURL</html:a> allow control of various parts of an edge. Also note that, if active areas of two edges overlap, it is unspecified which area dominates.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2535,7 +2571,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    If the input graph defines this attribute, the node is polygonal, and output is dot or xdot, this attribute provides the coordinates of the vertices of the node's polygon, in inches. If the node is an ellipse or circle, the <html:a rel="attr">samplepoints</html:a> attribute affects the output.
+                    If the input graph defines this attribute, the node is polygonal, and output is dot or xdot, this attribute provides the coordinates of the vertices of the node's polygon, in inches. If the node is an ellipse or circle, the <html:a href="#samplepoints">samplepoints</html:a> attribute affects the output.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2565,7 +2601,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Weight of edge. In dot, the heavier the weight, the shorter, straighter and more vertical the edge is. In neato, the heavier the weight, the more neato will try to place the end points so that the length of the edge is <html:a rel="attr">len</html:a>.
+                    Weight of edge. In dot, the heavier the weight, the shorter, straighter and more vertical the edge is. In neato, the heavier the weight, the more neato will try to place the end points so that the length of the edge is <html:a href="#len">len</html:a>.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2575,7 +2611,7 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Width of node, in inches. This is taken as the initial, minimum width of the node. If <html:a rel="attr">fixedsize</html:a> is true, this will be the final width of the node. Otherwise, if the node label requires more width to fit, the node's width will be increased to contain the label. Note also that, if the output format is dot, the value given to <html:a rel="attr">width</html:a> will be the final value.
+                    Width of node, in inches. This is taken as the initial, minimum width of the node. If <html:a href="#fixedsize">fixedsize</html:a> is true, this will be the final width of the node. Otherwise, if the node label requires more width to fit, the node's width will be increased to contain the label. Note also that, if the output format is dot, the value given to <html:a href="#width">width</html:a> will be the final value.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2591,10 +2627,10 @@
         <xsd:annotation>
             <xsd:documentation>
                 <html:p>
-                    Provides z coordinate value for 3D layouts and displays. If the graph has <html:a rel="attr">dim</html:a> set to 3 (or more), neato will use a node's <html:a rel="attr">z</html:a> value for the z coordinate of its initial position if its <html:a rel="attr">pos</html:a> attribute is also defined.
+                    Provides z coordinate value for 3D layouts and displays. If the graph has <html:a href="#dim">dim</html:a> set to 3 (or more), neato will use a node's <html:a href="#z">z</html:a> value for the z coordinate of its initial position if its <html:a href="#pos">pos</html:a> attribute is also defined.
                 </html:p>
                 <html:p>
-                    Even if no <html:a rel="attr">z</html:a> values are specified in the input, it is necessary to declare a <html:a rel="attr">z</html:a> attribute for nodes, e.g, using <html:code>node[z=""]</html:code> in order to get z values on output. Thus, setting <html:code>dim=3</html:code> but not declaring <html:a rel="attr">z</html:a> will cause <html:code>neato -Tvrml</html:code> to layout the graph in 3D but project the layout onto the xy-plane for the rendering. If the <html:a rel="attr">z</html:a> attribute is declared, the final rendering will be in 3D.
+                    Even if no <html:a href="#z">z</html:a> values are specified in the input, it is necessary to declare a <html:a href="#z">z</html:a> attribute for nodes, e.g, using <html:code>node[z=""]</html:code> in order to get z values on output. Thus, setting <html:code>dim=3</html:code> but not declaring <html:a href="#z">z</html:a> will cause <html:code>neato -Tvrml</html:code> to layout the graph in 3D but project the layout onto the xy-plane for the rendering. If the <html:a href="#z">z</html:a> attribute is declared, the final rendering will be in 3D.
                 </html:p>
             </xsd:documentation>
         </xsd:annotation>
@@ -2652,7 +2688,7 @@
         <xsd:attribute ref="nojustify" default="false" />
         <xsd:attribute ref="penwidth" />
         <xsd:attribute ref="pos" />
-        <xsd:attribute ref="radius" default="0.0" /> 
+        <xsd:attribute ref="radius" default="0.0" />
         <xsd:attribute ref="samehead" />
         <xsd:attribute ref="sametail" />
         <xsd:attribute ref="showboxes" default="0" />

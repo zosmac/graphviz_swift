@@ -12,6 +12,10 @@ import WebKit
     let page = WebPage()
 
     init() {
-        page.load(html: parsedAttributes.documentation, baseURL: URL(string: "about:blank")!)
+        loadHome()
+    }
+
+    func loadHome() {
+        page.load(html: parsedAttributes.documentation)
     }
 }
