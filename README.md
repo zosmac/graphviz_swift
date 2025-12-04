@@ -84,7 +84,7 @@ The final button displays a sidebar for updating global graph, node, or edge att
 
 ![GraphvizSwiftAttrs](Readme/GraphvizSwiftAttrs.png)
 
-For guidance on setting attributes, select *Show Attributes Documentation* from the View menu:
+For guidance on setting attributes, select *Attributes Documentation* from the Window menu. Note that some of the links in the documentation link to external sites. To return to the attributes documentation page, select the Home button in the title bar.
 
 ![GraphvizSwiftAttrsDoc](Readme/GraphvizSwiftAttrsDoc.png)
 
