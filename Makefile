@@ -25,7 +25,7 @@ ARCH=-arch $(UNAME_M)
 graphviz: clean $(PREFIX)/bin/dot
 
 .PHONY: pkg
-pkg: $(PREFIX)/bin/dot graphvizswift-$(UNAME_M).pkg
+pkg: cleanpkg $(PREFIX)/bin/dot graphvizswift-$(UNAME_M).pkg
 
 graphvizswift-$(UNAME_M).pkg: Resources/Component.plist $(BUILD_DIR)/Release/$(APP_NAME).app $(BUILD_DIR)/Scripts/postinstall
 	@echo "\n============================="
@@ -86,6 +86,14 @@ $(GV_DIR)/configure:
 	mkdir -p $(BUILD_DIR)
 	curl --output-dir $(BUILD_DIR) -O -L $(GV_URL)
 	tar xzf $(BUILD_DIR)/$(notdir $(GV_URL)) -C $(BUILD_DIR)
+
+
+.PHONY: cleanpkg
+cleanpkg:
+	@echo "\n============="
+	@echo Clean Package
+	@echo "=============\n"
+	rm -rf $(BUILD_DIR)/Release graphvizswift-$(UNAME_M).pkg*
 
 .PHONY: clean
 clean:

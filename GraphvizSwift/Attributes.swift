@@ -172,7 +172,7 @@ final class ParsedAttributes {
                 documentation += simpleTypeDoc
             }
             if let listItemType = delegate.listItemType[key] {
-                documentation += "<p>A list of <a href=\"#\(listItemType)\">\(listItemType)s</a></p>"
+                documentation += "<p>A list of <a href=\"#\(listItemType)\">\(listItemType)</a> values.</p>"
             }
             for attribute in delegate.enumeration.filter({ $0.0 == key }) {
                 documentation += "Valid values for <code>\(key)</code> are<ul>"
@@ -266,6 +266,7 @@ final class AttributesParser: NSObject, XMLParserDelegate {
     ) {
 //        print("startelement", elementName, attributeDict)
         if !elementName.hasPrefix("xsd:") && !inDocumentation {
+            print("============ non xsd found!================== \(elementName)")
             return
         }
         switch elementName {
@@ -326,21 +327,14 @@ final class AttributesParser: NSObject, XMLParserDelegate {
             inDocumentation = true
         case "xsd:annotation":
             if let id = attributeDict["id"] {
+                // only top level annotations in the "overview" (special annotation section) have id, to create an anchor target.
                 inAnnotation = id // started special annotation section
                 overviewDoc += "<h2 id=\"\(id)\">\(id)</h2>\n"
             }
             //        case "xsd:restriction":
             //        case "xsd:schema":
         default:
-            if elementName.hasPrefix("html:") {
-                addHTML {
-                    var string = "<" + elementName.suffix(elementName.count - 5)
-                    for (key, value) in attributeDict {
-                        string += " \(key)=\"\(value)\""
-                    }
-                    return string + ">"
-                }
-            }
+            break
         }
     }
 
@@ -364,17 +358,27 @@ final class AttributesParser: NSObject, XMLParserDelegate {
         case "xsd:annotation":
             inAnnotation = nil
         default:
-            if elementName.hasPrefix("html:") {
-                addHTML { "</\(elementName.dropFirst(5))>" } // drop "html:"
-            }
+            break
         }
     }
 
-    // foundCharacters are part of the documentation
+    // CDATA are blocks of html documentation
+    func parser(
+        _ parser: XMLParser,
+        foundCDATA CDATABlock: Data
+    ) {
+        if let string = String(data: CDATABlock, encoding: .utf8) {
+            addHTML { string }
+        }
+    }
+
+    // foundCharacters are betwen tags, and probably a mistake.
     func parser(
         _ parser: XMLParser,
         foundCharacters string: String
     ) {
-        addHTML { string }
+        if string.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 {
+            print("Found Unexpected Characters: |\(string)|")
+        }
     }
 }
