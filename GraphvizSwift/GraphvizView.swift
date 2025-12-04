@@ -32,7 +32,7 @@ struct GraphvizView: View {
 
         ViewByType(document: $document, viewType: viewType, rendering: $rendering, zoomScale: zoomScale, viewScale: $viewScale)
             .inspector(isPresented: $inspectorPresented) {
-                AttributesView(graph: graph, attributes: $attributes, settings: $settings)
+                AttributesView(attributes: $attributes, settings: $settings)
                     .inspectorColumnWidth(min: 200, ideal: 300, max: 400)
             }
             .onChange(of: viewType, initial: true) {
@@ -81,7 +81,7 @@ struct GraphvizView: View {
                         Button("Zoom in", systemImage: "plus.magnifyingglass") { // "arrow.up.left.and.arrow.down.right") {
                             zoomScale *= 2.0.squareRoot()
                         }
-                        Button("Zoom to Fit", systemImage: "square.arrowtriangle.4.outward") { // "arrow.up.left.and.down.right.magnifyingglass") { // "arrow.up.left.and.down.right.and.arrow.up.right.and.down.left") {
+                        Button("Zoom to Fit", systemImage: "arrow.up.left.and.down.right.magnifyingglass") {
                             zoomScale = viewScale
                         }
                     }

@@ -13,7 +13,6 @@ struct AttributesView: View {
     @Environment(\.appearsActive) private var appearsActive
     @Environment(AttributesDocPage.self) var attributesDocPage
 
-    @Bindable var graph: Graph
     @Binding var attributes: Attributes?
     @Binding var settings: [[String: String]]
 

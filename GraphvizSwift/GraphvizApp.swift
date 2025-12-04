@@ -29,7 +29,7 @@ extension FocusedValues {
     @FocusedBinding(\.saveViewType) private var saveViewType
 
     private let attributesDocPage = AttributesDocPage()
-    @State private var attributesDocLaunched: Bool = false
+    @State private var attributesDocLaunched = false
 
     var body: some Scene {
         DocumentGroup(newDocument: GraphvizDocument()) {
@@ -48,6 +48,11 @@ extension FocusedValues {
             CommandGroup(replacing: .importExport) {
                 SaveViewButton(viewType: (saveViewType ?? viewType))
             }
+            CommandGroup(after: .singleWindowList) {
+                 Section {
+                     WindowVisibilityToggle(windowID: "AttributesDocView")
+                 }
+             }
             CommandGroup(replacing: .help) {
                 Button("GraphvizSwift Help") {
                     if let url = Bundle.main.url(forResource: "README", withExtension: "html") ?? URL(string: "https://github.com/zosmac/graphviz_swift/#welcome-to-graphvizswift") {
@@ -64,21 +69,21 @@ extension FocusedValues {
         .defaultSize(width: 800, height: 600)
         .defaultPosition(UnitPoint(x: 0.4, y: 0.1))
 
-        Window("Attributes Documentation", id: "AttributesDocView") {
-            WebView(attributesDocPage.page)
-                .onAppear {
-                    attributesDocPage.loadHome()
-                }
-                .toolbarBackground(Color.accentColor.opacity(0.3))
-                .toolbar(id: "AttributesDocViewToolbar") {
-                    ToolbarItem(id: "AttributesDocViewHomeButton", placement: .navigation) {
-                        Button("Home", systemImage: "house") {
-                            attributesDocPage.loadHome()
-                        }
-                        .glassEffect()
+        UtilityWindow("Attributes Documentation", id: "AttributesDocView") {
+            VStack(spacing: 0.0) {
+                HStack {
+                    Button("Overview", systemImage: "house") {
+                        attributesDocPage.loadHome()
                     }
+                    .glassEffect(.regular.tint(Color.accentColor.opacity(0.3)))
+                    Spacer()
                 }
+                .padding(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 0))
+                .background(Rectangle().fill(Color.accentColor.opacity(0.3)))
+                WebView(attributesDocPage.page)
+            }
         }
+        .commandsRemoved()
         .defaultSize(width: 350, height: 400)
         .defaultPosition(.topTrailing)
 

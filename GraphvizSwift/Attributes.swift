@@ -127,9 +127,10 @@ final class ParsedAttributes {
 <style>
     :root {
         color-scheme: light dark; /* Enables support for light-dark() */
-        --background-color: light-dark(#ffffff, #333333);
-        --text-color: light-dark(#000000, #ffffff);
-        --link-color: light-dark(#0000FF, #8888FF);
+        --background-color: light-dark(#fff, #333);
+        --text-color: light-dark(#000, #fff);
+        --link-color: light-dark(#00f, #88f);
+        --code-background-color: light-dark(#ddd, #666);
     }
     table {
         border-collapse: collapse; /* Collapse borders for a clean grid */
@@ -159,6 +160,8 @@ final class ParsedAttributes {
     code {
         font-family: Menlo,monospace;
         font-size: 9pt;
+        background-color: var(--code-background-color);
+        color: var(--text-color);
     }
 </style>
 <html><body id="home">
