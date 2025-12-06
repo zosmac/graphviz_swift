@@ -52,7 +52,7 @@ struct SettingsView: View {
                     .frame(width: 64, height: 64, alignment: .trailing)
             }
             Slider(value: $textSize, in: 9...32, step: 1) {
-                Text("Font Size (\(textSize, specifier: "%.f") pts)")
+                Text("Text Size (\(textSize, specifier: "%.f") pts)")
                     .frame(width: 110, alignment: .leading)
             } minimumValueLabel: {
                 Text("9")
