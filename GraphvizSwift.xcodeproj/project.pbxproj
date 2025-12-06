@@ -114,6 +114,8 @@
 		5885F76C2DDA9E1500CA803D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				58C1F79F2E7DF04500FC6690 /* Makefile */,
+				58AA16342DFD956200C4345A /* Info.plist */,
 				580221962ED687F5002D67B9 /* attributes.xml */,
 				5858DC6F2E9AAC2F0073F393 /* Assets.xcassets */,
 				58C1F7A12E7E220800FC6690 /* Component.plist */,
@@ -122,8 +124,6 @@
 				581859AB2E929F9200741031 /* Graphviz.icon */,
 				58AA16302DFD956200C4345A /* Graphviz-Bridging-Header.h */,
 				58EF96262E8DEBBC0077C399 /* Help.html */,
-				58AA16342DFD956200C4345A /* Info.plist */,
-				58C1F79F2E7DF04500FC6690 /* Makefile */,
 				587485B92E87793C00490930 /* Readme */,
 				58561A012E87331100814D06 /* README.md */,
 				58C21B5A2EDE770500C1F380 /* README.html */,
@@ -285,15 +285,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				58C21B5B2EDE770500C1F380 /* README.html in Resources */,
-				5858DC702E9AAC2F0073F393 /* Assets.xcassets in Resources */,
 				580221972ED687F5002D67B9 /* attributes.xml in Resources */,
+				5858DC702E9AAC2F0073F393 /* Assets.xcassets in Resources */,
 				58C1F7A22E7E220800FC6690 /* Component.plist in Resources */,
-				58561A022E87331100814D06 /* README.md in Resources */,
 				5854A8FB2E93EFC9009F1CC1 /* GraphGv.icns in Resources */,
 				5854A8FD2E93F05B009F1CC1 /* Graphviz.icns in Resources */,
 				581859AC2E929F9200741031 /* Graphviz.icon in Resources */,
 				58EF96272E8DEBBC0077C399 /* Help.html in Resources */,
+				58C21B5B2EDE770500C1F380 /* README.html in Resources */,
+				58561A022E87331100814D06 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

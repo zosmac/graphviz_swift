@@ -25,7 +25,7 @@ struct GraphvizView: View {
 
     @State private var rendering = Data()
     @State private var attributes: Attributes?
-    @State private var logMessage = LogMessage()
+    @State private var logMessages = LogMessages()
 
     var body: some View {
         @Bindable var graph = Graph(text: document.text)
@@ -38,18 +38,18 @@ struct GraphvizView: View {
             .onChange(of: viewType, initial: true) {
                 zoomScale = 1.0
                 rendering = graph.render(viewType: viewType, settings: settings)
-                logMessage = graph.logMessage
+                logMessages = graph.logMessages
                 attributes = graph.attributes
             }
             .onChange(of: settings) {
                 rendering = graph.render(viewType: viewType, settings: settings)
-                logMessage = graph.logMessage
+                logMessages = graph.logMessages
                 attributes = graph.attributes
             }
             .onChange(of: document.text) {
                 graph = Graph(text: document.text)
                 rendering = graph.render(viewType: viewType, settings: settings)
-                logMessage = graph.logMessage
+                logMessages = graph.logMessages
                 attributes = graph.attributes
             }
             .focusedSceneValue(\.saveViewPresented, $saveViewPresented)
@@ -86,14 +86,14 @@ struct GraphvizView: View {
                         }
                     }
                 }
-                ToolbarItem(id: "Message") {
-                    Button("Message", systemImage: "exclamationmark.message") {
-                        messagePresented = logMessage.message.isEmpty ? false : !messagePresented
+                ToolbarItem(id: "Messages") {
+                    Button("Messages", systemImage: "exclamationmark.message") {
+                        messagePresented = logMessages.block.isEmpty ? false : !messagePresented
                     }
-                    .foregroundStyle(logMessage.message.isEmpty ? .secondary : Color.red)
-                    .popover(isPresented: $messagePresented, arrowEdge: .trailing) {
+                    .foregroundStyle(logMessages.block.isEmpty ? .secondary : Color.red)
+                    .popover(isPresented: $messagePresented, arrowEdge: .leading) {
                         ScrollView {
-                            Text(logMessage.message)
+                            Text(logMessages.block)
                                 .foregroundStyle(Color.accentColor)
                         }
                         .frame(minWidth: 200)

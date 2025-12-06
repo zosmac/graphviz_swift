@@ -12,7 +12,7 @@ import SwiftUI
 @Observable final class Graph {
     var text: String
     var attributes: Attributes!
-    let logMessage = LogMessage()
+    let logMessages = LogMessages()
     private var layoutEngine = UserDefaults.standard.string(forKey: "layoutEngine") ?? defaultLayoutEngine
 
     init(text: String) {
@@ -20,7 +20,7 @@ import SwiftUI
     }
 
     func render(viewType: String, settings: [[String: String]]) -> Data {
-        let handler = GraphvizLogHandler(logMessage: logMessage)
+        let handler = GraphvizLogHandler(logMessages: logMessages)
         return handler.capture {
             print("RENDER for \(viewType)")
             guard let graph = agmemread(text + "\n") else { return Data() }
