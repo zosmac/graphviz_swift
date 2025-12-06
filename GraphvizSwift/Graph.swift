@@ -13,6 +13,7 @@ import SwiftUI
     var text: String
     var attributes: Attributes!
     let logMessage = LogMessage()
+    private var layoutEngine = UserDefaults.standard.string(forKey: "layoutEngine") ?? defaultLayoutEngine
 
     init(text: String) {
         self.text = text
@@ -47,13 +48,19 @@ import SwiftUI
                     nextSymbol = symbol
                 }
             }
+            // if layout engine not set in graph, apply value from app settings to the layout attribute for the graph
+            var engine = settings[AGRAPH]["layout"]
+            if engine == nil {
+                engine = layoutEngine
+                settings[AGRAPH]["layout"] = engine
+            }
             attributes = Attributes(applying: settings)
 
             var renderedData: UnsafeMutablePointer<CChar>?
             var renderedLength: size_t = 0
             let context = gvContext()
             defer { gvFreeContext(context) }
-            gvLayout(context, graph, "dot") // TODO: set as for -K CLI flag?
+            gvLayout(context, graph, engine)
             defer { gvFreeLayout(context, graph) }
             if gvRenderData(context, graph, viewType, &renderedData, &renderedLength) == 0 {
                 return Data(bytesNoCopy: renderedData!,

@@ -323,6 +323,22 @@
         <xsd:list itemType="layers" />
     </xsd:simpleType>
 
+    <xsd:simpleType name="layoutEngine">
+        <xsd:annotation>
+            <xsd:documentation>
+            <![CDATA[
+                <p>
+                Layout engine
+                </p>
+            ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="string">
+            <!-- <xsd:enumeration value="..." /> -->
+        </xsd:restriction>
+-
+    </xsd:simpleType>
+
     <xsd:simpleType name="lblString">
         <xsd:annotation>
             <xsd:documentation>
@@ -400,6 +416,30 @@
             <xsd:enumeration value="breadthfirst" />
             <xsd:enumeration value="nodesfirst" />
             <xsd:enumeration value="edgesfirst" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="overlapTechnique">
+        <xsd:annotation>
+            <xsd:documentation>
+            <![CDATA[
+                <p>
+                    Node overlap removal technique
+                </p>
+            ]]>
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="string">
+            <xsd:enumeration value="true" />
+            <xsd:enumeration value="scale" />
+            <xsd:enumeration value="false" />
+            <xsd:enumeration value="prism" />
+            <xsd:enumeration value="prism0" />
+            <xsd:enumeration value="9:prism" />
+            <xsd:enumeration value="voronoi" />
+            <xsd:enumeration value="scalexy" />
+            <xsd:enumeration value="compress" />
+            <xsd:enumeration value="vspc" />
         </xsd:restriction>
     </xsd:simpleType>
 
@@ -1819,7 +1859,7 @@
         </xsd:annotation>
     </xsd:attribute>
 
-    <xsd:attribute name="layout" type="string">
+    <xsd:attribute name="layout" type="layoutEngine">
         <xsd:annotation>
             <xsd:documentation>
             <![CDATA[
@@ -2140,7 +2180,7 @@
         </xsd:annotation>
     </xsd:attribute>
 
-    <xsd:attribute name="overlap" type="string" gv:layouts="fdp neato sfdp circo twopi">
+    <xsd:attribute name="overlap" type="overlapTechnique" gv:layouts="fdp neato sfdp circo twopi">
         <xsd:annotation>
             <xsd:documentation>
             <![CDATA[
@@ -3016,7 +3056,7 @@
         <xsd:attribute ref="constraint" default="true" />
         <xsd:attribute ref="decorate" default="false" />
         <xsd:attribute ref="dir" />
-        <xsd:attribute ref="edgehref"/>
+        <xsd:attribute ref="edgehref" />
         <xsd:attribute ref="edgetarget" />
         <xsd:attribute ref="edgetooltip" />
         <xsd:attribute ref="edgeURL" />
@@ -3026,9 +3066,9 @@
         <xsd:attribute ref="fontsize" default="14.0" />
         <xsd:attribute ref="head_lp" />
         <xsd:attribute ref="headclip" default="true" />
-        <xsd:attribute ref="headhref"/>
+        <xsd:attribute ref="headhref" />
         <xsd:attribute ref="headlabel" />
-        <xsd:attribute ref="headport" default="center"/>
+        <xsd:attribute ref="headport" default="center" />
         <xsd:attribute ref="headtarget" />
         <xsd:attribute ref="headtooltip" />
         <xsd:attribute ref="headURL" />
@@ -3062,9 +3102,9 @@
         <xsd:attribute ref="style" />
         <xsd:attribute ref="tail_lp" />
         <xsd:attribute ref="tailclip" default="true" />
-        <xsd:attribute ref="tailhref"/>
+        <xsd:attribute ref="tailhref" />
         <xsd:attribute ref="taillabel" />
-        <xsd:attribute ref="tailport" default="center"/>
+        <xsd:attribute ref="tailport" default="center" />
         <xsd:attribute ref="tailtarget" />
         <xsd:attribute ref="tailtooltip" />
         <xsd:attribute ref="tailURL" />
@@ -3193,7 +3233,7 @@
         <xsd:attribute ref="ordering" />
         <xsd:attribute ref="outputorder" default="breadthfirst" />
         <xsd:attribute ref="overlap" default="true" />
-        <xsd:attribute ref="overlap_scaling" default="-4"/>
+        <xsd:attribute ref="overlap_scaling" default="-4" />
         <xsd:attribute ref="overlap_shrink" default="true" />
         <xsd:attribute ref="pack" default="false" />
         <xsd:attribute ref="packmode" default="node" />
@@ -3210,7 +3250,7 @@
         <xsd:attribute ref="resolution" default="96.0" />
         <xsd:attribute ref="root" />
         <xsd:attribute ref="rotate" default="0" />
-        <xsd:attribute ref="rotation" default="0"/>
+        <xsd:attribute ref="rotation" default="0" />
         <xsd:attribute ref="scale" />
         <xsd:attribute ref="searchsize" default="30" />
         <xsd:attribute ref="sep" default="0.1" />

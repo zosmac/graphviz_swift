@@ -257,6 +257,8 @@ final class AttributesParser: NSObject, XMLParserDelegate {
     func parserDidEndDocument(
         _ parser: XMLParser
     ) {
+        // layout engine enumeration is not set in attributes.xml, instead retrieved at runtime with gvPluginList("layout")
+        enumeration["layoutEngine"] = layoutEngines
     }
 
     // begin handling for element

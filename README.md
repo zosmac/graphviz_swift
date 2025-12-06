@@ -72,7 +72,7 @@ Select from this list or navigate to other folders containing `.gv` files. Upon 
 
 ![GraphvizSwiftView](Readme/GraphvizSwiftView.png)
 
-The toolbar has a format selection popup menu that specifies the current image format. The default is PDF, which you can change in Settings:
+The toolbar has a view format selection popup menu that specifies the current image format. The default is PDF, which you can change in Settings. In Settings, you may also configure defaults for the Layout Engine for formatting graphs, the Text Size of *gv*, *canon*, and *json* renderings, and the Input Scale for node position points to inches conversion.
 
 ![GraphvizSwiftSettings](Readme/GraphvizSwiftSettings.png)
 

@@ -84,7 +84,7 @@ extension FocusedValues {
             }
         }
         .commandsRemoved()
-        .defaultSize(width: 350, height: 400)
+        .defaultSize(width: 350, height: 500)
         .defaultPosition(.topTrailing)
 
         Settings {
