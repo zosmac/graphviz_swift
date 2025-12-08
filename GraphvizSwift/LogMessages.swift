@@ -14,7 +14,7 @@ struct LogMessage: NotificationCenter.MainActorMessage {
 }
 
 /// LogMessages holds the block of log messages captured during graph.render. This type is a member of an instance of observable class Graph so that the post of the messages can be detected by the Text view of the Messages button.
-@Observable nonisolated final class LogMessages: @unchecked Sendable {
+@Observable final class LogMessages: Sendable {
     var block: String = ""
 }
 
