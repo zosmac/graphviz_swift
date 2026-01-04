@@ -27,6 +27,7 @@ struct ViewByType: View {
             TextEditor(text: $document.text)
                 .autocorrectionDisabled()
                 .font(.system(size: textSize*zoomScale, design: .monospaced))
+                .padding(10)
                 .onChange(of: document.text) {
                     print("text changed for file \(configuration?.fileURL, default: "?")")
                 }
@@ -37,6 +38,7 @@ struct ViewByType: View {
                         .multilineTextAlignment(.leading)
                         .font(.system(size: textSize*zoomScale))
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                        .padding(10)
                 }
             } else {
                 Text("Render failed: select Messages Button to view error.")

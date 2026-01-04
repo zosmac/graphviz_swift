@@ -1,6 +1,6 @@
 BUILD_DIR=build
 PREFIX=$(CURDIR)/$(BUILD_DIR)/PREFIX
-GV_VER=14.0.4
+GV_VER=14.1.1
 GV_URL=https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/$(GV_VER)/graphviz-$(GV_VER).tar.gz
 GV_DIR=$(BUILD_DIR)/graphviz-$(GV_VER)
 

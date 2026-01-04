@@ -20,8 +20,8 @@ import SwiftUI
     }
 
     func render(viewType: String, settings: [[String: String]]) -> Data {
-        let handler = GraphvizLogHandler(logMessages: logMessages)
-        return handler.capture {
+        let logHandler = LogHandler(logMessages: logMessages)
+        return logHandler.capture {
             print("RENDER for \(viewType)")
             guard let graph = agmemread(text + "\n") else { return Data() }
             defer { agclose(graph) }

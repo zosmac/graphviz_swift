@@ -24,16 +24,7 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 VStack(alignment: .leading) {
-                    Picker(selection: $viewType) {
-                        ForEach(viewableContentTypes, id: \.self) {
-                            Text($0.uppercased()).tag($0)
-                                .frame(width: 60, alignment: .leading)
-                        }
-                    }
-                    label: {
-                        Text("View Type")
-                            .frame(width: 110, alignment: .leading)
-                    }
+                    ViewTypePicker(viewType: $viewType)
                     Picker(selection: $layoutEngine) {
                         ForEach(layoutEngines, id: \.self) {
                             Text($0)

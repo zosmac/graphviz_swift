@@ -1,5 +1,5 @@
 //
-//  GraphvizApp.swift
+//  GraphvizSwiftApp.swift
 //  GraphvizSwift
 //
 //  Created by Keefe Hayes on 5/10/25.
@@ -21,8 +21,8 @@ extension FocusedValues {
     @Entry var saveViewType: Binding<String>?
 }
 
-/// GraphvizApp creates the graphviz document views and attributes documentation window.
-@main struct GraphvizApp: App {
+/// GraphvizSwiftApp creates the graphviz document views and attributes documentation window.
+@main struct GraphvizSwiftApp: App {
     @AppStorage("viewType") private var viewType = defaultViewType
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.openWindow) private var openWindow
@@ -90,7 +90,7 @@ extension FocusedValues {
         Settings {
             SettingsView()
         }
-        .defaultSize(width: 280, height: 180)
+        .defaultSize(width: 300, height: 200)
         .defaultPosition(.topLeading)
     }
 }

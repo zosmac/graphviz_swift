@@ -1,12 +1,29 @@
 //
-//  GraphvizViewTypes.swift
+//  ViewTypePicker.swift
 //  GraphvizSwift
 //
 //  Created by Keefe Hayes on 8/21/25.
 //
 
 import UniformTypeIdentifiers
-import Foundation
+import SwiftUI
+
+struct ViewTypePicker: View {
+    @Binding var viewType: String
+
+    var body: some View {
+        Picker(selection: $viewType) {
+            ForEach(viewableContentTypes, id: \.self) {
+                Text($0.uppercased()).tag($0)
+                    .frame(width: 60, alignment: .leading)
+            }
+        }
+        label: {
+            Text("View Type")
+                .frame(width: 110, alignment: .leading)
+        }
+    }
+}
 
 let layoutEngines: [String] = {
     var count: Int32 = 0

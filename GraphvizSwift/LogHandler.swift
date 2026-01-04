@@ -1,16 +1,17 @@
 //
-//  LogMessages.swift
+//  LogHandler.swift
 //  GraphvizSwift
 //
 //  Created by Keefe Hayes on 9/1/25.
 //
 
 import os
-import SwiftUI
+import Foundation
 
+/// LogMessage contains a single error line captured during graph render and sent as a notification.
 struct LogMessage: NotificationCenter.MainActorMessage {
-    typealias Subject = GraphvizLogHandler
-    public let line: String
+    typealias Subject = LogHandler
+    let line: String
 }
 
 /// LogMessages holds the block of log messages captured during graph.render. This type is a member of an instance of observable class Graph so that the post of the messages can be detected by the Text view of the Messages button.
@@ -18,8 +19,8 @@ struct LogMessage: NotificationCenter.MainActorMessage {
     var block: String = ""
 }
 
-/// GraphvizLogHandler receives log messages from graphviz render operations. Its static capture function provides a wrapper for capturing log messages from graphviz API calls to display in the UI.
-@Observable final class GraphvizLogHandler: Sendable {
+/// LogHandler receives log messages during graph render. Its capture method provides a wrapper for capturing log messages from graphviz API calls to display in the UI.
+@Observable final class LogHandler: Sendable {
     static let captureLock = OSAllocatedUnfairLock()
     let logMessages: LogMessages
 

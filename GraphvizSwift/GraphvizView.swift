@@ -61,12 +61,7 @@ struct GraphvizView: View {
             .toolbar(id: "GraphvizViewToolbar") {
                 ToolbarItem(id: "View Type") {
                     ControlGroup("View Type") {
-                        Picker("View Type", selection: $viewType) {
-                            ForEach(viewableContentTypes, id: \.self) {
-                                Text($0.uppercased()).tag($0)
-                            }
-                        }
-                        .frame(width: 80)
+                        ViewTypePicker(viewType: $viewType)
                         SaveViewButton(viewType: viewType)
                     }
                 }
