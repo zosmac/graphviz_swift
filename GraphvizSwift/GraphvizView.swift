@@ -15,7 +15,7 @@ struct GraphvizView: View {
     @Binding var document: GraphvizDocument
 
     @State private var viewType = UserDefaults.standard.string(forKey: "viewType") ?? defaultViewType
-    @State private var settings = Array(repeating: [String: String](), count: 3)
+    @State private var settings = Array(repeating: [String: String](), count: kindMax)
     @State private var zoomScale: CGFloat = 1.0
     @State private var viewScale: CGFloat = 1.0
 

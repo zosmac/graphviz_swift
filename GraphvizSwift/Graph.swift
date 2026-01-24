@@ -38,7 +38,7 @@ import SwiftUI
                 }
             }
 
-            var settings = Array(repeating: [String: String](), count: 3)
+            var settings = Array(repeating: [String: String](), count: kindMax)
             for kind in [AGRAPH, AGNODE, AGEDGE] {
                 var nextSymbol: UnsafeMutablePointer<Agsym_t>? = nil
                 while let symbol = agnxtattr(graph, Int32(kind), nextSymbol) {

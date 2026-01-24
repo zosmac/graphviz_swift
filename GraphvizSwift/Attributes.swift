@@ -7,7 +7,11 @@
 
 import Foundation
 
+/// parsedAttributes contains the decoded attributes.xml
 let parsedAttributes = ParsedAttributes()
+
+/// kindMax specifies the size for arrays of attributes by kind
+let kindMax = max(AGRAPH, AGNODE, AGEDGE) + 1
 
 /// Attribute reflects a graph, node, or edge property after the graph's setting applied.
 struct Attribute: Identifiable, Equatable, Hashable {
@@ -96,7 +100,7 @@ struct Attributes {
     let kinds: [[Attribute]] // by kind: AGRAPH, AGNODE, AGEDGE
 
     init(applying settings: [[AnyHashable: Any]]) {
-        var kinds = Array(repeating: [Attribute](), count: 3)
+        var kinds = Array(repeating: [Attribute](), count: kindMax)
         // merge document's attribute settings into its attributes
         for (kind, attributes) in parsedAttributes.kinds.enumerated() {
             for attribute in attributes {
@@ -193,7 +197,7 @@ final class ParsedAttributes {
         }
 
         documentation += "<h1>Attributes</h1>"
-        var kinds = Array(repeating: [ParsedAttribute](), count: 3)
+        var kinds = Array(repeating: [ParsedAttribute](), count: kindMax)
         for attribute in delegate.attributes.sorted() {
             attribute.enumeration = delegate.enumeration[attribute.simpleType]
             attribute.listItemType = delegate.listItemType[attribute.simpleType]
@@ -289,9 +293,9 @@ final class AttributesParser: NSObject, XMLParserDelegate {
                       let index = indices[name] {
 //                print(name)
                 // defaultValue meanings:
-                // 1. if nil, this attribute is not for this KIND
-                // 2. if among a complexType(i.e. a KIND), set default to non-nil
-                // 3. if not blank, the defaultValue FOR THIS KIND overrides any default set by <attribute name=> tag
+                // - if nil, this attribute is not for this KIND
+                // - if among a complexType(i.e. a KIND), set default to non-nil
+                // - if not blank, the defaultValue FOR THIS KIND overrides any default set by <attribute name=> tag
                 let defaultValue = attributeDict["default"] ?? ""
                 switch inComplexType! {
                 case "graph":
