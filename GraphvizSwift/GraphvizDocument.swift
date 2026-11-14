@@ -5,16 +5,18 @@
 //  Created by Keefe Hayes on 5/10/25.
 //
 
-import UniformTypeIdentifiers
 import SwiftUI
+import UniformTypeIdentifiers
 
-nonisolated
-extension UTType {
+nonisolated extension UTType {
     static var gv: UTType {
         UTType(exportedAs: "com.att.graphviz.graph")
     }
     static var canon: UTType {
         UTType(exportedAs: "com.att.graphviz.graph.canon")
+    }
+    static var tga: UTType {
+        UTType(importedAs: "com.truevision.tga-image")
     }
 }
 
@@ -33,7 +35,8 @@ struct GraphvizDocument: FileDocument {
 
     init(configuration: ReadConfiguration) throws {
         guard let data = configuration.file.regularFileContents,
-              let text = String(data: data, encoding: .utf8) else {
+            let text = String(data: data, encoding: .utf8)
+        else {
             throw CocoaError(.fileReadUnknown)
         }
         self.text = text

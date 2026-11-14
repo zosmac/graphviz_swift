@@ -16,8 +16,8 @@ let kindMax = max(AGRAPH, AGNODE, AGEDGE) + 1
 /// Attribute reflects a graph, node, or edge property after the graph's setting applied.
 struct Attribute: Identifiable, Equatable, Hashable {
     let id: UUID
-    let name: String /// Attribute name
-    let value: String /// Attribute's value
+    let name: String
+    let value: String
     let defaultValue: String?
     let simpleType: String
     let enumeration: [String]?
@@ -33,26 +33,26 @@ struct Attribute: Identifiable, Equatable, Hashable {
         self.listItemType = attribute.listItemType
     }
 
-    func hash(into hasher: inout Hasher) { // Hashable
+    func hash(into hasher: inout Hasher) {  // Hashable
         hasher.combine(id)
     }
 }
 
 /// ParsedAttribute defines a graph, node, or edge property parsed from attributes.xml.
 final class ParsedAttribute: Comparable {
-    static func < (lhs: ParsedAttribute, rhs: ParsedAttribute) -> Bool { // Comparable
+    static func < (lhs: ParsedAttribute, rhs: ParsedAttribute) -> Bool {  // Comparable
         lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
     }
-    static func == (lhs: ParsedAttribute, rhs: ParsedAttribute) -> Bool { // Equatable
+    static func == (lhs: ParsedAttribute, rhs: ParsedAttribute) -> Bool {  // Equatable
         lhs.name == rhs.name
     }
 
     let id = UUID()
     let name: String
-    var value: String! // value if set in document, and changed by user in UI
-    var defaultValue: String? // from attributes.xml
+    var value: String!  // value if set in document, and changed by user in UI
+    var defaultValue: String?  // from attributes.xml
     var simpleType = ""
-    var enumeration: [String]? // option values of enumerated type, true/false for boolean
+    var enumeration: [String]?  // option values of enumerated type, true/false for boolean
     var listItemType: String?
     var doc = ""
 
@@ -70,7 +70,7 @@ final class ParsedAttribute: Comparable {
     }
 
     // An attribute may apply to a graph, node or edge, so each attribute must be copied to be distinct by kind.
-    init(copy: ParsedAttribute, kind: Int, _ defaultValue: String? = nil) { // Copyable
+    init(copy: ParsedAttribute, kind: Int, _ defaultValue: String? = nil) {  // Copyable
         self.name = copy.name
         self.simpleType = copy.simpleType
         self.enumeration = copy.enumeration
@@ -80,7 +80,7 @@ final class ParsedAttribute: Comparable {
         // for TextField, use defaultValue for field label
         self.defaultValue = copy.defaultValue
         if defaultValue != "" {
-            self.defaultValue = defaultValue // graph/node/edge default, if defined, overrides
+            self.defaultValue = defaultValue  // graph/node/edge default, if defined, overrides
         }
         // for Picker, set value to identify selection, seeding with defaultValue if defined
         var value = ""
@@ -97,7 +97,7 @@ final class ParsedAttribute: Comparable {
 
 /// Attributes holds the attribute settings for a graph.
 struct Attributes {
-    let kinds: [[Attribute]] // by kind: AGRAPH, AGNODE, AGEDGE
+    let kinds: [[Attribute]]  // by kind: AGRAPH, AGNODE, AGEDGE
 
     init(applying settings: [[AnyHashable: Any]]) {
         var kinds = Array(repeating: [Attribute](), count: kindMax)
@@ -105,8 +105,12 @@ struct Attributes {
         for (kind, attributes) in parsedAttributes.kinds.enumerated() {
             for attribute in attributes {
                 kinds[kind].append(
-                    Attribute(attribute: attribute,
-                              value: settings[kind][attribute.name] as? String ?? attribute.value))
+                    Attribute(
+                        attribute: attribute,
+                        value: settings[kind][attribute.name] as? String
+                            ?? attribute.value
+                    )
+                )
             }
         }
         self.kinds = kinds
@@ -115,71 +119,79 @@ struct Attributes {
 
 /// ParsedAttributes contains Graphviz attributes, by kind of graph, node, or edge, and documentation of the attributes.
 final class ParsedAttributes {
-    let kinds: [[ParsedAttribute]] // by kind: AGRAPH, AGNODE, AGEDGE
+    let kinds: [[ParsedAttribute]]  // by kind: AGRAPH, AGNODE, AGEDGE
     let documentation: String
 
     init() {
-        let url = Bundle.main.url(forResource: "attributes", withExtension: "xml")
+        let url = Bundle.main.url(
+            forResource: "attributes",
+            withExtension: "xml"
+        )
         let data = try! Data(contentsOf: url!)
         let parser = XMLParser(data: data)
-        let delegate = AttributesParser() // strong here, parser.delegate is unowned(unsafe)
+        let delegate = AttributesParser()  // strong here, parser.delegate is unowned(unsafe)
         parser.delegate = delegate
         if !parser.parse() {
-            print("parse failed \(parser.parserError?.localizedDescription ?? "")")
+            print(
+                "parse failed \(parser.parserError?.localizedDescription ?? "")"
+            )
         }
         var documentation = """
-<style>
-    :root {
-        color-scheme: light dark; /* Enables support for light-dark() */
-        --background-color: light-dark(#fff, #333);
-        --text-color: light-dark(#000, #fff);
-        --link-color: light-dark(#00f, #88f);
-        --code-background-color: light-dark(#ddd, #666);
-    }
-    table {
-        border-collapse: collapse; /* Collapse borders for a clean grid */
-    }
-    th, td {
-        border: 2px solid #888;
-        padding: 4px; /* Add some padding inside cells */
-    }
-    * {
-        background-color: var(--background-color);
-        color: var(--text-color);
-        font-family: sans-serif;
-        font-size: 10pt;
-    }
-    h1 {
-        font-size: 13pt;
-        font-weight: bold;
-    }
-    h2 {
-        font-size: 12pt;
-    }
-    a[href] {
-        font-family: Menlo,monospace;
-        font-size: 9pt;
-        color: var(--link-color);
-    }
-    code {
-        font-family: Menlo,monospace;
-        font-size: 9pt;
-        background-color: var(--code-background-color);
-        color: var(--text-color);
-    }
-</style>
-<html><body id="home">
-    <h1>Overview</h1>
-        \(delegate.overviewDoc)
-    <h1>Attribute Types</h1>
-"""
+            <style>
+                :root {
+                    color-scheme: light dark; /* Enables support for light-dark() */
+                    --background-color: light-dark(#fff, #333);
+                    --text-color: light-dark(#000, #fff);
+                    --link-color: light-dark(#00f, #88f);
+                    --code-background-color: light-dark(#ddd, #666);
+                }
+                table {
+                    border-collapse: collapse; /* Collapse borders for a clean grid */
+                }
+                th, td {
+                    border: 2px solid #888;
+                    padding: 4px; /* Add some padding inside cells */
+                }
+                * {
+                    background-color: var(--background-color);
+                    color: var(--text-color);
+                    font-family: sans-serif;
+                    font-size: 10pt;
+                }
+                h1 {
+                    font-size: 13pt;
+                    font-weight: bold;
+                }
+                h2 {
+                    font-size: 12pt;
+                }
+                a[href] {
+                    font-family: Menlo,monospace;
+                    font-size: 9pt;
+                    color: var(--link-color);
+                }
+                code {
+                    font-family: Menlo,monospace;
+                    font-size: 9pt;
+                    background-color: var(--code-background-color);
+                    color: var(--text-color);
+                }
+            </style>
+            <html><body id="home">
+                <h1>Overview</h1>
+                    \(delegate.overviewDoc)
+                <h1>Attribute Types</h1>
+            """
         for key in delegate.simpleTypeDoc.keys.sorted() {
             print(key)
-            if let simpleTypeDoc = delegate.simpleTypeDoc[key], !simpleTypeDoc.isEmpty {
+            if let simpleTypeDoc = delegate.simpleTypeDoc[key],
+                !simpleTypeDoc.isEmpty
+            {
                 documentation += simpleTypeDoc
             }
             if let listItemType = delegate.listItemType[key] {
-                documentation += "<p>A list of <a href=\"#\(listItemType)\">\(listItemType)</a> values.</p>"
+                documentation +=
+                    "<p>A list of <a href=\"#\(listItemType)\">\(listItemType)</a> values.</p>"
             }
             for attribute in delegate.enumeration.filter({ $0.0 == key }) {
                 documentation += "Valid values for <code>\(key)</code> are<ul>"
@@ -189,9 +201,11 @@ final class ParsedAttributes {
                 documentation += "</ul>"
             }
             documentation += "<code>\(key)</code> is a valid type for<ul>"
-            for attribute in delegate.attributes.filter({ $0.simpleType == key }) {
+            for attribute in delegate.attributes.filter({ $0.simpleType == key }
+            ) {
                 print("\t\(attribute.name)")
-                documentation += "<li><a href=\"#\(attribute.name)\">\(attribute.name)</a></li>"
+                documentation +=
+                    "<li><a href=\"#\(attribute.name)\">\(attribute.name)</a></li>"
             }
             documentation += "</ul>"
         }
@@ -204,13 +218,31 @@ final class ParsedAttributes {
             documentation += "\n" + attribute.doc
 
             if attribute.graph != nil {
-                kinds[AGRAPH].append(ParsedAttribute(copy: attribute, kind: AGRAPH, attribute.graph!))
+                kinds[AGRAPH].append(
+                    ParsedAttribute(
+                        copy: attribute,
+                        kind: AGRAPH,
+                        attribute.graph!
+                    )
+                )
             }
             if attribute.node != nil {
-                kinds[AGNODE].append(ParsedAttribute(copy: attribute, kind: AGNODE, attribute.node!))
+                kinds[AGNODE].append(
+                    ParsedAttribute(
+                        copy: attribute,
+                        kind: AGNODE,
+                        attribute.node!
+                    )
+                )
             }
             if attribute.edge != nil {
-                kinds[AGEDGE].append(ParsedAttribute(copy: attribute, kind: AGEDGE, attribute.edge!))
+                kinds[AGEDGE].append(
+                    ParsedAttribute(
+                        copy: attribute,
+                        kind: AGEDGE,
+                        attribute.edge!
+                    )
+                )
             }
         }
 
@@ -224,9 +256,9 @@ final class AttributesParser: NSObject, XMLParserDelegate {
     var overviewDoc = ""
     var attributes = [ParsedAttribute]()
     var indices = [String: Int]()
-    var listItemType = Dictionary<String, String>()
-    var enumeration = Dictionary<String, [String]>()
-    var simpleTypeDoc = Dictionary<String, String>()
+    var listItemType = [String: String]()
+    var enumeration = [String: [String]]()
+    var simpleTypeDoc = [String: String]()
 
     // track which XML element within as parsing proceeds
     var inAttribute: String?
@@ -243,9 +275,11 @@ final class AttributesParser: NSObject, XMLParserDelegate {
             if attributes[indices[name]!].doc.isEmpty {
                 let type = attributes[indices[name]!].simpleType
                 if simpleTypeDoc[type] == nil {
-                    attributes[indices[name]!].doc = "<h2 id=\"\(name)\">\(name) <i>\(type)</i></h2>\n"
+                    attributes[indices[name]!].doc =
+                        "<h2 id=\"\(name)\">\(name) <i>\(type)</i></h2>\n"
                 } else {
-                    attributes[indices[name]!].doc = "<h2 id=\"\(name)\">\(name) <a href=\"#\(type)\"><i>\(type)</i></a></h2>\n"
+                    attributes[indices[name]!].doc =
+                        "<h2 id=\"\(name)\">\(name) <a href=\"#\(type)\"><i>\(type)</i></a></h2>\n"
                 }
             }
             attributes[indices[name]!].doc += string
@@ -273,25 +307,29 @@ final class AttributesParser: NSObject, XMLParserDelegate {
         qualifiedName qName: String?,
         attributes attributeDict: [String: String] = [:]
     ) {
-//        print("startelement", elementName, attributeDict)
+        //        print("startelement", elementName, attributeDict)
         if !elementName.hasPrefix("xsd:") && !inDocumentation {
-            print("============ non xsd found!================== \(elementName)")
+            print(
+                "============ non xsd found!================== \(elementName)"
+            )
             return
         }
         switch elementName {
         case "xsd:attribute":
             if let name = attributeDict["name"] {
-                inAttribute = name // started attribute name= section
+                inAttribute = name  // started attribute name= section
                 if indices[name] == nil {
                     indices[name] = attributes.count
                     attributes.append(ParsedAttribute(name: name))
                 }
                 let index = indices[name]!
-                attributes[index].simpleType = attributeDict["type"] ?? attributes[index].simpleType
+                attributes[index].simpleType =
+                    attributeDict["type"] ?? attributes[index].simpleType
                 attributes[index].defaultValue = attributeDict["default"]
             } else if let name = attributeDict["ref"],
-                      let index = indices[name] {
-//                print(name)
+                let index = indices[name]
+            {
+                //                print(name)
                 // defaultValue meanings:
                 // - if nil, this attribute is not for this KIND
                 // - if among a complexType(i.e. a KIND), set default to non-nil
@@ -326,22 +364,22 @@ final class AttributesParser: NSObject, XMLParserDelegate {
             }
         case "xsd:simpleType":
             if let name = attributeDict["name"] {
-                inSimpleType = name // started simpleType section
+                inSimpleType = name  // started simpleType section
             }
         case "xsd:complexType":
             if let name = attributeDict["name"] {
-                inComplexType = name // started complexType section
+                inComplexType = name  // started complexType section
             }
         case "xsd:documentation":
             inDocumentation = true
         case "xsd:annotation":
             if let id = attributeDict["id"] {
                 // only top level annotations in the "overview" (special annotation section) have id, to create an anchor target.
-                inAnnotation = id // started special annotation section
+                inAnnotation = id  // started special annotation section
                 overviewDoc += "<h2 id=\"\(id)\">\(id)</h2>\n"
             }
-            //        case "xsd:restriction":
-            //        case "xsd:schema":
+        //        case "xsd:restriction":
+        //        case "xsd:schema":
         default:
             break
         }
@@ -354,14 +392,14 @@ final class AttributesParser: NSObject, XMLParserDelegate {
         namespaceURI: String?,
         qualifiedName qName: String?
     ) {
-//        print("endelement", elementName)
+        //        print("endelement", elementName)
         switch elementName {
         case "xsd:attribute":
-            inAttribute = nil // ended attribute name= element
+            inAttribute = nil  // ended attribute name= element
         case "xsd:simpleType":
-            inSimpleType = nil // ended simpleType element
+            inSimpleType = nil  // ended simpleType element
         case "xsd:complexType":
-            inComplexType = nil // ended complexType element
+            inComplexType = nil  // ended complexType element
         case "xsd:documentation":
             inDocumentation = false
         case "xsd:annotation":

@@ -5,8 +5,8 @@
 //  Created by Keefe Hayes on 9/1/25.
 //
 
-import os
 import Foundation
+import os
 
 /// LogMessage contains a single error line captured during graph render and sent as a notification.
 struct LogMessage: NotificationCenter.MainActorMessage {
@@ -28,7 +28,7 @@ struct LogMessage: NotificationCenter.MainActorMessage {
         self.logMessages = logMessages
     }
 
-    func capture(block: () -> Any ) -> Any {
+    func capture(block: () -> Any) -> Any {
         Self.captureLock.lock()
         defer { Self.captureLock.unlock() }
         self.logMessages.block = ""

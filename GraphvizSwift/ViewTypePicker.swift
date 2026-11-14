@@ -5,22 +5,17 @@
 //  Created by Keefe Hayes on 8/21/25.
 //
 
-import UniformTypeIdentifiers
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct ViewTypePicker: View {
     @Binding var viewType: String
 
     var body: some View {
-        Picker(selection: $viewType) {
+        Picker("View Type", selection: $viewType) {
             ForEach(viewableContentTypes, id: \.self) {
                 Text($0.uppercased()).tag($0)
-                    .frame(width: 60, alignment: .leading)
             }
-        }
-        label: {
-            Text("View Type")
-                .frame(width: 110, alignment: .leading)
         }
     }
 }
@@ -53,8 +48,9 @@ let viewableContentTypes: [String] = {
     for i in 0..<Int(count) {
         if let device = list[i] {
             if let utType = UTType(filenameExtension: String(cString: device)),
-               let fileExtension = utType.preferredFilenameExtension,
-               !utType.isDynamic {
+                let fileExtension = utType.preferredFilenameExtension,
+                !utType.isDynamic
+            {
                 set.insert(fileExtension)
             }
             free(device)

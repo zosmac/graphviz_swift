@@ -5,19 +5,24 @@
 //  Created by Keefe Hayes on 8/16/25.
 //
 
-import UniformTypeIdentifiers
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct SaveViewButton: View {
     @FocusedBinding(\.saveViewPresented) private var saveViewPresented
 
     var viewType: String
-    
+
     var body: some View {
         Button {
             saveViewPresented = true
         } label: {
-            Label("Save \(viewType.uppercased())", systemImage: "square.and.arrow.down.on.square")
+            Label(
+                "Save \(viewType.uppercased())",
+                systemImage: "arrow.down.document"
+            )
+            // "square.and.arrow.down.on.square"
+            // "square.and.arrow.down"
         }
         .keyboardShortcut("S", modifiers: [.option, .command])
     }
@@ -25,7 +30,8 @@ struct SaveViewButton: View {
 
 struct SaveViewSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.documentConfiguration) private var configuration: DocumentConfiguration?
+    @Environment(\.documentConfiguration) private var configuration:
+        DocumentConfiguration?
 
     let viewType: String
     let rendering: Data
@@ -35,12 +41,16 @@ struct SaveViewSheet: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            if let url = configuration?.fileURL?.deletingPathExtension().appendingPathExtension(viewType) {
+            if let url = configuration?.fileURL?.deletingPathExtension()
+                .appendingPathExtension(viewType)
+            {
                 Text("Save File:")
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(Color.accentColor)
                 Text(url.path)
-                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+                    .font(
+                        .system(size: 14, weight: .semibold, design: .rounded)
+                    )
                 HStack {
                     Spacer()
                     Button("Cancel") {
@@ -66,7 +76,10 @@ struct SaveViewSheet: View {
                         dismiss()
                     }
                 } message: {
-                    Text(saveError?.localizedDescription ?? "Unknown error occurred.")
+                    Text(
+                        saveError?.localizedDescription
+                            ?? "Unknown error occurred."
+                    )
                 }
             } else {
                 Text("Unnamed file requires a name to save.")

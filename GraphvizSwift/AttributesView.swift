@@ -46,16 +46,32 @@ struct AttributesView: View {
                         TableColumn("Attribute", value: \.name)
                         TableColumn("Value") { attribute in
                             if attribute.enumeration == nil {
-                                ValueView(settings: $settings, kind: kind, attribute: attribute, label: attribute.defaultValue ?? "", value: attribute.value) //, isDisabled: !attribute.value.isEmpty)
+                                ValueView(
+                                    settings: $settings,
+                                    kind: kind,
+                                    attribute: attribute,
+                                    label: attribute.defaultValue ?? "",
+                                    value: attribute.value
+                                )  //, isDisabled: !attribute.value.isEmpty)
                             } else {
-                                EnumerationView(settings: $settings, kind: kind, attribute: attribute, value: attribute.value)
+                                EnumerationView(
+                                    settings: $settings,
+                                    kind: kind,
+                                    attribute: attribute,
+                                    value: attribute.value
+                                )
                             }
                         }
                     }
                     .onChange(of: appearsActive) {
                         if $1 {
-                            if let index = attributes.firstIndex(where: { $0.id == row }) {
-                                proxy.scrollTo(attributes[index].id, anchor: .center)
+                            if let index = attributes.firstIndex(where: {
+                                $0.id == row
+                            }) {
+                                proxy.scrollTo(
+                                    attributes[index].id,
+                                    anchor: .center
+                                )
                             } else {
                                 proxy.scrollTo(attributes[0].id, anchor: .top)
                             }
@@ -63,8 +79,13 @@ struct AttributesView: View {
                         }
                     }
                     .onChange(of: kind, initial: true) {
-                        if let index = attributes.firstIndex(where: { $0.id == row }) {
-                            proxy.scrollTo(attributes[index].id, anchor: .center)
+                        if let index = attributes.firstIndex(where: {
+                            $0.id == row
+                        }) {
+                            proxy.scrollTo(
+                                attributes[index].id,
+                                anchor: .center
+                            )
                         } else {
                             proxy.scrollTo(attributes[0].id, anchor: .top)
                         }
@@ -80,10 +101,12 @@ struct AttributesView: View {
     }
 
     func tint(_ accent: Bool) -> Color {
-        accent ? Color.accentColor.opacity(0.3) : colorScheme == .light ? Color.white : Color.black
+        accent
+            ? Color.accentColor.opacity(0.3)
+            : colorScheme == .light ? Color.white : Color.black
     }
 
-    func docPagePosition(attributes: [Attribute], row: Attribute.ID?) -> Void {
+    func docPagePosition(attributes: [Attribute], row: Attribute.ID?) {
         var href = "#"
         if let index = attributes.firstIndex(where: { $0.id == row }) {
             href += attributes[index].name
@@ -91,7 +114,9 @@ struct AttributesView: View {
         do {
             Task { @MainActor in
                 do {
-                    try await attributesDocPage.page.callJavaScript("window.location.hash='\(href)'")
+                    try await attributesDocPage.page.callJavaScript(
+                        "window.location.hash='\(href)'"
+                    )
                 } catch { print(error) }
             }
         }
@@ -109,7 +134,7 @@ struct ValueView: View {
 
     var body: some View {
         TextField(label, text: $value)
-        //            .disabled(isDisabled)
+            //            .disabled(isDisabled)
             .onSubmit {
                 if let kind {
                     settings[kind][attribute.name] = value

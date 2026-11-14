@@ -5,9 +5,9 @@
 //  Created by Keefe Hayes on 9/5/25.
 //
 
-import UniformTypeIdentifiers
 import SwiftUI
 import Synchronization
+import UniformTypeIdentifiers
 
 let defaultLayoutEngine = "dot"
 let defaultViewType = "pdf"
@@ -30,8 +30,7 @@ struct SettingsView: View {
                             Text($0)
                                 .frame(width: 60, alignment: .leading)
                         }
-                    }
-                    label: {
+                    } label: {
                         Text("Layout Engine")
                             .frame(width: 110, alignment: .leading)
                     }

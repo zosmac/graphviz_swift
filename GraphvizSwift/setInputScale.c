@@ -7,6 +7,4 @@
 
 extern double PSinputscale;
 
-void setInputScale(double inputScale) {
-    PSinputscale = inputScale;
-}
+void setInputScale(double inputScale) { PSinputscale = inputScale; }

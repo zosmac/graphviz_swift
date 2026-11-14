@@ -5,15 +5,17 @@
 //  Created by Keefe Hayes on 6/12/25.
 //
 
-import UniformTypeIdentifiers
 import SwiftUI
+import UniformTypeIdentifiers
 
 /// Graph bridges a Graphviz document to its views.
 @Observable final class Graph {
     var text: String
     var attributes: Attributes!
     let logMessages = LogMessages()
-    private var layoutEngine = UserDefaults.standard.string(forKey: "layoutEngine") ?? defaultLayoutEngine
+    private var layoutEngine =
+        UserDefaults.standard.string(forKey: "layoutEngine")
+        ?? defaultLayoutEngine
 
     init(text: String) {
         self.text = text
@@ -22,7 +24,9 @@ import SwiftUI
     func render(viewType: String, settings: [[String: String]]) -> Data {
         let logHandler = LogHandler(logMessages: logMessages)
         return logHandler.capture {
-            print("RENDER for \(viewType)")
+            print(
+                "RENDER for \(viewType) \(UTType(filenameExtension: viewType)!)"
+            )
             guard let graph = agmemread(text + "\n") else { return Data() }
             defer { agclose(graph) }
             print("GRAPH is \(graph)")
@@ -32,7 +36,12 @@ import SwiftUI
                     _ = name.withCString { name in
                         value.withCString { value in
                             // withCString sends in an UnsafePointer. Because agattr does not declare its parameters as const, must recast argument to UnsafeMutablePointer.
-                            return agattr_text(graph, Int32(kind), UnsafeMutablePointer(mutating: name), UnsafeMutablePointer(mutating: value))
+                            return agattr_text(
+                                graph,
+                                Int32(kind),
+                                UnsafeMutablePointer(mutating: name),
+                                UnsafeMutablePointer(mutating: value)
+                            )
                         }
                     }
                 }
@@ -62,12 +71,20 @@ import SwiftUI
             defer { gvFreeContext(context) }
             gvLayout(context, graph, engine)
             defer { gvFreeLayout(context, graph) }
-            if gvRenderData(context, graph, viewType, &renderedData, &renderedLength) == 0 {
-                return Data(bytesNoCopy: renderedData!,
-                            count: renderedLength,
-                            deallocator: .custom { ptr, _ in
-                    gvFreeRenderData(ptr)
-                })
+            if gvRenderData(
+                context,
+                graph,
+                viewType,
+                &renderedData,
+                &renderedLength
+            ) == 0 {
+                return Data(
+                    bytesNoCopy: renderedData!,
+                    count: renderedLength,
+                    deallocator: .custom { ptr, _ in
+                        gvFreeRenderData(ptr)
+                    }
+                )
             }
             return Data()
         } as! Data

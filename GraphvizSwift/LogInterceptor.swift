@@ -47,7 +47,7 @@
 //            observee.message = string
 //        }
 //    }
-//    
+//
 //    func observe(name: String, block: () -> Any ) -> Any {
 //        LogInterceptor.logLock.lock()
 //        fflush(stderr)

@@ -5,8 +5,8 @@
 //  Created by Keefe Hayes on 5/10/25.
 //
 
-import UniformTypeIdentifiers
 import SwiftUI
+import UniformTypeIdentifiers
 import WebKit
 
 let GraphvizErrorDomain = "GraphvizErrorDomain"
@@ -49,18 +49,29 @@ extension FocusedValues {
                 SaveViewButton(viewType: (saveViewType ?? viewType))
             }
             CommandGroup(after: .singleWindowList) {
-                 Section {
-                     WindowVisibilityToggle(windowID: "AttributesDocView")
-                 }
-             }
+                Section {
+                    WindowVisibilityToggle(windowID: "AttributesDocView")
+                }
+            }
             CommandGroup(replacing: .help) {
                 Button("GraphvizSwift Help") {
-                    if let url = Bundle.main.url(forResource: "README", withExtension: "html") ?? URL(string: "https://github.com/zosmac/graphviz_swift/#welcome-to-graphvizswift") {
+                    if let url = Bundle.main.url(
+                        forResource: "README",
+                        withExtension: "html"
+                    )
+                        ?? URL(
+                            string:
+                                "https://github.com/zosmac/graphviz_swift/#welcome-to-graphvizswift"
+                        )
+                    {
                         NSWorkspace.shared.open(url)
                     }
                 }
                 Button("Graphviz Help") {
-                    if let url = Bundle.main.url(forResource: "Help", withExtension: "html") {
+                    if let url = Bundle.main.url(
+                        forResource: "Help",
+                        withExtension: "html"
+                    ) {
                         NSWorkspace.shared.open(url)
                     }
                 }
@@ -78,7 +89,9 @@ extension FocusedValues {
                     .glassEffect(.regular.tint(Color.accentColor.opacity(0.3)))
                     Spacer()
                 }
-                .padding(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 0))
+                .padding(
+                    EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 0)
+                )
                 .background(Rectangle().fill(Color.accentColor.opacity(0.3)))
                 WebView(attributesDocPage.page)
             }
