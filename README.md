@@ -70,7 +70,7 @@ The toolbar has a **View Type** popup menu to set the desired rendering type. Th
 ![GraphvizSwiftType](Readme/GraphvizSwiftType.png)
 The adjacent **Save** button saves the file as a document of that type.
 ![GraphvizSwiftSave](Readme/GraphvizSwiftSave.png)
-Next is a **Zoom** button to toggle the size of the image between the image's actual size and a size that fits the window.
+Next is a **Zoom** button to toggle the size of the image between the image's actual size and a size that fits the window. Use the *two finger pinch gesture* to **zoom** the image in and out.
 ![GraphvizSwiftZoom](Readme/GraphvizSwiftZoom.png)
 The **Messages** button follows the zoom button. If highlighted in red, select it to display any error messages from rendering the graph:
 ![GraphvizSwiftMessages](Readme/GraphvizSwiftMessages.png)
