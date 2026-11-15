@@ -12,10 +12,14 @@ struct ViewTypePicker: View {
     @Binding var viewType: String
 
     var body: some View {
-        Picker("View Type", selection: $viewType) {
+        Picker(selection: $viewType) {
             ForEach(viewableContentTypes, id: \.self) {
                 Text($0.uppercased()).tag($0)
+                    .frame(width: 60, alignment: .leading)
             }
+        } label: {
+            Text("View Type")
+                .frame(width: 110, alignment: .leading)
         }
     }
 }

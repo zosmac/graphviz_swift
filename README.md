@@ -2,10 +2,10 @@
 ## The *Swift* language based *macOS* *Graphviz* Application.
 
 - [Overview](#overview)
-- [Installing *GraphvizSwift*](#installing-graphvizswift)
+- [Obtaining the *GraphvizSwift* Package Installer](#obtaining-the-graphvizswift-package-installer)
   - [Download the *GraphvizSwift* Package Installer](#download-the-graphvizswift-package-installer)
   - [Clone and Build the *GraphvizSwift* Package Installer](#clone-and-build-the-graphvizswift-package-installer)
-  - [Install *GraphvizSwift*](#install-graphvizswift)
+- [Installing *GraphvizSwift*](#installing-graphvizswift)
 - [Running *GraphvizSwift*](#running-graphvizswift)
 
 ## Overview
@@ -13,8 +13,8 @@
 
 Note that *Graphviz* DOT language files by convention have the `.gv` extension. The `.dot` extension is registered for Microsoft DOcument Templates (Universal Type Identifier com.microsoft.word.dot).
 
-## Installing *GraphvizSwift*
-You have two choices for installing [GraphvizSwift](https://github.com/zosmac/graphviz_swift), either by downloading the package installer directly, or by cloning the repository and building the package installer.
+## Obtaining the *GraphvizSwift* Package Installer
+You have two choices for obtaining the [GraphvizSwift](https://github.com/zosmac/graphviz_swift) package installer: either by downloading the package installer directly, or by cloning the repository and building the package installer.
 
 Note that *GraphvizSwift* uses *WebKit*'s *WebView* and *WebPage*, *NotificationCenter*'s *MainActorMessage*, and *Liquid Glass* effects, all introduced with macOS 26 Tahoe.
 
@@ -52,7 +52,7 @@ cd graphviz_swift
 make pkg
 ```
 
-### Install *GraphvizSwift*
+## Installing *GraphvizSwift*
 Open the package installer:
 ```zsh
 open graphvizswift-arm64.pkg
@@ -61,33 +61,24 @@ Enter the password for your macOS system account when prompted, and the app will
 
 ## Running *GraphvizSwift*
 Once installed, find *GraphvizSwift* in the `/Applications` folder or via the App Launcher. Open the app, which will first present an open document navigator view. *Graphviz* includes a sample folder which is deployed with the *GraphvizSwift* app. In the document navigator, press the key combination &#8984;&#8679;G. This opens a sheet to enter a Unix path. The sample folder is `/Applications/GraphvizSwift.app/Contents/Frameworks/share/graphviz/graphs/directed`:
-
 ![GraphvizSwiftCmdShiftG](Readme/GraphvizSwiftCmdShiftG.png)
-
 The *Graphviz* sample folder installs a number of example DOT files (extension is .gv):
-
 ![GraphvizSwiftOpen](Readme/GraphvizSwiftOpen.png)
-
-Select from this list or navigate to other folders containing `.gv` files. Upon selection, *GraphvizSwift* presents a document view of the file. The toolbar has a **View Type** popup menu to set the desired rendering type. The default is PDF, which you can change in **Settings**. The adjacent **Save** button saves the file in that as that type, and next you will see several zoom options to change the size of the image:
-
+Select from this list or navigate to other folders containing `.gv` files. Upon selection, *GraphvizSwift* presents a document view of the file.
 ![GraphvizSwiftView](Readme/GraphvizSwiftView.png)
-
-The **Messages** button follows the zoom buttons. If highlighted in red, select it to display any error messages from rendering the graph:
-
+The toolbar has a **View Type** popup menu to set the desired rendering type. The default is PDF, which you can change in **Settings**.
+![GraphvizSwiftType](Readme/GraphvizSwiftType.png)
+The adjacent **Save** button saves the file as a document of that type.
+![GraphvizSwiftSave](Readme/GraphvizSwiftSave.png)
+Next is a **Zoom** button to toggle the size of the image between the image's actual size and a size that fits the window.
+![GraphvizSwiftZoom](Readme/GraphvizSwiftZoom.png)
+The **Messages** button follows the zoom button. If highlighted in red, select it to display any error messages from rendering the graph:
 ![GraphvizSwiftMessages](Readme/GraphvizSwiftMessages.png)
-
 The final button **Attributes** displays a sidebar for updating global graph, node, or edge attributes of the graph:
-
 ![GraphvizSwiftAttrs](Readme/GraphvizSwiftAttrs.png)
-
 For guidance on setting attributes, from the **Window** menu select **Show Attributes Documentation**. Note that some of the links in the documentation open external sites. To return to the attributes documentation, select **Overview** below the title bar:
-
 ![GraphvizSwiftAttrsDoc](Readme/GraphvizSwiftAttrsDoc.png)
-
 You may also edit the file directly to update global attributes and to edit attributes for specific nodes, edges, or clusters. To enable edit mode, select **GV** from the **View Type** popup:
-
 ![GraphvizSwiftEdit](Readme/GraphvizSwiftEdit.png)
-
 With GraphvizSwift's **Settings**, you may configure several defaults for the app. The **View Type** popup menu specifies the type for rendering graphs. The default is PDF. You may also configure defaults for the **Layout Engine** for formatting graphs, the **Text Size** of *gv*, *canon*, and *json* renderings, and the **Input Scale** for node position points to inches conversion:
-
 ![GraphvizSwiftSettings](Readme/GraphvizSwiftSettings.png)
