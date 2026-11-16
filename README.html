@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Welcome to *GraphvizSwift*</title>
+</head>
+<body>
+<h1>Welcome to <em>GraphvizSwift</em></h1>
+<h2>The <em>SwiftUI</em> language based <em>macOS</em> <em>Graphviz</em> Application.</h2>
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#obtaining-the-graphvizswift-package-installer">Obtaining the <em>GraphvizSwift</em> Package Installer</a>
+<ul>
+<li><a href="#download-the-graphvizswift-package-installer">Download the <em>GraphvizSwift</em> Package Installer</a></li>
+<li><a href="#clone-and-build-the-graphvizswift-package-installer">Clone and Build the <em>GraphvizSwift</em> Package Installer</a></li>
+</ul>
+</li>
+<li><a href="#installing-graphvizswift">Installing <em>GraphvizSwift</em></a></li>
+<li><a href="#running-graphvizswift">Running <em>GraphvizSwift</em></a></li>
+</ul>
+<a id="overview"></a>
+<h2>Overview</h2>
+<p><em>GraphvizSwift</em> is a <a href="https://www.apple.com/os/macos/">macOS</a> application that reads <a href="https://graphviz.org">Graphviz</a> <a href="https://graphviz.org/doc/info/lang.html">DOT Language</a> files for display. DOT defines the nodes and edges of a network graph, which <em>Graphviz</em> interprets to draw a network graph diagram. On <em>macOS</em>, <em>Graphviz</em> can use <a href="https://developer.apple.com/documentation/quartz">Quartz</a> to render the diagrams into the following image formats: BMP, GIF, JPEG, PDF, PNG, SVG, and TIFF.</p>
+<p>Note that <em>Graphviz</em> DOT language files by convention have the <code>.gv</code> extension, as the <code>.dot</code> extension is registered for Microsoft DOcument Templates (Universal Type Identifier com.microsoft.word.dot).</p>
+<a id="obtaining-the-graphvizswift-package-installer"></a>
+<h2>Obtaining the <em>GraphvizSwift</em> Package Installer</h2>
+<p>You have two choices for obtaining the <a href="https://github.com/zosmac/graphviz_swift">GraphvizSwift</a> package installer: either by downloading the package installer directly, or by cloning the repository and building the package installer.</p>
+<p>Note that <em>GraphvizSwift</em> uses <em>WebKit</em>'s <em>WebView</em> and <em>WebPage</em>, <em>NotificationCenter</em>'s <em>MainActorMessage</em>, and <em>Liquid Glass</em> effects, all introduced with macOS 26 Tahoe.</p>
+<a id="download-the-graphvizswift-package-installer"></a>
+<h3>Download the <em>GraphvizSwift</em> Package Installer</h3>
+<p>You can install <em>GraphvizSwift</em> directly onto your Mac by downloading the package installer from <a href="https://github.com/zosmac/graphviz_swift">its repository</a>. Select <code>graphvizswift-arm64.pkg</code> and then download the raw file.</p>
+<p><img src="Readme/GraphvizSwiftDownload.png" alt="GraphvizSwiftDownload" width=600></p>
+<p>Similarly, download <code>graphvizswift-arm64.pkg.sha512</code>. Then, verify the package installer:</p>
+<pre><code class="language-zsh">cd ~/Downloads
+sha512sum -c graphvizswift-arm64.pkg.sha512
+</code></pre>
+<p>If this reports <code>graphvizswift-arm64.pkg: OK</code>, then remove it from quarantine:</p>
+<pre><code class="language-zsh">xattr -d com.apple.quarantine graphvizswift-arm64.pkg
+</code></pre>
+<a id="clone-and-build-the-graphvizswift-package-installer"></a>
+<h3>Clone and Build the <em>GraphvizSwift</em> Package Installer</h3>
+<h4>Install <em>Xcode</em></h4>
+<p>To build the <em>GraphvizSwift</em> App, first download and install <a href="https://developer.apple.com/xcode/">Xcode</a>. <em>Xcode</em> provides the Command Line Tools (e.g. <code>git</code>, <code>make</code>) for building <em>Graphviz</em>, <code>xcodebuild</code> for building the <em>GraphvizSwift</em> App, and the IDE for <em>macOS</em> app development and testing.</p>
+<p><img src="Readme/GraphvizSwiftXcode.png" alt="GraphvizSwiftXcode" width=600></p>
+<h4>Clone the <em>GraphvizSwift</em> Repository</h4>
+<pre><code class="language-zsh">git clone git@github.com:zosmac/graphviz_swift.git
+</code></pre>
+<h4>Build the Package Installer</h4>
+<p>Create the macOS package installer <code>graphvizswift-arm64.pkg</code> to install the <em>GraphvizSwift</em> App locally and to distribute it for installation on other macOS hosts.</p>
+<pre><code class="language-zsh">cd graphviz_swift
+make pkg
+</code></pre>
+<a id="installing-graphvizswift"></a>
+<h2>Installing <em>GraphvizSwift</em></h2>
+<p>Open the package installer:</p>
+<pre><code class="language-zsh">open graphvizswift-arm64.pkg
+</code></pre>
+<p>Enter the password for your macOS system account when prompted, and the app will be installed in /Applications/GraphvizSwift.app.</p>
+<a id="running-graphvizswift"></a>
+<h2>Running <em>GraphvizSwift</em></h2>
+<p>Once installed, find <em>GraphvizSwift</em> in the <code>/Applications</code> folder or via the App Launcher. Open the app, which will first present an open document navigator view. <em>Graphviz</em> includes a sample folder which is deployed with the <em>GraphvizSwift</em> app. In the document navigator, press the key combination ⌘⇧G. This opens a sheet to enter a Unix path. The sample folder is <code>/Applications/GraphvizSwift.app/Contents/Frameworks/share/graphviz/graphs/directed</code>:</p>
+<p><img src="Readme/GraphvizSwiftCmdShiftG.png" alt="GraphvizSwiftCmdShiftG" width=600></p>
+<p>The <em>Graphviz</em> sample folder installs a number of example files (extension <code>.gv</code>). Select from this list or navigate to other folders containing <code>.gv</code> files.</p>
+<p><img src="Readme/GraphvizSwiftOpen.png" alt="GraphvizSwiftOpen" width=600></p>
+<p>Upon selection, <em>GraphvizSwift</em> presents a document view of the file.</p>
+<p><img src="Readme/GraphvizSwiftView.png" alt="GraphvizSwiftView" width=600></p>
+<p>The toolbar has a <strong>View Type</strong> popup menu to set the desired rendering type. The default is PDF, which you can change in <strong>Settings</strong>.</p>
+<p><img src="Readme/GraphvizSwiftType.png" alt="GraphvizSwiftType" width=600></p>
+<p>The adjacent <strong>Save</strong> button saves the file as a document of that type.</p>
+<p><img src="Readme/GraphvizSwiftSave.png" alt="GraphvizSwiftSave" width=600></p>
+<p>Next is a <strong>Zoom</strong> button to toggle the size of the image between the image's actual size and a size that fits the window. Use the <em>two finger pinch gesture</em> to <strong>zoom</strong> the image in and out.</p>
+<p><img src="Readme/GraphvizSwiftZoom.png" alt="GraphvizSwiftZoom" width=600></p>
+<p>The <strong>Messages</strong> button follows the zoom button. If highlighted in red, select it to display any error messages from rendering the graph:</p>
+<p><img src="Readme/GraphvizSwiftMessages.png" alt="GraphvizSwiftMessages" width=600></p>
+<p>The final button <strong>Attributes</strong> displays a sidebar for updating global graph, node, or edge attributes of the graph:</p>
+<p><img src="Readme/GraphvizSwiftAttrs.png" alt="GraphvizSwiftAttrs" width=600></p>
+<p>For guidance on setting attributes, from the <strong>Window</strong> menu select <strong>Show Attributes Documentation</strong>. Note that some of the links in the documentation open external sites. To return to the attributes documentation, select <strong>Overview</strong> below the title bar:</p>
+<p><img src="Readme/GraphvizSwiftAttrsDoc.png" alt="GraphvizSwiftAttrsDoc" width=500></p>
+<p>You may also edit the file directly to update global attributes and to edit attributes for specific nodes, edges, or clusters. To enable edit mode, select <strong>GV</strong> from the <strong>View Type</strong> popup:</p>
+<p><img src="Readme/GraphvizSwiftEdit.png" alt="GraphvizSwiftEdit" width=600></p>
+<p>With GraphvizSwift's <strong>Settings</strong>, you may configure several defaults for the app. The <strong>View Type</strong> popup menu specifies the type for rendering graphs. The default is PDF. You may also configure defaults for the <strong>Layout Engine</strong> for formatting graphs, the <strong>Text Size</strong> of <em>gv</em>, <em>canon</em>, and <em>json</em> renderings, and the <strong>Input Scale</strong> for node position points to inches conversion:</p>
+<p><img src="Readme/GraphvizSwiftSettings.png" alt="GraphvizSwiftSettings" width=400></p>
+</body>
+</html>

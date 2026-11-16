@@ -30,7 +30,12 @@ struct ViewByType: View {
         case document.docType:
             TextEditor(text: $document.text)
                 .autocorrectionDisabled()
-                .font(.system(size: textSize * zoomScale, design: .monospaced))
+                .font(
+                    .system(
+                        size: textSize * (zoomScale + viewScale),
+                        design: .monospaced
+                    )
+                )
                 .padding(10)
                 .onChange(of: document.text) {
                     print(
@@ -42,7 +47,7 @@ struct ViewByType: View {
                 ScrollView {
                     Text(text)
                         .multilineTextAlignment(.leading)
-                        .font(.system(size: textSize * zoomScale))
+                        .font(.system(size: textSize * (zoomScale + viewScale)))
                         .frame(
                             maxWidth: .infinity,
                             maxHeight: .infinity,
@@ -53,7 +58,10 @@ struct ViewByType: View {
             } else {
                 Text("Render failed: select Messages Button to view error.")
                     .font(
-                        .system(size: textSize * zoomScale, weight: .semibold)
+                        .system(
+                            size: textSize * (zoomScale + viewScale),
+                            weight: .semibold
+                        )
                     )
                     .foregroundStyle(.red)
                     .frame(
@@ -104,7 +112,10 @@ struct ViewByType: View {
             } else {
                 Text("Render failed: select Messages Button to view error.")
                     .font(
-                        .system(size: textSize * zoomScale, weight: .semibold)
+                        .system(
+                            size: textSize * (zoomScale + viewScale),
+                            weight: .semibold
+                        )
                     )
                     .foregroundStyle(.red)
                     .frame(

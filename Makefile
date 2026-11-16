@@ -1,6 +1,6 @@
 BUILD_DIR=build
 PREFIX=$(CURDIR)/$(BUILD_DIR)/PREFIX
-GV_VER=14.1.1
+GV_VER=16.1.1
 GV_URL=https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/$(GV_VER)/graphviz-$(GV_VER).tar.gz
 GV_DIR=$(BUILD_DIR)/graphviz-$(GV_VER)
 
@@ -77,7 +77,7 @@ $(GV_DIR)/Makefile: $(GV_DIR)/configure
 	@echo "\n=================="
 	@echo Configure Graphviz
 	@echo "==================\n"
-	cd $(GV_DIR) && ./configure --prefix=$(PREFIX) --with-quartz CFLAGS="-Ofast $(ARCH)" CXXFLAGS="-Ofast $(ARCH)" OBJCFLAGS="-Ofast $(ARCH)" OBJCXXFLAGS="-Ofast $(ARCH)" LDFLAGS="$(ARCH) -Wl,-dead_strip"
+	cd $(GV_DIR) && ./configure --prefix=$(PREFIX) --with-quartz CFLAGS="-O3 $(ARCH)" CXXFLAGS="-O3 $(ARCH)" OBJCFLAGS="-O3 $(ARCH)" OBJCXXFLAGS="-O3 $(ARCH)" LDFLAGS="$(ARCH) -Wl,-dead_strip"
 
 $(GV_DIR)/configure:
 	@echo "\n================="

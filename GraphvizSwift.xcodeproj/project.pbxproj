@@ -15,10 +15,10 @@
 		5854A8FD2E93F05B009F1CC1 /* Graphviz.icns in Resources */ = {isa = PBXBuildFile; fileRef = 5854A8FC2E93F05B009F1CC1 /* Graphviz.icns */; };
 		58561A022E87331100814D06 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 58561A012E87331100814D06 /* README.md */; };
 		5858DC702E9AAC2F0073F393 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5858DC6F2E9AAC2F0073F393 /* Assets.xcassets */; };
+		58B2876C30AB8BD6001021DB /* libcgraph.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58B2876B30AB8BD6001021DB /* libcgraph.10.dylib */; };
+		58B2876E30AB96A7001021DB /* README.html in Resources */ = {isa = PBXBuildFile; fileRef = 58B2876D30AB96A7001021DB /* README.html */; };
 		58C1F7A22E7E220800FC6690 /* Component.plist in Resources */ = {isa = PBXBuildFile; fileRef = 58C1F7A12E7E220800FC6690 /* Component.plist */; };
-		58C21B5B2EDE770500C1F380 /* README.html in Resources */ = {isa = PBXBuildFile; fileRef = 58C21B5A2EDE770500C1F380 /* README.html */; };
 		58EF96272E8DEBBC0077C399 /* Help.html in Resources */ = {isa = PBXBuildFile; fileRef = 58EF96262E8DEBBC0077C399 /* Help.html */; };
-		58EF96292E8F056B0077C399 /* libcgraph.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EF96282E8F056B0077C399 /* libcgraph.8.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,14 +49,14 @@
 		5858DC6F2E9AAC2F0073F393 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		58AA16302DFD956200C4345A /* Graphviz-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Graphviz-Bridging-Header.h"; sourceTree = "<group>"; };
 		58AA16342DFD956200C4345A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		58B2876B30AB8BD6001021DB /* libcgraph.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcgraph.10.dylib; path = build/PREFIX/lib/libcgraph.10.dylib; sourceTree = "<group>"; };
+		58B2876D30AB96A7001021DB /* README.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = README.html; sourceTree = SOURCE_ROOT; };
 		58C1F79F2E7DF04500FC6690 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; name = Makefile; path = ../Makefile; sourceTree = "<group>"; };
 		58C1F7A12E7E220800FC6690 /* Component.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Component.plist; sourceTree = "<group>"; };
-		58C21B5A2EDE770500C1F380 /* README.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = README.html; sourceTree = "<group>"; };
 		58E5A58A2DCF89F000303648 /* GraphvizSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GraphvizSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		58E5A59B2DCF89F100303648 /* GraphvizSwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphvizSwiftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		58E5A5A52DCF89F100303648 /* GraphvizSwiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GraphvizSwiftUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		58EF96262E8DEBBC0077C399 /* Help.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = Help.html; sourceTree = "<group>"; };
-		58EF96282E8F056B0077C399 /* libcgraph.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcgraph.8.dylib; path = build/PREFIX/lib/libcgraph.8.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -88,8 +88,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				58EF96292E8F056B0077C399 /* libcgraph.8.dylib in Frameworks */,
 				580430EB2E832D3E0094234F /* libcdt.6.dylib in Frameworks */,
+				58B2876C30AB8BD6001021DB /* libcgraph.10.dylib in Frameworks */,
 				580430ED2E832D3E0094234F /* libgvc.7.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -126,7 +126,7 @@
 				58EF96262E8DEBBC0077C399 /* Help.html */,
 				587485B92E87793C00490930 /* Readme */,
 				58561A012E87331100814D06 /* README.md */,
-				58C21B5A2EDE770500C1F380 /* README.html */,
+				58B2876D30AB96A7001021DB /* README.html */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -157,7 +157,7 @@
 			isa = PBXGroup;
 			children = (
 				580430E62E832C340094234F /* libcdt.6.dylib */,
-				58EF96282E8F056B0077C399 /* libcgraph.8.dylib */,
+				58B2876B30AB8BD6001021DB /* libcgraph.10.dylib */,
 				580430E72E832C340094234F /* libgvc.7.dylib */,
 			);
 			name = Frameworks;
@@ -288,11 +288,11 @@
 				580221972ED687F5002D67B9 /* attributes.xml in Resources */,
 				5858DC702E9AAC2F0073F393 /* Assets.xcassets in Resources */,
 				58C1F7A22E7E220800FC6690 /* Component.plist in Resources */,
+				58B2876E30AB96A7001021DB /* README.html in Resources */,
 				5854A8FB2E93EFC9009F1CC1 /* GraphGv.icns in Resources */,
 				5854A8FD2E93F05B009F1CC1 /* Graphviz.icns in Resources */,
 				581859AC2E929F9200741031 /* Graphviz.icon in Resources */,
 				58EF96272E8DEBBC0077C399 /* Help.html in Resources */,
-				58C21B5B2EDE770500C1F380 /* README.html in Resources */,
 				58561A022E87331100814D06 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -363,7 +363,6 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -416,7 +415,6 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
