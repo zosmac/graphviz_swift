@@ -24,7 +24,7 @@ Note that *GraphvizSwift* uses *WebKit*'s *WebView* and *WebPage*, *Notification
 
 You can install *GraphvizSwift* directly onto your Mac by downloading the package installer from [its repository](https://github.com/zosmac/graphviz_swift). Select `graphvizswift-arm64.pkg` and then download the raw file.
 
-![GraphvizSwiftDownload](Readme/GraphvizSwiftDownload.png =600)
+![GraphvizSwiftDownload](Readme/GraphvizSwiftDownload.png =600x)
 
 Similarly, download `graphvizswift-arm64.pkg.sha512`. Then, verify the package installer:
 
@@ -45,7 +45,7 @@ xattr -d com.apple.quarantine graphvizswift-arm64.pkg
 
 To build the *GraphvizSwift* App, first download and install [Xcode](https://developer.apple.com/xcode/). *Xcode* provides the Command Line Tools (e.g. `git`, `make`) for building *Graphviz*, `xcodebuild` for building the *GraphvizSwift* App, and the IDE for *macOS* app development and testing.
 
-![GraphvizSwiftXcode](Readme/GraphvizSwiftXcode.png =600)
+![GraphvizSwiftXcode](Readme/GraphvizSwiftXcode.png =600x)
 
 #### Clone the *GraphvizSwift* Repository
 
@@ -75,44 +75,44 @@ Enter the password for your macOS system account when prompted, and the app will
 
 Once installed, find *GraphvizSwift* in the `/Applications` folder or via the App Launcher. Open the app, which will first present an open document navigator view. *Graphviz* includes a sample folder which is deployed with the *GraphvizSwift* app. In the document navigator, press the key combination &#8984;&#8679;G. This opens a sheet to enter a Unix path. The sample folder is `/Applications/GraphvizSwift.app/Contents/Frameworks/share/graphviz/graphs/directed`:
 
-![GraphvizSwiftCmdShiftG](Readme/GraphvizSwiftCmdShiftG.png =600)
+![GraphvizSwiftCmdShiftG](Readme/GraphvizSwiftCmdShiftG.png =600x)
 
 The *Graphviz* sample folder installs a number of example files (extension `.gv`). Select from this list or navigate to other folders containing `.gv` files.
 
-![GraphvizSwiftOpen](Readme/GraphvizSwiftOpen.png =600)
+![GraphvizSwiftOpen](Readme/GraphvizSwiftOpen.png =600x)
 
 Upon selection, *GraphvizSwift* presents a document view of the file.
 
-![GraphvizSwiftView](Readme/GraphvizSwiftView.png =600)
+![GraphvizSwiftView](Readme/GraphvizSwiftView.png =600x)
 
 The toolbar has a **View Type** popup menu to set the desired rendering type. The default is PDF, which you can change in **Settings**.
 
-![GraphvizSwiftType](Readme/GraphvizSwiftType.png =600)
+![GraphvizSwiftType](Readme/GraphvizSwiftType.png =600x)
 
 The adjacent **Save** button saves the file as a document of that type.
 
-![GraphvizSwiftSave](Readme/GraphvizSwiftSave.png =600)
+![GraphvizSwiftSave](Readme/GraphvizSwiftSave.png =600x)
 
 Next is a **Zoom** button to toggle the size of the image between the image's actual size and a size that fits the window. Use the *two finger pinch gesture* to **zoom** the image in and out.
 
-![GraphvizSwiftZoom](Readme/GraphvizSwiftZoom.png =600)
+![GraphvizSwiftZoom](Readme/GraphvizSwiftZoom.png =600x)
 
 The **Messages** button follows the zoom button. If highlighted in red, select it to display any error messages from rendering the graph:
 
-![GraphvizSwiftMessages](Readme/GraphvizSwiftMessages.png =600)
+![GraphvizSwiftMessages](Readme/GraphvizSwiftMessages.png =600x)
 
 The final button **Attributes** displays a sidebar for updating global graph, node, or edge attributes of the graph:
 
-![GraphvizSwiftAttrs](Readme/GraphvizSwiftAttrs.png =600)
+![GraphvizSwiftAttrs](Readme/GraphvizSwiftAttrs.png =600x)
 
 For guidance on setting attributes, from the **Window** menu select **Show Attributes Documentation**. Note that some of the links in the documentation open external sites. To return to the attributes documentation, select **Overview** below the title bar:
 
-![GraphvizSwiftAttrsDoc](Readme/GraphvizSwiftAttrsDoc.png =500)
+![GraphvizSwiftAttrsDoc](Readme/GraphvizSwiftAttrsDoc.png =500x)
 
 You may also edit the file directly to update global attributes and to edit attributes for specific nodes, edges, or clusters. To enable edit mode, select **GV** from the **View Type** popup:
 
-![GraphvizSwiftEdit](Readme/GraphvizSwiftEdit.png =600)
+![GraphvizSwiftEdit](Readme/GraphvizSwiftEdit.png =600x)
 
 With GraphvizSwift's **Settings**, you may configure several defaults for the app. The **View Type** popup menu specifies the type for rendering graphs. The default is PDF. You may also configure defaults for the **Layout Engine** for formatting graphs, the **Text Size** of *gv*, *canon*, and *json* renderings, and the **Input Scale** for node position points to inches conversion:
 
-![GraphvizSwiftSettings](Readme/GraphvizSwiftSettings.png =400)
+![GraphvizSwiftSettings](Readme/GraphvizSwiftSettings.png =400x)
