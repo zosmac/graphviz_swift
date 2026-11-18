@@ -56,20 +56,10 @@ struct ViewByType: View {
                         .padding(10)
                 }
             } else {
-                Text("Render failed: select Messages Button to view error.")
-                    .font(
-                        .system(
-                            size: textSize * (zoomScale + viewScale),
-                            weight: .semibold
-                        )
-                    )
-                    .foregroundStyle(.red)
-                    .frame(
-                        maxWidth: .infinity,
-                        maxHeight: .infinity,
-                        alignment: .topLeading
-                    )
-                    .padding(10)
+                ErrorMessageView(
+                    message:
+                        "Render failed: select Messages Button to view error."
+                )
             }
         case .svg:  // large SVG files do not display successfully with NSImage
             if let mimeType = UTType(filenameExtension: viewType)?
@@ -87,7 +77,7 @@ struct ViewByType: View {
             }
         default:
             if let image = NSImage(data: rendering) {
-                GeometryReader { geometryProxy in
+                GeometryReader { _ in
                     ScrollView([.vertical, .horizontal]) {
                         Image(nsImage: image)
                             .resizable()
@@ -101,8 +91,8 @@ struct ViewByType: View {
                     }
                 }
                 .background(.gray.opacity(0.2))
-                .onGeometryChange(for: CGSize.self) { proxy in
-                    proxy.size
+                .onGeometryChange(for: CGSize.self) {
+                    $0.size
                 } action: {
                     viewSize = min(
                         $0.width / image.size.width,
@@ -110,21 +100,32 @@ struct ViewByType: View {
                     )
                 }
             } else {
-                Text("Render failed: select Messages Button to view error.")
-                    .font(
-                        .system(
-                            size: textSize * (zoomScale + viewScale),
-                            weight: .semibold
-                        )
-                    )
-                    .foregroundStyle(.red)
-                    .frame(
-                        maxWidth: .infinity,
-                        maxHeight: .infinity,
-                        alignment: .topLeading
-                    )
-                    .padding(10)
+                ErrorMessageView(
+                    message:
+                        "Render failed: select Messages Button to view error."
+                )
             }
         }
+    }
+}
+
+struct ErrorMessageView: View {
+    let message: String
+
+    var body: some View {
+        Text(message)
+            .font(
+                .system(
+                    size: 18,
+                    weight: .semibold
+                )
+            )
+            .foregroundStyle(.red)
+            .frame(
+                maxWidth: .infinity,
+                maxHeight: .infinity,
+                alignment: .topLeading
+            )
+            .padding(10)
     }
 }

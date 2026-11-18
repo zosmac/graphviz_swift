@@ -46,11 +46,13 @@ struct GraphvizView: View {
         )
         .gesture(
             MagnifyGesture()
-                .onChanged { value in
-                    viewScale = value.magnification - 1.0
+                .onChanged {
+                    if zoomScale + $0.magnification - 1.0 > 0 {
+                        viewScale = $0.magnification - 1.0
+                    }
                 }
-                .onEnded { value in
-                    zoomScale += (value.magnification - 1.0)
+                .onEnded { _ in
+                    zoomScale += viewScale
                     viewScale = 0.0
                 }
         )
